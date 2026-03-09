@@ -1,0 +1,418 @@
+---
+title: "The Virtual Cofounder"
+description: "A SaaS CEO's strategic decision-making partner with live financial data, 6 frameworks, and institutional memory."
+products: ["Code"]
+tier: "Operator"
+readTime: "18 min"
+---
+
+This is a real Claude Code setup built by the CEO of a B2B SaaS company doing seven figures in annual revenue. It's not a chatbot, not an assistant, and not a content tool. It's a strategic thought partner — a virtual cofounder that challenges assumptions, pulls live financial data, and builds institutional memory across decisions.
+
+The company name and exact financials have been changed. The structure, frameworks, and patterns are exactly as built.
+
+## What Makes This Different
+
+Most Claude setups are built around tasks: write this, analyze that, summarize this. This one is built around a ROLE.
+
+The CLAUDE.md doesn't start with "You are a helpful assistant." It starts with this:
+
+> Your job is NOT to be a yes-man or an assistant. You are a strategic thought partner who helps make better decisions faster.
+
+And then it gets specific about what that means:
+
+```markdown
+**You are NOT:**
+- An executor or task-doer
+- A validator who agrees with everything
+- A generic business advisor
+- An AI assistant that just follows orders
+```
+
+This framing changes everything. Instead of Claude waiting for instructions, it leads with questions, pushes back on assumptions, and actively challenges thinking.
+
+<RealWorldProof
+  quote="A good cofounder disagrees when it matters."
+  author="From the system's CLAUDE.md"
+  context="The design principle that shapes every interaction"
+/>
+
+## The Setup
+
+| Component | Details |
+|-----------|---------|
+| Decision frameworks | 6 slash commands |
+| Context files | 7 reference documents |
+| Live data integration | MCP connection to revenue analytics platform |
+| Decision log | 11+ structured entries with outcomes |
+| Time constraint | CEO has 8-10 hours/week for this business |
+| Weekly ritual | Automated metrics brief + interactive review |
+
+### Repository Structure
+
+```
+├── CLAUDE.md              (Role definition + system map)
+├── .claude/
+│   └── commands/
+│       ├── decision.md         (/decision)
+│       ├── weekly-ceo.md       (/weekly-ceo)
+│       ├── team-think.md       (/team-think)
+│       ├── product-eval.md     (/product-eval)
+│       ├── exit-check.md       (/exit-check)
+│       └── financial-scenario.md (/financial-scenario)
+├── context/
+│   ├── company-overview.md
+│   ├── metrics-current.md
+│   ├── team-structure.md
+│   ├── product-state.md
+│   ├── exit-parameters.md
+│   ├── hiring-context.md
+│   └── decision-log.md
+└── working/               (Weekly briefs and scenario outputs)
+```
+
+## Defining the Role, Not the Tasks
+
+The CLAUDE.md spends most of its word count on HOW to think, not WHAT to do.
+
+### The Engagement Model
+
+```markdown
+## How to Engage
+
+**Lead with questions before giving answers:**
+- "What would need to be true for this to be the right call?"
+- "What's the cost of getting this wrong vs. the cost of waiting?"
+- "How does this serve the exit timeline?"
+- "Who else is affected by this decision?"
+- "What are you optimizing for here?"
+
+**Play devil's advocate** when the CEO seems too certain.
+Your job is to stress-test thinking, not validate it.
+
+**Be direct when the data is clear.** Don't Socratic-method
+everything. If the numbers obviously point one direction, say so.
+```
+
+Notice the nuance: lead with questions MOST of the time, but be direct when the data is clear. This prevents the annoying pattern where AI tools ask questions they could answer themselves.
+
+### Pattern Recognition
+
+The system includes explicit behavioral patterns to watch for:
+
+```markdown
+## Patterns to Watch For
+
+**When the CEO is:**
+- Over-investing time → Ask: "Is this exit-relevant or just interesting?"
+- Avoiding a decision → Ask: "What's the cost of not deciding?"
+- Being too optimistic → Ask: "What could go wrong here?"
+- Being too pessimistic → Ask: "What's the upside we might be missing?"
+- Solving problems himself → Ask: "Who on the team could own this?"
+```
+
+This is sophisticated behavioral design. It means Claude doesn't just respond to what's said — it reads the situation and responds to the underlying dynamic.
+
+<ScenarioCard
+  scenario="The CEO spends 30 minutes describing a complex feature idea in detail, clearly excited about the technical implementation."
+  answer="The system recognizes 'over-investing time' and redirects: 'That's interesting technically. Before we go deeper — how does this serve the exit? If we were selling in 6 months, would a buyer see this as a green flag or unnecessary complexity? And is this worth 3-4 of your weekly hours, given what else is on the plate?'"
+  prompt="This is the over-investing pattern. Respond with: 'Is this exit-relevant or just interesting? How many of your weekly hours does this consume? What doesn't get done if we do this?'"
+/>
+
+## Live Data Integration
+
+The system connects to a revenue analytics platform via MCP (Model Context Protocol). Claude pulls real-time financial data instead of relying on static files.
+
+### What Data Is Available
+
+```markdown
+## Live Data Tools
+
+- Current and historical MRR/ARR
+- Customer and revenue churn rates
+- Customer lifetime value
+- Active customer count
+- Average revenue per account
+- Customer search and activity feed
+- Recent upgrades, downgrades, and cancellations
+```
+
+### When Data Gets Pulled
+
+The CLAUDE.md is explicit about when to use live data:
+
+```markdown
+**When to pull live data:**
+- Any decision that depends on revenue, churn, or customer metrics
+- Weekly CEO reviews (pull fresh numbers)
+- Exit readiness assessments
+- When asked "how are we doing?"
+
+**Pro tip:** When doing analysis, pull the data first,
+then think. Don't rely on memory of what the numbers
+"probably are."
+```
+
+This last point is subtle but important. Without it, Claude might use metrics from context files that are days or weeks old. The instruction to "pull data first, then think" ensures decisions are grounded in current reality.
+
+<TipCallout type="note">
+MCP connections let Claude Code read from external data sources. In this case, it's a revenue analytics platform. It could also be a CRM, a project management tool, or any API with an MCP server. The CEO doesn't manage the connection — it's configured once and works automatically.
+</TipCallout>
+
+## The Six Decision Frameworks
+
+Each framework is a slash command — a structured process for a specific type of decision.
+
+### 1. `/decision` — Strategic Decision Framework
+
+The primary framework. Used for any significant strategic decision.
+
+**The process:**
+
+1. **Clarify the decision** — "What exactly are we deciding? Is this reactive or proactive? What's the timeline?"
+2. **Exit lens** — "How does this affect sellability? Would a buyer see this as a red flag or green flag?"
+3. **Time/ROI check** — "How many of your weekly hours does this consume? What's the expected return?"
+4. **Options analysis** — "What are the realistic options? Always include 'do nothing.'"
+5. **Risk assessment** — "What's the cost of getting this wrong? Can we pilot before committing?"
+6. **Instinct check** — "Given all this, what's your gut telling you?" Then validate, challenge, or probe deeper.
+7. **Decision and next steps** — Summarize, identify actions, assign ownership, log it.
+
+**Key design choice:** The framework includes a "Quick Decision Filter" for small decisions:
+1. Is this reversible? If yes, decide quickly.
+2. Does this cost more than 2 hours? If no, just do it.
+3. Does this affect exit? If no, delegate or defer.
+
+Not every decision needs the full framework. The filter prevents analysis paralysis on trivial choices.
+
+### 2. `/weekly-ceo` — The Weekly Ritual
+
+A three-phase structured review:
+
+**Phase 1 — Automated Brief (no questions, just data):**
+- Pull live MRR, churn, customer count, and recent activity
+- Compare to stored benchmarks
+- Present a dashboard table
+- Flag anomalies: any metric trending wrong for 2+ weeks, unusual spikes in cancellations, revenue churn exceeding customer churn
+
+**Phase 2 — Interactive Review:**
+- Fires: What consumed unexpected time?
+- Priorities: What was committed to last week? Did it happen?
+- This week: What's the ONE thing that matters most?
+- Time audit: How many hours did the business take?
+- Exit readiness: Any progress on documentation?
+- The wrestling question: "What's the one question you're wrestling with?"
+
+**Phase 3 — Output:**
+- Generate a saveable weekly brief with metrics snapshot, discussion points, decisions, action items, and exit readiness update
+- Save to `working/weekly-brief-[date].md`
+
+<PromptBlock
+  title="The weekly dashboard output"
+  prompt="## Weekly Dashboard — [Date]\n\n| Metric | Current | Last Week | Trend | Target |\n|--------|---------|-----------|-------|--------|\n| MRR | $XXX | $XXX | arrow X% | $XXX |\n| Customer Churn | X.X% | X.X% | arrow | <X% |\n| MRR Churn | X.X% | X.X% | arrow | <X% |\n| Active Customers | XXX | XXX | +/-X | XXX |\n\n### Notable Activity (Last 7 Days)\n- [X] new customers\n- [X] upgrades ($XXX MRR added)\n- [X] downgrades ($XXX MRR lost)\n- [X] cancellations ($XXX MRR lost)\n- Net MRR change: +/- $XXX"
+/>
+
+### 3. `/product-eval` — Product Decision Evaluation
+
+For feature requests, bug priorities, and technical decisions. Every product decision gets categorized into one of four buckets:
+
+| Bucket | Criteria |
+|--------|----------|
+| **MUST DO** | Affects churn directly, breaks core functionality, security issue, buyer red flag |
+| **SHOULD DO** | Improves key metrics, low effort/high impact, reduces maintenance burden |
+| **DEFER** | Nice to have, high effort, not exit-relevant, can be done post-exit |
+| **KILL** | Adds complexity without ROI, serves edge cases, "cool idea" not strategic |
+
+The framework includes specific question sets for different scenario types: feature requests, bugs, technical debt, and integrations. Each filters through the exit lens — "Would a buyer look at this and think 'smart' or 'why?'"
+
+### 4. `/team-think` — Team Decision Framework
+
+Covers hiring, performance issues, delegation, and restructuring. Always references the team structure context file first.
+
+**Hiring decisions** are challenged by default:
+- "What problem does this hire solve?"
+- "Can this be contracted, outsourced, or automated instead?"
+- "How does this affect margins?" (Buyers care about profitability)
+- "Who onboards and manages this person?" (Not the CEO — that breaks the time constraint)
+
+**Performance issues** get a cost analysis: cost of keeping them vs. cost of replacing them vs. cost of the gap if they leave.
+
+**Delegation decisions** audit what the CEO is currently doing and categorize each activity: only he can do, he's best at, anyone could do, or no one should do.
+
+### 5. `/exit-check` — Exit Readiness Assessment
+
+A quarterly assessment covering:
+- Documentation status (financial, legal, operational checklists)
+- Metrics health (pulled from live data)
+- Operational risks (people, technical, business)
+- Deal readiness (target parameters, buyer profile, process status)
+- Gap analysis (critical, important, nice-to-have)
+- Exit readiness score (1-5 across five areas)
+
+Each section is designed to surface what a buyer would see in due diligence — before the buyer sees it.
+
+### 6. `/financial-scenario` — Financial Modeling
+
+Three modes:
+
+- **Exit mode** — Model exit scenarios at different multiples, with sensitivity analysis on churn and growth
+- **Revenue mix mode** — Model alternative revenue streams and their growth scenarios
+- **Combined mode** — Run both side by side for a total income picture
+
+The exit mode pulls live data from the revenue platform and models conservative, base, and optimistic scenarios. It includes after-tax calculations and a sensitivity table showing how churn and growth changes affect the exit price.
+
+<TipCallout type="tip">
+The financial scenario command always caveats its output: "These are models, not predictions. Consult your tax advisor for QSBS-related items." This is an important guardrail — Claude shouldn't present financial projections as fact.
+</TipCallout>
+
+## Time Scarcity as Design Constraint
+
+The CEO has 8-10 hours per week for this business. This constraint shapes every part of the system.
+
+The CLAUDE.md encodes it explicitly:
+
+```markdown
+**Remember the constraint:** 8-10 hours/week.
+Time is the scarce resource. Always ask:
+"Is this worth the CEO's limited hours?"
+```
+
+This single constraint changes how every decision framework operates:
+- The `/decision` framework includes "How many hours does this consume?"
+- The `/product-eval` framework asks "Does the CEO need to be involved?"
+- The `/team-think` framework asks "Who on the team could own this?"
+- The `/weekly-ceo` review tracks actual hours spent vs. budget
+
+Without this constraint encoded in the system, Claude would suggest elaborate plans that require 40 hours of executive attention. With it, every suggestion is filtered through "is this worth the time?"
+
+## The Decision Log: Institutional Memory
+
+The `context/decision-log.md` file is the system's memory. It captures every significant decision with structured fields:
+
+```markdown
+## [Date] - [Decision Title]
+
+**Decision:** [What was decided]
+**Context:** [What triggered this? What were the options?]
+**Rationale:** [Why this choice?]
+**Exit relevance:** [How does this serve the exit?]
+**Owner:** [Who's responsible]
+**Check-in:** [When to review]
+**Outcome:** [Filled in later — what actually happened?]
+```
+
+### What 11+ Decisions Look Like
+
+After several months of use, the decision log contains entries like:
+
+- Declining a custom feature request from a customer offering $500/month upgrade
+- Hiring a fractional growth marketer (with full rationale: budget impact, alternative candidates considered, exit relevance)
+- Strategic direction shift from maintenance mode to active product investment (with multi-phase plan)
+- Corporate expense audit identifying significant cost savings
+- Evaluation of multiple acquisition conversations running in parallel
+
+Each entry is rich enough that Claude can reference it in future decisions. When a new product decision comes up, Claude checks: "In a previous decision, you declined a similar request because it added complexity pre-exit. Does the same reasoning apply here?"
+
+<ScenarioCard
+  scenario="A customer requests a custom integration that would take approximately 40 development hours. The CEO is tempted because the customer offered to pay an additional $500/month."
+  answer="The system pulls up the product evaluation framework AND checks the decision log. It finds a previous decision where a similar request was declined: 'high effort for single customer, adds complexity pre-exit, not a pattern.' It presents the analysis: 40 dev hours, $500/month = $6K/year revenue, payback period of ~7 months on dev time alone, plus ongoing maintenance burden. Then asks the key question: 'If we were selling in 6 months, would a buyer see this as a green flag or a maintenance headache?'"
+  prompt="/product-eval Customer X wants a custom reporting integration. 40 dev hours, they'll pay $500/mo extra."
+/>
+
+## The Weekly CEO Ritual
+
+The `/weekly-ceo` command is the heartbeat of the system. Run every Sunday or Monday, it creates a structured cadence:
+
+1. **Metrics pull** — Automated, no input required. Live financial data formatted into a dashboard.
+2. **Anomaly detection** — System flags anything trending wrong for 2+ weeks.
+3. **Fires review** — What consumed unexpected time? What almost broke?
+4. **Priority check** — Last week's commitments vs. actuals. This week's ONE thing.
+5. **Time audit** — Hours spent vs. the 8-10 hour budget.
+6. **Exit progress** — Any movement on documentation, buyer conversations, readiness?
+7. **The wrestling question** — "What are you wrestling with right now?" This often surfaces the most valuable conversation of the week.
+
+The output is saved as a dated file, creating a running record. After several months, these weekly briefs form a narrative of the business — what was happening, what was decided, and what followed.
+
+### Red Flags the System Watches For
+
+The weekly ritual includes explicit monitoring for danger signals:
+
+```markdown
+## Red Flags to Watch For
+
+If these show up repeatedly, dig deeper:
+- Business taking 12+ hours/week consistently
+- Avoiding team conversations
+- Metrics trending wrong with no plan
+- No exit prep progress for 3+ weeks
+- Same problem surfacing week after week
+- MRR churn outpacing customer churn (losing bigger accounts)
+```
+
+This is proactive monitoring built into the conversation. Claude doesn't wait to be asked — it watches for these patterns and raises them.
+
+## What Makes This System Work
+
+### 1. Role-First Design
+
+The system defines WHO Claude is before WHAT it does. A thought partner who challenges, not an assistant who executes. This shapes every interaction.
+
+### 2. Live Data Eliminates Guesswork
+
+Revenue metrics come from the actual platform, not memory or stale files. When the CEO asks "how are we doing?", the answer is grounded in today's numbers.
+
+### 3. Constraint Encoding
+
+The 8-10 hour time constraint is woven into every framework. Without it, the system would suggest plans that sound good but are impractical.
+
+### 4. Institutional Memory Compounds
+
+Each decision logged makes every future decision better informed. The system literally gets smarter over time.
+
+### 5. Behavioral Patterns, Not Just Processes
+
+The "patterns to watch for" section means Claude responds to dynamics, not just questions. It notices when the CEO is avoiding hard conversations or over-investing in interesting-but-unimportant work.
+
+### 6. The Weekly Ritual Creates Cadence
+
+Without a regular touchpoint, the system sits idle. The weekly CEO review forces consistent engagement, metrics review, and decision progress tracking.
+
+## Key Patterns You Can Steal
+
+### 1. Define the Role Before the Tasks
+
+Start your CLAUDE.md with who Claude IS, not what Claude DOES. Include what Claude is NOT. This framing shapes every interaction.
+
+### 2. Build in Devil's Advocacy
+
+Explicitly instruct Claude to push back: "Play devil's advocate when the user seems too certain." Without this, AI defaults to agreement.
+
+### 3. Connect Live Data
+
+If your decisions depend on metrics, connect them to a live data source. MCP servers exist for analytics platforms, CRMs, project management tools, and more. Stale data leads to stale decisions.
+
+### 4. Encode Your Constraints
+
+What's your scarce resource? Time? Money? Team capacity? Build that constraint into every framework so Claude filters recommendations through reality, not theory.
+
+### 5. Log Decisions Systematically
+
+Even five logged decisions create useful institutional memory. The structure matters: decision, context, rationale, expected outcome, actual outcome. The gap between expected and actual is where learning happens.
+
+### 6. Create a Weekly Ritual
+
+Pick one regular touchpoint — weekly is ideal. Make it structured (automated metrics first, discussion second, action items third). Save the output. Over time, these records become invaluable.
+
+## Getting Started: Minimum Viable Cofounder
+
+<StepByStep
+  steps={[
+    { title: "Define the role in CLAUDE.md", description: "Write 50-100 lines defining who Claude is, how it should engage, what patterns to watch for, and what constraints exist. Include what Claude is NOT." },
+    { title: "Create the /decision command", description: "The strategic decision framework is the highest-value starting point. Six steps: clarify, evaluate, analyze options, assess risk, check instinct, decide." },
+    { title: "Start a decision log", description: "Create context/decision-log.md. Log your first three decisions. Include expected outcomes so you can review later." },
+    { title: "Add the /weekly-ceo command", description: "Even without live data, a structured weekly review creates valuable cadence. Use manual metrics input initially." },
+    { title: "Connect live data when ready", description: "When manual metrics input becomes tedious, set up an MCP connection to your analytics platform. This is optional — the system works without it." }
+  ]}
+/>
+
+The system described in this case study took about two weeks to build and refine. The first version had three commands and three context files. It grew as the CEO discovered what he needed through actual use.
+
+The most important thing isn't the number of frameworks — it's the role definition. Get that right and everything else follows.

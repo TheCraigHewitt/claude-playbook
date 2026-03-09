@@ -1,0 +1,142 @@
+---
+title: "Learning and Research with AI"
+description: "Read faster, synthesize better, build mental models. Upload papers, books, and reports for deep analysis."
+products: ["Chat"]
+tier: "Starter"
+readTime: "11 min"
+---
+
+Most people use Claude to write. The underrated superpower is using it to learn. Claude can process a 50-page report in seconds, explain complex topics at exactly your level, and help you build mental models that stick — not just trivia you forget by Friday.
+
+## How to Read Faster with Claude
+
+You're not outsourcing reading — you're outsourcing the first pass. Claude handles the extraction; you handle the thinking.
+
+<StepByStep
+  steps={[
+    { title: "Upload the source material", description: "PDF, article text, book chapter, research paper. Drop it into a Claude conversation or Project." },
+    { title: "Get the executive summary", description: "Claude gives you the main argument, key evidence, and conclusions in 2-3 paragraphs." },
+    { title: "Ask targeted questions", description: "Instead of reading end-to-end, interrogate the document. 'What's the weakest argument?' 'What data supports this claim?' 'What does this mean for my business?'" },
+    { title: "Build your synthesis", description: "Connect what you learned to what you already know. Claude helps you map new information onto your existing mental models." }
+  ]}
+/>
+
+## The Document Analysis Prompt
+
+<PromptBlock
+  title="Analyze a document or report"
+  prompt="I've uploaded [document name]. I have about [time] to extract value from this. Give me:\n\n1. **Core thesis** (2-3 sentences — what is this document actually arguing?)\n2. **Key findings** (the 5-7 most important data points, insights, or claims)\n3. **So what?** (Why does this matter? What should I think or do differently based on this?)\n4. **Strongest evidence** (the most compelling data or arguments)\n5. **Weakest points** (where is the logic shaky, the data thin, or the conclusions overreaching?)\n6. **My context** (I'm a [your role] at [your company]. What's specifically relevant to me?)\n\nDon't summarize every section. Tell me what matters and skip what doesn't."
+  variables={[
+    { name: "document name", placeholder: "McKinsey 2026 State of AI Report" },
+    { name: "time", placeholder: "15 minutes" },
+    { name: "your role", placeholder: "CEO of a B2B SaaS company" },
+    { name: "your company", placeholder: "a $5M ARR podcast hosting platform" }
+  ]}
+/>
+
+## Research Paper Analysis
+
+For academic papers, industry reports, or technical documents:
+
+<PromptBlock
+  title="Research paper breakdown"
+  prompt="I uploaded a research paper: [title/topic]. I'm not an academic — I need this translated into practical understanding.\n\n1. **What did they study?** (one paragraph, plain English)\n2. **What did they find?** (key results, no jargon)\n3. **How confident should I be in these findings?** (sample size, methodology quality, limitations the authors acknowledge)\n4. **What does this NOT prove?** (common misinterpretations of this type of research)\n5. **Practical implications** (what would I do differently based on this?)\n6. **Related questions** (what should I look into next if this topic matters to me?)\n\nIf the paper has charts or data tables, explain the most important ones in plain language."
+  variables={[{ name: "title/topic", placeholder: "The impact of AI on white-collar productivity (Stanford, 2025)" }]}
+/>
+
+<TipCallout type="tip">
+Upload the actual PDF rather than pasting text. Claude can process the full document including charts, tables, and footnotes. You get much better analysis when Claude sees the complete document with its original structure.
+</TipCallout>
+
+## Building Mental Models
+
+This is the highest-value use of Claude for learning. Don't just absorb facts — build frameworks.
+
+<PromptBlock
+  title="Build a mental model from a topic"
+  prompt="I want to deeply understand [topic]. I'm not a beginner — I'd say I'm at [level] on this subject.\n\nDon't give me a textbook overview. Instead:\n\n1. **The mental model** — What's the framework that experts use to think about this? Not the facts, but the structure of how it all fits together.\n2. **The key distinctions** — What do experts see differently from novices? What separations do they make that most people miss?\n3. **Common misconceptions** — What do smart people get wrong about this topic?\n4. **The one insight** — If I could only know one thing about this topic, what should it be?\n5. **An analogy** — Explain the core concept using something I already understand\n\nThen give me 3 progressively harder questions to test whether I actually understand (not just memorized)."
+  variables={[
+    { name: "topic", placeholder: "How LLMs actually work (not the math — the intuition)" },
+    { name: "level", placeholder: "intermediate — I use them daily but don't understand the architecture" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="You need to get smart on a new topic for a board meeting in 3 days. The board wants to discuss AI regulation and you need to have an informed opinion, not just talking points."
+  answer="Upload 3-5 key articles or reports on the topic. Have Claude build you a mental model of the regulatory landscape — who the players are, what the key debates are, what the likely outcomes are. Then ask Claude to anticipate the 5 questions your board is most likely to ask and help you draft thoughtful answers."
+  prompt="I need to develop an informed perspective on [topic] in 3 days for a board meeting. I've uploaded [number] documents. Help me:\n1. Build a mental model of the landscape (key players, key debates, likely directions)\n2. Develop a defensible opinion (not just neutral summary — what do I actually think?)\n3. Anticipate the 5 questions my board will ask and draft answers\n4. Identify the 2-3 things I'd look uninformed if I didn't know"
+/>
+
+## Book Synthesis
+
+When you read a business book (or want to extract value without reading cover-to-cover):
+
+<PromptBlock
+  title="Book synthesis and application"
+  prompt="I just finished reading [book title] by [author]. Help me extract maximum value:\n\n1. **The one big idea** — What's the core argument in one sentence?\n2. **The 3-5 key frameworks** — What mental models does the author introduce?\n3. **What I should actually DO** — Based on this book and my context ([your situation]), what are the 3 most actionable takeaways?\n4. **Where I disagree** — Based on what I've told you about my business, where does this advice NOT apply or need modification?\n5. **Connection map** — How does this connect to other books/ideas I know? (I've read [list other relevant books])\n\nI don't want a book summary. I want a synthesis that changes how I think and act."
+  variables={[
+    { name: "book title", placeholder: "Buy Back Your Time" },
+    { name: "author", placeholder: "Dan Martell" },
+    { name: "your situation", placeholder: "CEO of a SaaS company, $1.5M ARR, 8-person team, want to spend more time on content" }
+  ]}
+/>
+
+## Comparative Analysis
+
+When you need to understand a decision space, not just a single source:
+
+<PromptBlock
+  title="Compare multiple perspectives on a topic"
+  prompt="I've uploaded [number] sources about [topic]:\n\n[list the sources]\n\nDon't summarize each one separately. Instead:\n\n1. **Where do they agree?** (consensus points across all sources)\n2. **Where do they disagree?** (contradictions or different conclusions from the same evidence)\n3. **Why do they disagree?** (different assumptions, different data, different audiences?)\n4. **Who's most credible?** (based on evidence quality, not authority or reputation)\n5. **What's missing?** (what perspective or evidence is absent from ALL these sources?)\n6. **My synthesis** — Given everything, what's the most defensible position?"
+  variables={[
+    { name: "number", placeholder: "4" },
+    { name: "topic", placeholder: "whether companies should build or buy AI capabilities" }
+  ]}
+/>
+
+## The Learning Project
+
+Set up a long-running Project for ongoing learning on a topic you're investing in.
+
+<PromptBlock
+  title="Set up a learning project"
+  prompt="I'm building a deep understanding of [topic] over the next [time period]. Help me set up a learning plan:\n\n1. **Current knowledge assessment** — Ask me 5 questions to diagnose what I already know and where the gaps are\n2. **Learning roadmap** — Based on my gaps, what should I learn in what order?\n3. **Source recommendations** — For each topic, what should I read/watch? Prioritize practical over academic.\n4. **Weekly practice** — What should I do each week to apply what I'm learning (not just consume)?\n5. **Progress markers** — How will I know when I've moved from intermediate to advanced?\n\nI'll upload readings into this Project as I go, and we'll synthesize them together."
+  variables={[
+    { name: "topic", placeholder: "AI agent architecture — how to design and deploy agents for business operations" },
+    { name: "time period", placeholder: "the next 6 weeks" }
+  ]}
+/>
+
+## The Socratic Method
+
+When you want to understand something deeply, don't ask Claude to explain it — ask Claude to question you.
+
+<PromptBlock
+  title="Socratic learning session"
+  prompt="I want to test and deepen my understanding of [topic]. Don't explain it to me — quiz me using the Socratic method.\n\n1. Ask me a foundational question about [topic]\n2. Based on my answer, identify what I understand correctly and where my thinking has gaps\n3. Ask a follow-up question that targets the gap\n4. Continue for 5-7 rounds, getting progressively deeper\n5. At the end, give me a candid assessment of my understanding — where I'm solid and where I'm still fuzzy\n\nDon't be gentle. If my answer is wrong or shallow, say so directly and tell me why."
+  variables={[{ name: "topic", placeholder: "unit economics and how to use them to make pricing decisions" }]}
+/>
+
+<BeforeAfter
+  before={{
+    content: "Explain unit economics to me."
+  }}
+  after={{
+    content: "I think I understand unit economics but I'm not sure I could make a pricing decision based on them. Quiz me using the Socratic method — start with a foundational question about how LTV/CAC relates to pricing, then go deeper based on my answers. Correct me when I'm wrong."
+  }}
+  annotation="Passive consumption vs. active learning. The Socratic approach builds understanding that sticks because you're constructing the knowledge, not just receiving it."
+/>
+
+<RealWorldProof
+  quote="I used to take 3 weeks to get through a strategy book. Now I upload it into a Claude Project, get the core frameworks in 20 minutes, and spend my reading time on the chapters that actually challenge my thinking. I've 'read' more this quarter than in the past two years."
+  author="Founder and CEO"
+  context="Running a $3M ARR company while trying to stay sharp on AI, strategy, and leadership"
+/>
+
+## Common Mistakes
+
+**Don't skip the primary source entirely.** Claude's summary is a starting point, not a replacement. For important topics, use Claude to identify which parts deserve your full attention, then read those parts yourself.
+
+**Don't treat Claude as infallible on facts.** Claude is excellent at synthesis, reasoning, and framework-building. It's less reliable on specific statistics, dates, and recent events. Verify critical facts from primary sources.
+
+**Don't just collect insights — apply them.** The Learning Project only works if you're acting on what you learn. Ask Claude: "Based on what I learned this week, what's one thing I should do differently starting Monday?"

@@ -1,0 +1,124 @@
+---
+title: "SEO Content at Scale"
+description: "Audit existing pages, generate optimized content, and update at scale using Claude."
+products: ["Chat", "Code"]
+tier: "Growth"
+readTime: "13 min"
+---
+
+Most companies approach SEO content the wrong way: they publish a lot of mediocre pages and hope Google sorts it out. The better approach is fewer, better pages — each one genuinely useful — updated regularly to stay relevant. Claude makes both the creation and the maintenance dramatically faster.
+
+## SEO Content Audit
+
+Before you create anything new, audit what you already have. Most sites are sitting on pages that rank on page 2-3 and just need better content to break through.
+
+<PromptBlock
+  title="Content audit and prioritization"
+  prompt="I'm pasting data from [X] pages on our website. For each page, I have: URL, title, target keyword, current ranking position, monthly search volume, and last updated date.\n\n[Paste data]\n\nAnalyze and prioritize into three buckets:\n\n1. **Quick wins** — Pages ranking positions 4-20 that could reach top 3 with content improvements. Sort by potential traffic impact.\n2. **Refresh needed** — Pages last updated 6+ months ago that are declining in rankings. What needs updating?\n3. **Consolidate** — Pages targeting similar keywords that are cannibalizing each other. Which should we merge?\n4. **Kill** — Pages with no traffic, no rankings, and no strategic value. Recommend removing or noindexing.\n\nFor each quick-win page, give me a specific improvement plan: what to add, what to restructure, what's missing compared to the pages currently ranking above us."
+  variables={[
+    { name: "X", placeholder: "50" }
+  ]}
+/>
+
+## Creating SEO-Optimized Content
+
+<PromptBlock
+  title="SEO blog post"
+  prompt="Write a blog post targeting the keyword [target keyword]. Monthly search volume: [volume]. Current top-ranking pages are: [list top 3 URLs or describe their approach].\n\nRequirements:\n1. Title: Include target keyword, under 60 characters, compelling enough to click in search results\n2. Meta description: Under 155 characters, includes keyword, has a clear value proposition\n3. H2/H3 structure: Use related keywords and questions from 'People Also Ask' naturally as headers\n4. Content depth: Cover what the top-ranking pages cover PLUS at least one section they're missing\n5. Word count: [target word count] (match or slightly exceed the average of top-ranking pages)\n6. Internal linking opportunities: Suggest 3-5 places where we could link to other pages on our site about [related topics]\n7. External link suggestions: 2-3 authoritative sources worth citing\n\nIMPORTANT: Write for the human reader first, search engines second. If a keyword placement sounds forced, skip it. Google is smart enough to understand topical relevance without keyword stuffing.\n\nOur brand voice: [voice description].\n\nRelated keywords to weave in naturally: [list related keywords]"
+  variables={[
+    { name: "target keyword", placeholder: "AI sales coaching" },
+    { name: "volume", placeholder: "2,400/month" },
+    { name: "target word count", placeholder: "2,000" },
+    { name: "voice description", placeholder: "Direct, practical, written by someone who's done this — not a content mill" },
+    { name: "related keywords", placeholder: "sales call analysis, rep coaching software, AI for sales teams, sales performance improvement" }
+  ]}
+/>
+
+<BeforeAfter
+  before="AI Sales Coaching: The Complete Guide to Using Artificial Intelligence for Sales Team Performance Improvement in 2026"
+  after="AI Sales Coaching: What Actually Works (And What's a Waste of Money)"
+  explanation="The 'before' title is keyword-stuffed and boring. Nobody clicks on 'complete guides' anymore. The 'after' creates curiosity and promises a specific, honest perspective — which is what earns both clicks and backlinks."
+/>
+
+## Content Refresh Workflow
+
+Updating existing content is often higher ROI than creating new pages. A page that already ranks on page 2 has Google's trust — it just needs better content to move up.
+
+<PromptBlock
+  title="Content refresh"
+  prompt="Here's an existing blog post that ranks [position] for [keyword]. It was last updated [date]. I want to refresh it to improve rankings.\n\nCurrent content:\n[Paste the full post]\n\nTop-ranking competitor content summary:\n[Describe what the #1-3 results cover]\n\nRefresh plan — tell me:\n1. What sections are outdated and need updating?\n2. What topics do competitors cover that we're missing?\n3. What sections can be cut (thin, redundant, or off-topic)?\n4. What new sections should we add?\n5. Does the title/meta description need updating?\n6. Are there better header structures we should use?\n\nThen write the refreshed version. Keep sections that are still strong. Rewrite sections that are weak. Add new sections where we have gaps. Maintain our existing voice and tone."
+  variables={[
+    { name: "position", placeholder: "#8" },
+    { name: "keyword", placeholder: "how to implement AI in sales" },
+    { name: "date", placeholder: "8 months ago" }
+  ]}
+/>
+
+## Programmatic SEO with Claude Code
+
+For sites with hundreds of similar pages (product pages, location pages, comparison pages), Claude Code can generate and update content programmatically.
+
+<PromptBlock
+  title="Programmatic SEO content generation"
+  prompt="I need to generate [X] SEO-optimized pages for [page type]. Each page follows the same template but with unique, valuable content.\n\nTemplate structure:\n[Define the page template — sections, format]\n\nData for each page:\n[Paste CSV or structured data with variables for each page]\n\nRules:\n- Each page must have unique content — not just variable swaps in a template\n- Include at least [Y] words of unique, non-templated content per page\n- Meta titles and descriptions must be unique per page\n- Internal linking: each page should link to 2-3 related pages in the set\n- No thin content. If a page can't have genuinely useful unique content, flag it for removal from the list\n\nGenerate the first 3 pages so I can review the quality before scaling to all [X]."
+  variables={[
+    { name: "X", placeholder: "50" },
+    { name: "page type", placeholder: "comparison pages (our product vs. each competitor)" },
+    { name: "Y", placeholder: "500" }
+  ]}
+/>
+
+<TipCallout type="tip">
+Programmatic SEO only works when each page is genuinely useful to someone searching for that specific term. If you're generating 200 city pages that are identical except for the city name, Google will ignore them. Each page needs real, unique value.
+</TipCallout>
+
+## Keyword Research and Topic Clustering
+
+<PromptBlock
+  title="Topic cluster strategy"
+  prompt="I want to build a topic cluster around [main topic]. Our pillar page will target [pillar keyword] (search volume: [volume]).\n\nGenerate:\n1. **Pillar page outline** — Comprehensive overview (2,500-3,500 words), covering the topic broadly\n2. **Cluster pages** — [X] supporting articles, each targeting a specific long-tail keyword related to the pillar\n   - For each: title, target keyword, estimated search volume range, angle, and how it links back to the pillar\n3. **Content calendar** — Suggested publishing order (pillar first, then clusters by priority)\n4. **Internal linking map** — How all pages connect to each other\n\nPrioritize cluster pages by: search volume * conversion intent. A 500-volume keyword with buying intent beats a 5,000-volume keyword with informational intent."
+  variables={[
+    { name: "main topic", placeholder: "AI for revenue operations" },
+    { name: "pillar keyword", placeholder: "AI revenue operations" },
+    { name: "volume", placeholder: "1,800/month" },
+    { name: "X", placeholder: "12" }
+  ]}
+/>
+
+## Scaling Content Updates with Claude Code
+
+When you have dozens of pages to update, Claude Code can process them systematically.
+
+<PromptBlock
+  title="Batch content updates via Claude Code"
+  prompt="I have [X] blog posts in our CMS that need the following updates:\n\n1. Add a table of contents based on H2 headers\n2. Update any statistics or data points that reference years before 2025\n3. Add internal links to our new [product/feature] page where contextually relevant\n4. Update meta descriptions to be under 155 characters and include the primary keyword\n5. Add FAQ schema markup based on the H2/H3 questions in each post\n\nHere are the posts:\n[Paste content or file paths]\n\nProcess each post and output the updated version with a change log showing what was modified and why."
+  variables={[
+    { name: "X", placeholder: "25" }
+  ]}
+/>
+
+## Content Quality Checks
+
+<PromptBlock
+  title="SEO content quality review"
+  prompt="Review this content for SEO quality. Target keyword: [keyword].\n\n[Paste content]\n\nCheck:\n1. **Keyword usage** — Is the target keyword in the title, first 100 words, at least one H2, and meta description? (Don't force it — just check)\n2. **Search intent match** — Does this content answer what someone searching this keyword actually wants?\n3. **Depth vs. competitors** — Based on the keyword, are we covering the topic thoroughly enough?\n4. **Readability** — Sentence length, paragraph length, use of headers, scannability\n5. **Unique value** — What does this page offer that a searcher can't find on any other result?\n6. **E-E-A-T signals** — Does the content demonstrate experience, expertise, authoritativeness, and trustworthiness?\n\nRate each dimension 1-5. For anything below 4, give a specific improvement with rewritten text."
+  variables={[
+    { name: "keyword", placeholder: "how to build an AI sales team" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="You have 200 blog posts. Traffic has been declining for 6 months. You don't know which posts to update, which to kill, and which to leave alone."
+  answer="Export your analytics data — URL, traffic trend, current rankings, target keyword. Paste it into Claude and ask for the triage. Focus on two buckets: quick wins (page 2 rankings with decent volume — these need content improvements) and content to kill (no traffic, no rankings, thin content — these may be dragging your domain quality down). Ignore everything in the middle until you've handled these two extremes."
+  prompt="Here's our blog analytics for the last 6 months:\n\n[Paste: URL, monthly traffic, 6-month trend, current ranking, target keyword, word count, last updated]\n\nTriage into:\n1. URGENT UPDATE — declining traffic + still has ranking potential (positions 4-20)\n2. QUICK WIN — page 2 rankings we can push to page 1 with better content\n3. CONSOLIDATE — multiple pages targeting the same topic (pick winners, merge losers)\n4. KILL — no traffic, no rankings, no strategic value (noindex or delete)\n5. LEAVE ALONE — performing well, no action needed\n\nFor the top 5 URGENT UPDATE pages, give me a specific refresh plan."
+/>
+
+<StepByStep
+  steps={[
+    { title: "Audit before creating", description: "Export your existing page data. Identify quick wins and consolidation opportunities before writing a single new post." },
+    { title: "Match search intent", description: "Before writing, search your target keyword. Look at what ranks. If the top results are how-to guides, don't write a listicle. Match the format Google is already rewarding." },
+    { title: "Write for humans, optimize for machines", description: "Claude can handle both. Ask for genuinely useful content first, then do an SEO pass for keyword placement and structure." },
+    { title: "Build topic clusters", description: "A pillar page plus 8-12 supporting cluster pages outperforms 12 disconnected blog posts every time." },
+    { title: "Schedule regular refreshes", description: "Set a quarterly reminder to review your top 20 pages. Paste them into Claude with competitor analysis and ask for improvements." }
+  ]}
+/>

@@ -1,0 +1,221 @@
+---
+title: "Skills in Chat & CoWork"
+description: "Upload skill packs in claude.ai, use pre-built skills for Office documents, and combine skills for complex workflows."
+products: ["Chat", "CoWork"]
+tier: "Builder"
+readTime: "10 min"
+---
+
+Not everyone uses Claude Code. If you work primarily in Claude Chat or CoWork, you can still build and use skills — they just load differently. This playbook covers how to bring skills into the browser-based Claude experience.
+
+## Skills in Claude Chat: Project Instructions
+
+In Claude Chat, skills live as Project instructions. Every conversation in that Project automatically loads your skill context.
+
+### Setting Up a Skill-Powered Project
+
+<StepByStep
+  steps={[
+    { title: "Create a new Project", description: "In claude.ai, click 'New Project' and give it a name that reflects the skill. Example: 'Content Production' or 'Sales Proposals'." },
+    { title: "Add custom instructions", description: "Open Project settings and paste your skill content into the custom instructions field. This loads automatically for every conversation." },
+    { title: "Upload reference files", description: "Add any supporting documents — brand guides, templates, examples — as Project knowledge files." },
+    { title: "Start a conversation", description: "Every new conversation in this Project will have your skill context pre-loaded. Jump straight to work." }
+  ]}
+/>
+
+### Structuring Project Instructions as Skills
+
+Your Project instructions ARE your skill. Structure them exactly like a skill file:
+
+<PromptBlock
+  title="Project instructions formatted as a skill"
+  prompt="## Role\nYou are my content strategist. You help me plan, outline, and draft content for a B2B audience.\n\n## My Context\n- Company: [Your company]\n- Audience: VPs and directors at mid-market SaaS companies\n- Tone: Direct, practical, no buzzwords\n- Content types: LinkedIn posts, blog articles, email newsletters\n\n## How to Work With Me\n- Always ask what the ONE takeaway should be before drafting\n- Suggest 3 angle options before committing to one\n- Keep first drafts short — I'd rather add than cut\n- Never use: 'leverage', 'synergy', 'game-changer', 'crushing it'\n\n## Quality Standards\n- Every piece needs a specific, non-obvious insight\n- Support claims with examples, data, or stories\n- Paragraphs max 3 sentences\n- End with a clear action or question, not a summary"
+  variables={[
+    { name: "Your company", placeholder: "Acme Analytics" }
+  ]}
+/>
+
+### Multiple Skills in One Project
+
+You can include multiple skills in a single Project's instructions. Use clear headers to separate them:
+
+```markdown
+# Content Production System
+
+## Skill: Blog Post Drafting
+[Instructions for blog posts...]
+
+## Skill: LinkedIn Post Creation
+[Instructions for LinkedIn posts...]
+
+## Skill: Email Newsletter
+[Instructions for newsletters...]
+
+## Shared Context
+[Brand voice, audience, constraints that apply to ALL skills above...]
+```
+
+Claude will reference the appropriate skill based on what you ask for in the conversation.
+
+<TipCallout type="tip">
+Put shared context (brand voice, audience, company info) AFTER the individual skills. Claude weights the beginning of instructions most heavily — put the specific workflow instructions first, shared context second.
+</TipCallout>
+
+## Uploading Skill Packs in CoWork
+
+Claude CoWork supports uploading knowledge files that function as skills. This is how you bring structured skill files into the team environment.
+
+### How to Upload Skills
+
+1. Write your skill as a `.md` file (or several files)
+2. Zip them together if uploading multiple skills
+3. In CoWork, go to your workspace Settings
+4. Upload the file(s) as knowledge
+5. Claude now references these skills when relevant
+
+### What Goes in a Skill Pack
+
+A skill pack is a zip file containing related skills and their supporting context. For example, a **Sales Skill Pack** might include:
+
+```
+sales-skill-pack/
+├── proposal-drafter.md       (Skill: draft proposals)
+├── objection-handler.md      (Skill: handle common objections)
+├── follow-up-writer.md       (Skill: write follow-up emails)
+├── competitive-positioning.md (Context: how we compare)
+├── pricing-guide.md          (Context: current pricing)
+└── voice-examples.md         (Context: email tone examples)
+```
+
+The skill files reference the context files — "Before drafting a proposal, review `competitive-positioning.md` and `pricing-guide.md`."
+
+<TipCallout type="note">
+Skill packs in CoWork are shared across the team. Anyone in the workspace can benefit from the same skills. This is how you standardize how your team uses Claude.
+</TipCallout>
+
+## Pre-Built Skills: Office Document Creation
+
+Claude comes with pre-built skills for creating Microsoft Office documents. These are available in both Chat and CoWork, and they're more capable than most people realize.
+
+### PowerPoint Presentations
+
+Claude can generate complete `.pptx` files with layouts, formatting, and content.
+
+<PromptBlock
+  title="Generate a client presentation"
+  prompt="Create a 10-slide PowerPoint presentation for a quarterly business review.\n\nAudience: C-suite client stakeholders\nTone: Professional, data-driven, confident\n\nSlides:\n1. Title slide — 'Q1 2026 Business Review'\n2. Executive summary — 3 key highlights\n3. Revenue dashboard — MRR trend, growth rate, new customers\n4. Retention metrics — churn rate, NRR, top churn reasons\n5. Product updates — 3 features shipped this quarter\n6. Customer success highlights — 2 case study snippets\n7. Competitive landscape — positioning vs. top 3 competitors\n8. Challenges & risks — honest assessment, not sugarcoated\n9. Q2 priorities — 3 strategic initiatives\n10. Discussion & next steps\n\nDesign: Clean, modern, minimal text per slide. Use charts where data is referenced."
+  variables={[
+    { name: "Quarter", placeholder: "Q1 2026" },
+    { name: "Company", placeholder: "Acme Analytics" }
+  ]}
+/>
+
+### Excel Spreadsheets
+
+Claude can create structured `.xlsx` files with formulas, formatting, and multiple sheets.
+
+<PromptBlock
+  title="Generate a financial model"
+  prompt="Create an Excel spreadsheet for a 12-month SaaS revenue forecast.\n\nSheet 1 — Assumptions:\n- Starting MRR, monthly growth rate, churn rate, ARPU\n- Allow these to be changed (input cells highlighted)\n\nSheet 2 — Monthly Forecast:\n- Columns: Month, Starting MRR, New MRR, Churned MRR, Net MRR, Cumulative ARR\n- Formulas that reference the Assumptions sheet\n- 12 months of projections\n\nSheet 3 — Scenarios:\n- Conservative, Base, Optimistic side-by-side\n- Each pulls from different assumption sets\n\nFormat: Professional, clear headers, number formatting (currency, percentages)."
+/>
+
+### Word Documents
+
+Claude can generate `.docx` files with headers, formatting, tables, and professional layouts.
+
+<PromptBlock
+  title="Generate a project brief"
+  prompt="Create a Word document for a product requirements document (PRD).\n\nSections:\n1. Overview — Problem statement, target user, success metrics\n2. Requirements — Functional requirements as a numbered list\n3. Non-functional requirements — Performance, security, scalability\n4. User stories — 5-8 user stories in 'As a [user], I want [action], so that [benefit]' format\n5. Timeline — Phase 1, 2, 3 with rough dates\n6. Open questions — Items needing stakeholder input\n\nFormat: Professional headers, table for timeline, bulleted lists for requirements."
+/>
+
+### PDF Generation
+
+Claude can also create PDF documents, which is useful for deliverables, reports, and materials you need to share externally without editing.
+
+<TipCallout type="warning">
+Pre-built document skills work best with clear structure instructions. Don't just say "make a presentation about Q2 results" — specify the slides, the data points, and the format. The more specific you are, the less editing you'll do afterward.
+</TipCallout>
+
+## Combining Skills for Complex Workflows
+
+The real power emerges when you combine multiple skills in sequence. This works in both Chat (within a single conversation) and CoWork (across team interactions).
+
+### The Pipeline Pattern
+
+Use one skill's output as the next skill's input:
+
+```
+Skill 1: Research & Analysis
+   → Output: Key findings document
+
+Skill 2: Content Outline
+   → Input: Key findings from Skill 1
+   → Output: Structured outline
+
+Skill 3: Draft Writer
+   → Input: Outline from Skill 2
+   → Output: Complete draft
+
+Skill 4: Editor
+   → Input: Draft from Skill 3
+   → Output: Final polished piece
+```
+
+In Chat, you run this within a single conversation. Each skill builds on the previous output — and Claude has the full context of everything that came before.
+
+### Running a Pipeline in Chat
+
+<ScenarioCard
+  scenario="You need to create a quarterly report. You have raw data, but need to go from data to polished document."
+  answer="Run a three-skill pipeline in one conversation. First, invoke your Data Analysis skill to extract insights. Then invoke your Report Outline skill to structure the findings. Finally, invoke your Document Drafter skill to produce the polished report. Each step builds on the last, and Claude has full context."
+  prompt="Step 1: Analyze this data and extract the top 5 insights. [paste data]\n\nStep 2: Using those insights, create a report outline following my standard quarterly format.\n\nStep 3: Draft the full report in my brand voice. Include executive summary, detailed findings, and recommendations. Under 2,000 words."
+/>
+
+### The Specialist Pattern
+
+Instead of one skill doing everything, create specialist skills that do one thing well:
+
+| Specialist | What It Does |
+|-----------|-------------|
+| Researcher | Analyzes input data, extracts key points |
+| Strategist | Takes findings and recommends actions |
+| Writer | Takes strategy and produces content |
+| Editor | Reviews output for quality and consistency |
+| Formatter | Converts content into the final format (PDF, slides, etc.) |
+
+You don't need all of these. Start with the two that cover your highest-frequency tasks.
+
+## Limitations to Know
+
+Skills in Chat and CoWork have some constraints compared to Code:
+
+**No file system access.** Chat skills can't read files from your computer or save output to specific locations. You paste input and copy output manually.
+
+**No API connections.** Chat skills can't pull live data from external services. You provide the data; the skill processes it.
+
+**No automation.** You invoke skills manually. There's no scheduled execution or triggered workflows.
+
+**Context resets between conversations.** Each new conversation starts fresh with only Project instructions loaded. Long-running workflows need to happen within a single conversation, or you need to re-provide context.
+
+<TipCallout type="note">
+These aren't deal-breakers — they're design constraints. Many operators run effective skill systems entirely in Chat. If you need automation, file access, or API connections, that's when you move to Claude Code.
+</TipCallout>
+
+## Practical Setup: Your First Chat Skill Project
+
+Here's the minimum setup to start using skills in Chat today:
+
+<StepByStep
+  steps={[
+    { title: "Identify your most repetitive task", description: "What do you do more than twice a week that follows a predictable pattern?" },
+    { title: "Write the skill instructions", description: "Use the format from the Building Your First Skill playbook. Role, process, output format, guardrails." },
+    { title: "Create a Project in claude.ai", description: "Name it after the workflow. Paste your skill into custom instructions." },
+    { title: "Add supporting files", description: "Upload any reference documents — brand guides, templates, examples." },
+    { title: "Test with real input", description: "Run three real tasks through the skill. Note what works and what needs adjustment." },
+    { title: "Refine and expand", description: "Fix issues, then add a second skill to the same Project." }
+  ]}
+/>
+
+## What's Next
+
+If you're ready to move beyond Chat and CoWork, the next playbook covers [skills in Claude Code](/claude-playbook/skills/skills-code) — filesystem-based skills, slash commands, personal vs. project skills, and how to bundle scripts with your skills for real automation.

@@ -1,0 +1,171 @@
+---
+title: "The SOP Machine"
+description: "Turn tribal knowledge into documented, repeatable procedures."
+products: ["Chat", "CoWork"]
+tier: "Operator"
+readTime: "10 min"
+---
+
+Every growing company hits the same wall: the process lives in one person's head. When they're on vacation, sick, or they leave, everything grinds to a halt. SOPs fix this — but nobody writes them because it takes forever and the result is usually a 40-page document nobody reads.
+
+Claude turns rough notes, brain dumps, or even a Loom transcript into a clean, formatted SOP in minutes. The SOP Machine approach means you can document any process in under 15 minutes.
+
+## The Brain Dump to SOP Workflow
+
+<StepByStep
+  steps={[
+    { title: "Brain dump (5 min)", description: "Talk or type through the process as if you're training a new hire. Don't worry about structure, order, or completeness." },
+    { title: "Claude structures it (2 min)", description: "Paste the brain dump. Claude organizes it into a proper SOP with numbered steps, decision points, and edge cases." },
+    { title: "Gap check (3 min)", description: "Claude identifies what's missing — steps you skipped because they're obvious to you but wouldn't be to a new hire." },
+    { title: "Review and adjust (5 min)", description: "Read through, fix anything Claude got wrong, add the details only you know." },
+    { title: "Format and publish", description: "Claude outputs the final SOP in whatever format your team uses — Notion, Google Docs, Confluence, or plain markdown." }
+  ]}
+/>
+
+## The Core SOP Prompt
+
+This is the workhorse. Works for any process, any department.
+
+<PromptBlock
+  title="Turn rough notes into a formatted SOP"
+  prompt="Turn these rough notes into a professional Standard Operating Procedure document.\n\nPROCESS NAME: [name of the process]\nOWNER: [who's responsible for this process]\nFREQUENCY: [how often this runs — daily, weekly, per-event, etc.]\n\nMY ROUGH NOTES:\n[Paste your brain dump, bullet points, Loom transcript, or however you captured the process. Don't worry about structure — just get the content down.]\n\nCreate an SOP with these sections:\n\n1. PURPOSE: One sentence — why does this process exist?\n2. WHEN TO USE: Trigger events that kick off this process\n3. WHO'S INVOLVED: Roles needed (not specific people — roles)\n4. PREREQUISITES: What needs to be true before starting\n5. STEP-BY-STEP PROCEDURE: Numbered steps with enough detail that someone with no context could follow them\n6. DECISION POINTS: Any places where the process branches based on a condition (if X, do Y; if not, do Z)\n7. COMMON MISTAKES: Things people typically get wrong\n8. EDGE CASES: Unusual situations and how to handle them\n9. TOOLS & ACCESS NEEDED: Software, credentials, permissions required\n10. QUALITY CHECK: How to verify the process was done correctly\n11. ESCALATION: When and how to escalate if something goes wrong\n\nAfter generating the SOP, list any gaps — steps I probably do unconsciously that I didn't mention but a new hire would need to know."
+  variables={[
+    { name: "name of the process", placeholder: "New Customer Onboarding" },
+    { name: "who's responsible for this process", placeholder: "Customer Success Team" },
+    { name: "how often this runs — daily, weekly, per-event, etc.", placeholder: "Every time a new customer signs their contract" }
+  ]}
+/>
+
+<TipCallout type="tip">
+The best way to capture the brain dump: record a Loom of yourself doing the process, then paste the transcript. You'll capture steps you don't even realize you take. If you're describing the process from memory, you'll skip the muscle-memory steps that trip up new hires.
+</TipCallout>
+
+## SOP Templates by Process Type
+
+Different processes need different SOP structures. Here are templates for the most common types.
+
+### Recurring Process SOP (Daily/Weekly Tasks)
+
+<PromptBlock
+  title="Recurring process SOP template"
+  prompt="Create an SOP for a recurring process.\n\nPROCESS: [process name]\nFREQUENCY: [daily / weekly / monthly / quarterly]\nTIME REQUIRED: [approximate duration]\nOWNER: [role]\n\nDESCRIPTION:\n[Describe what happens — rough notes are fine]\n\nThe SOP should include:\n1. A checklist format (checkboxes for each step) since this runs repeatedly\n2. Expected time for each major step\n3. What 'done correctly' looks like — specific outputs or states to verify\n4. What to do if you're behind schedule\n5. Handoff instructions if someone else needs to cover\n6. A 'quick reference' version at the top — the condensed checklist for people who've done it before and just need the steps"
+  variables={[
+    { name: "process name", placeholder: "Weekly Invoice Processing" },
+    { name: "daily / weekly / monthly / quarterly", placeholder: "Weekly, every Monday" },
+    { name: "approximate duration", placeholder: "90 minutes" },
+    { name: "role", placeholder: "Finance Associate" }
+  ]}
+/>
+
+### Exception Handling SOP (When Things Go Wrong)
+
+<PromptBlock
+  title="Exception handling SOP template"
+  prompt="Create an SOP for handling an exception or incident.\n\nSITUATION: [what goes wrong]\nSEVERITY: [how bad is it — annoying vs. critical]\nFREQUENCY: [how often this happens]\n\nCURRENT PROCESS (rough):\n[How you handle this today — even if it's ad hoc]\n\nThe SOP should include:\n1. DETECTION: How do you know this has happened? (alerts, customer reports, monitoring)\n2. TRIAGE: How to assess severity and who to notify\n3. IMMEDIATE RESPONSE: First 15 minutes — stop the bleeding\n4. INVESTIGATION: How to find the root cause\n5. RESOLUTION: Steps to fix it, organized by common causes\n6. COMMUNICATION: Templates for customer communication at each severity level\n7. POST-MORTEM: What to document after resolution\n8. PREVENTION: Steps to reduce future occurrences\n\nInclude a decision tree for triage — the first thing someone should look at to determine which resolution path to follow."
+  variables={[
+    { name: "what goes wrong", placeholder: "Customer reports they can't access their account" },
+    { name: "how bad is it — annoying vs. critical", placeholder: "Critical if it's a paid customer, moderate if trial" },
+    { name: "how often this happens", placeholder: "2-3 times per month" }
+  ]}
+/>
+
+### New Hire Process SOP (Onboarding Someone Into a Role)
+
+<PromptBlock
+  title="Role-based onboarding SOP"
+  prompt="Create an onboarding SOP for someone joining our team in the [role] position.\n\nROLE: [role title]\nTEAM: [which team]\nREPORTS TO: [manager role]\n\nWHAT THIS PERSON NEEDS TO KNOW:\n[Brain dump everything — tools, processes, team norms, gotchas, cultural stuff, technical knowledge]\n\nCreate a structured onboarding plan:\n\nWEEK 1: Orientation and access\n- Day-by-day breakdown\n- Every account, tool, and permission they need (with how to request each one)\n- Key documents to read\n- People to meet and why\n\nWEEK 2: Shadowing and learning\n- Who to shadow and on what\n- First small tasks to practice\n- Knowledge checks — how to verify they understand the basics\n\nWEEK 3-4: Guided independence\n- Tasks they should own with supervision\n- Common mistakes new hires make in this role and how to avoid them\n- When to ask for help vs. figure it out\n\n30-60-90 DAY MILESTONES:\n- What 'good' looks like at each checkpoint\n- Skills they should have mastered\n- Conversations to have with their manager at each milestone"
+  variables={[
+    { name: "role", placeholder: "Customer Success Manager" },
+    { name: "role title", placeholder: "Customer Success Manager" },
+    { name: "which team", placeholder: "Customer Success" },
+    { name: "manager role", placeholder: "VP of Customer Success" }
+  ]}
+/>
+
+## Gap Analysis: Finding the Missing SOPs
+
+Most companies document the obvious processes and miss the critical ones. Claude can help you find the gaps.
+
+<PromptBlock
+  title="SOP gap analysis"
+  prompt="Help me identify which processes in our company need SOPs that we haven't documented yet.\n\nOUR COMPANY: [brief description — size, industry, team structure]\n\nPROCESSES WE'VE ALREADY DOCUMENTED:\n[List your existing SOPs]\n\nAnalyze the gaps:\n1. Based on our company type and size, what critical processes are we probably missing documentation for?\n2. Categorize missing SOPs by department: Sales, Marketing, Operations, Finance, Customer Success, Engineering\n3. Prioritize them: which missing SOPs carry the most risk if the process owner is unavailable?\n4. For each high-priority gap, give me a one-sentence description of what the SOP should cover\n5. Estimate: how long would it take to document each one using the brain dump approach?"
+  variables={[
+    { name: "brief description — size, industry, team structure", placeholder: "B2B SaaS, 25 employees, teams: Engineering (8), Sales (5), CS (4), Marketing (3), Ops/Finance (3), Leadership (2)" }
+  ]}
+/>
+
+<RealWorldProof
+  quote="We had a team of 30 with exactly 4 documented processes. After running the gap analysis, we identified 23 critical processes that lived in individual heads. We documented all 23 in two weeks using the brain dump method. The next month, when our head of operations went on maternity leave, her backup handled everything without a single escalation."
+  author="COO, E-commerce Company"
+  context="Used Claude to document 23 SOPs in 2 weeks across 6 departments"
+/>
+
+## Individual vs. Team SOP Creation
+
+<ProductPicker products={["Chat", "CoWork"]}>
+  {{
+    Chat: <div>
+      <p><strong>Solo SOP creation:</strong> Best for individual operators documenting their own processes. You brain dump into Claude Chat, get a structured SOP back, iterate until it's right, then export to your team wiki.</p>
+      <p>Use a Claude Project with your company context and SOP format preferences loaded. Each SOP session is a new conversation within the Project.</p>
+    </div>,
+    CoWork: <div>
+      <p><strong>Team SOP library:</strong> Best when multiple people contribute to and consume SOPs. CoWork makes documentation collaborative — anyone can brain dump, Claude formats, a reviewer approves.</p>
+      <p>Set up a shared CoWork space organized by department. SOPs become living documents that evolve as processes change.</p>
+    </div>
+  }}
+</ProductPicker>
+
+## Using CoWork for Team SOP Libraries
+
+CoWork lets your team contribute to and access SOPs collaboratively. This turns documentation from a one-time project into a living system.
+
+<StepByStep
+  title="Set up a CoWork SOP library"
+  steps={[
+    { title: "Create a CoWork space called 'Team SOPs'", description: "This is your central SOP repository. Everyone on the team gets access." },
+    { title: "Organize by department", description: "Create sections: Sales, Marketing, Operations, Finance, CS, Engineering. Each department owns their section." },
+    { title: "Seed with existing documentation", description: "Upload or paste your existing SOPs. Even rough ones — Claude will help clean them up." },
+    { title: "Set up the contribution workflow", description: "When someone on the team does something undocumented, they brain-dump it into CoWork. Claude formats it. A reviewer approves it." },
+    { title: "Monthly freshness review", description: "Each department lead reviews their SOPs monthly. Mark as current, needs update, or deprecated." }
+  ]}
+/>
+
+## SOP Quality Check
+
+After generating an SOP, validate it with this prompt.
+
+<PromptBlock
+  title="SOP quality review"
+  prompt="Review this SOP and evaluate it as if you're a new hire trying to follow it for the first time with zero context.\n\n[Paste your SOP here]\n\nEvaluate:\n1. COMPLETENESS: Can I follow this from start to finish without asking anyone a question? If not, where would I get stuck?\n2. CLARITY: Is every step unambiguous? Flag any step where two reasonable people might interpret it differently.\n3. ASSUMPTIONS: What knowledge does this assume I already have? List every assumption.\n4. TOOLS: Are all required tools, logins, and access clearly listed? Could I set myself up to run this process from the tool list alone?\n5. EDGE CASES: What could go wrong that isn't covered? Add 3 edge cases this SOP should address.\n6. VISUAL AIDS: Would any step benefit from a screenshot, flowchart, or diagram? Flag where visuals would help.\n7. LENGTH: Is this SOP the right length? Could any sections be condensed without losing clarity?\n\nGive me a SOP Quality Score (1-10) and the top 3 improvements to make."
+/>
+
+<BeforeAfter
+  before={{ label: "Typical brain dump", content: "When a customer wants to cancel, email them first to see if we can save them. If they still want to cancel, process it in Stripe. Make sure to update HubSpot. If they have a balance, handle that first. Someone should probably follow up in a month to see if they want to come back." }}
+  after={{ label: "Formatted SOP", content: "CUSTOMER CANCELLATION PROCESS\n\nTrigger: Customer requests cancellation via email, chat, or phone\nOwner: Customer Success Team\nTime required: 15-30 minutes\n\nStep 1: Acknowledge the request within 2 hours\n- Reply using template: CS-CANCEL-01 (in Notion templates folder)\n- Ask: reason for cancellation, effective date preference, open to a save conversation?\n\nStep 2: Check account status in Stripe\n- Log in: stripe.com → Customers → search by email\n- Check: outstanding balance? Active subscription? Prepaid credits?\n- If outstanding balance > $0: resolve billing before processing cancellation\n\nStep 3: Save attempt (if customer is open to it)\n- Schedule a 15-min call within 48 hours\n- Use save playbook (see: CS Save Playbook SOP)\n- Authority to offer: up to 20% discount for 3 months, or 1 month free\n- If save successful: update HubSpot deal stage → 'Retained' and note what was offered\n\nStep 4: Process cancellation (if proceeding)\n- Stripe: Cancel subscription → select 'at end of billing period' (not immediate)\n- HubSpot: Update contact property 'Customer Status' → 'Churned'\n- HubSpot: Log cancellation reason in the 'Churn Reason' field\n- Email customer: confirmation using template CS-CANCEL-02\n\nStep 5: Win-back sequence\n- Add customer to Kit automation: 'Win-back 30-day' sequence\n- Set reminder: 30 days post-cancellation, check if they've re-engaged\n\nCommon mistakes:\n- Processing immediate cancellation instead of end-of-period\n- Forgetting to update HubSpot (kills our churn reporting)\n- Offering discounts before understanding why they're leaving" }}
+  annotation="Same process, same information — but the SOP version can be followed by anyone on the team without asking a single question."
+/>
+
+<ScenarioCard
+  scenario="You have a Loom recording of someone doing a process, but no transcript."
+  answer="Most Loom plans include auto-generated transcripts. Go to the Loom, click 'Transcript' in the sidebar, and copy-paste it into Claude. If your Loom plan doesn't include transcripts, record yourself narrating the process as you do it — the audio transcript is more valuable than the video for SOP generation."
+  prompt="Here's a transcript from a Loom recording of our customer onboarding process. Convert this into a structured SOP. Note: the speaker sometimes goes on tangents or backtracks — extract the actual process steps and ignore the asides."
+/>
+
+<ScenarioCard
+  scenario="Your team already has SOPs in Notion, but they're outdated and nobody follows them."
+  answer="Don't start over. Paste the existing SOPs into Claude with a note: 'These are outdated. Here's what's changed: [your updates]. Revise this SOP to reflect current reality.' It's faster to update than rebuild, and you preserve the structure people are already familiar with."
+/>
+
+<MiniQuiz
+  question="What's the biggest barrier to getting SOPs documented?"
+  options={[
+    { label: "Lack of time to write them", correct: false, explanation: "The brain dump approach takes 15 minutes per SOP. Time isn't the real barrier — the perception that SOPs need to be perfect is." },
+    { label: "Perfectionism preventing version 1 from shipping", correct: true, explanation: "A rough SOP that exists is infinitely more valuable than a perfect SOP that doesn't. The brain dump method works because it gets version 1 out fast. You improve it when someone actually uses it and finds gaps." },
+    { label: "Not having the right documentation tools", correct: false, explanation: "You can write an SOP in any tool — Notion, Google Docs, a plain text file. The tool doesn't matter. What matters is getting the knowledge out of someone's head and onto paper." },
+    { label: "Processes being too complex to document", correct: false, explanation: "Complex processes are exactly the ones that need SOPs most. Break them into smaller sub-processes if needed, but complexity is a reason to document, not a reason to avoid it." }
+  ]}
+/>
+
+<TipCallout type="note">
+The biggest barrier to writing SOPs isn't time — it's perfectionism. A rough SOP that exists is infinitely more valuable than a perfect SOP that doesn't. Use the brain dump approach to get version 1 out fast, then improve it when someone actually uses it and finds gaps.
+</TipCallout>

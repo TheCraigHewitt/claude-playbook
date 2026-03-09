@@ -1,0 +1,173 @@
+---
+title: "The Mistakes That Waste Your Time"
+description: "7 anti-patterns and how to fix them."
+products: ["Chat"]
+tier: "Starter"
+readTime: "8 min"
+---
+
+After watching hundreds of professionals use Claude, the same mistakes keep showing up. Here are the seven worst offenders and how to fix each one.
+
+## 1. The Blank Slate Start
+
+**The mistake:** Starting every conversation from scratch without any persistent context.
+
+**Why it wastes time:** You spend 5-10 minutes re-briefing Claude on who you are, what your company does, and how you like things written. Every. Single. Time. Over a week, that's an hour of pure waste.
+
+**The fix:** Set up a Project with your core context. Do it once, benefit forever. (See [Projects, Memory & Skills](/claude-playbook/foundations/projects-memory-skills).)
+
+<BeforeAfter
+  before={{
+    label: "Every Monday morning",
+    content: "Hey Claude, I'm the VP of Marketing at Acme Corp. We're a B2B SaaS company that sells to mid-market e-commerce companies. Our tone is professional but conversational. I need you to..."
+  }}
+  after={{
+    label: "With a Project set up",
+    content: "Draft this week's newsletter. Focus on the Shopify integration launch."
+  }}
+  annotation="Same quality output. One takes 5 minutes of setup. The other takes 5 seconds."
+/>
+
+## 2. The Vague Request
+
+**The mistake:** "Write me a marketing email" or "Help me with my presentation."
+
+**Why it wastes time:** Claude produces generic output. You spend three rounds of "that's not quite right" getting to something usable. Each round takes a minute or two, and the end result is still mediocre because Claude was guessing the whole time.
+
+<BeforeAfter
+  before={{
+    label: "Vague",
+    content: "Write me a marketing email about our new feature."
+  }}
+  after={{
+    label: "Specific",
+    content: "Write a marketing email announcing our new Shopify integration to our existing customer base (e-commerce founders, $1M-$10M revenue). Key message: they can now connect Shopify in one click instead of the 2-week setup they had before. Tone: excited but not hype-y. Include a clear CTA to try it today. Under 200 words."
+  }}
+  annotation="The specific version produces usable output on the first try. The vague version requires at least 2-3 rounds of refinement."
+/>
+
+**The fix:** Use the RCTFC framework from [The Anatomy of a Great Prompt](/claude-playbook/foundations/anatomy-of-a-prompt). Even adding just a Task and Constraints dramatically improves output.
+
+## 3. The Everything Prompt
+
+**The mistake:** Asking Claude to do 8 things in one message — research, analyze, draft, format, proofread, strategize, plan, and execute.
+
+**Why it wastes time:** Claude tries to do everything at once and does none of it well. The output is long, unfocused, and mediocre across all dimensions. You get a 2,000-word response where every section is a B-minus.
+
+**The fix:** Break complex tasks into steps. Use follow-up messages. Claude works best when each message has one clear objective.
+
+<StepByStep
+  steps={[
+    { title: "First message: Research and analyze", description: "'Here's our Q3 data. Identify the three most important trends and explain why they matter.'" },
+    { title: "Second message: Strategize", description: "'Based on those trends, what are our three best options for Q4? Pros and cons of each.'" },
+    { title: "Third message: Draft", description: "'Let's go with option 2. Draft a one-page brief I can share with the leadership team.'" },
+    { title: "Fourth message: Refine", description: "'Make the executive summary punchier and add a timeline to the recommendation section.'" }
+  ]}
+  title="Break it into steps"
+/>
+
+Each step builds on the last. Claude uses everything from earlier in the conversation, so you're not losing context — you're focusing it.
+
+## 4. Not Saying What's Wrong
+
+**The mistake:** When Claude's output isn't right, saying "try again" or "that's not what I wanted" or "make it better."
+
+**Why it wastes time:** Claude doesn't know what was wrong, so it guesses — and usually guesses wrong. You end up in a frustrating loop of vague feedback and random changes.
+
+**The fix:** Be specific about what needs to change. Think about what a good editor would say.
+
+<BeforeAfter
+  before={{
+    label: "Unhelpful feedback",
+    content: "This isn't right. Try again."
+  }}
+  after={{
+    label: "Actionable feedback",
+    content: "Two things to change: 1) The tone is too formal — make it sound like a peer sharing a tip, not a consultant writing a memo. 2) The opening paragraph buries the lead — start with the main insight, not the background context."
+  }}
+  annotation="Claude can act on specific feedback immediately. Vague feedback leads to random changes."
+/>
+
+<TipCallout type="tip">
+A useful trick: instead of saying "make it better," ask yourself "what specifically would make this better?" and tell Claude that. The act of articulating the problem usually makes the fix obvious.
+</TipCallout>
+
+## 5. Ignoring the Conversation History
+
+**The mistake:** Starting a new conversation for every related task instead of building on the existing one.
+
+**Why it wastes time:** You lose all the context from the previous conversation. Claude has to re-learn everything. You re-explain things you already covered.
+
+**The fix:** Keep related tasks in the same conversation. Claude remembers everything from earlier in the thread and builds on it.
+
+**Good reasons to start a new conversation:**
+- Completely unrelated task
+- The conversation has gotten very long (100+ messages)
+- You want a fresh perspective without prior biases
+
+**Bad reasons to start a new conversation:**
+- Habit
+- You think Claude "forgot" (it didn't — everything is in the context window)
+- The previous output wasn't perfect (give feedback instead)
+
+<ScenarioCard
+  scenario="You asked Claude to help you write a blog post. The draft is good but the conclusion is weak. You're tempted to start a new conversation and try again."
+  answer="Stay in the same conversation. Claude already knows the topic, the audience, the tone, and everything from your discussion. Just say: 'The conclusion is weak — it trails off instead of ending with a clear takeaway. Rewrite the last two paragraphs with a stronger call to action.' You'll get a better result in one message than starting over."
+/>
+
+## 6. Not Providing Examples
+
+**The mistake:** Describing what you want instead of showing it.
+
+**Why it wastes time:** Your description of "professional but conversational" might mean something very different from what Claude produces. Words like "concise," "engaging," and "high-quality" are subjective — Claude will interpret them, but not necessarily the way you would.
+
+**The fix:** Paste an example. "Write something that sounds like this: [example]" is the fastest way to get the right tone and style.
+
+<PromptBlock
+  title="Show, don't tell"
+  prompt="Write a weekly update email to my team. Here's an example of my style from a previous email:\n\n[paste a real email you've written]\n\nMatch this tone and structure. This week's update should cover: [topics]."
+  variables={[
+    { name: "paste a real email you've written", placeholder: "Your actual email example" },
+    { name: "topics", placeholder: "This week's topics and updates" }
+  ]}
+/>
+
+This works for any output type: emails, blog posts, Slack messages, reports, presentations. One good example is worth a page of description.
+
+## 7. Using the Wrong Product
+
+**The mistake:** Trying to do automation in Chat, or using Code for one-off writing tasks.
+
+**Why it wastes time:** You fight the tool instead of leveraging it. Chat can't connect to APIs. Code is overkill for drafting an email. CoWork is unnecessary for a solo task.
+
+**The fix:** Match the product to the task. (See [Chat vs. CoWork vs. Code](/claude-playbook/foundations/decision-matrix).)
+
+<ScenarioCard
+  scenario="You've been using Claude Chat to manually pull your Stripe revenue numbers every week, paste them into a spreadsheet, and then ask Claude to analyze the trends. It takes about 30 minutes each time."
+  answer="This is a classic case of using the wrong product. Claude Code can connect directly to the Stripe API, pull the data automatically, run the analysis, and generate a formatted report — all in one command. The 30-minute manual task becomes a 10-second automated one. Set it up once, run it every week."
+/>
+
+## The Meta-Pattern
+
+Notice something about all seven mistakes? They have the same root cause: **treating Claude like a search engine instead of a person.**
+
+Search engines need keywords. People need context, examples, and specific instructions.
+
+The underlying skill behind all of these fixes is the same: **brief Claude the way you'd brief a brilliant person who's never worked with you before.** Give them what they need to succeed, be specific about what you want, and give clear feedback when something isn't right.
+
+Do that consistently, and you'll get consistently excellent results.
+
+<MiniQuiz
+  question="You asked Claude to write a sales email and the result is too formal. What's the most effective next step?"
+  options={[
+    { label: "Start a new conversation and try a different prompt", correct: false, explanation: "You'd lose all context. Stay in the conversation and give specific feedback." },
+    { label: "Say 'try again, but better'", correct: false, explanation: "This is Mistake #4 — vague feedback. Claude won't know what 'better' means to you." },
+    { label: "Say 'too formal — rewrite this like a peer sharing a tip over coffee, not a consultant writing a report'", correct: true, explanation: "Specific feedback about what's wrong and what the target sounds like. Claude can act on this immediately." }
+  ]}
+/>
+
+## Your Action Step
+
+Pick the one mistake from this list that you make most often. Fix that one thing this week. Don't try to fix all seven at once — that's basically Mistake #3 (the Everything Prompt) applied to your own learning.
+
+Most people should start with Mistake #1 (Blank Slate Start). Setting up a single Project takes 5 minutes and improves every conversation that follows.

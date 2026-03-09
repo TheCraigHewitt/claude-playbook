@@ -1,0 +1,182 @@
+---
+title: "Pre-Call Research & Prep"
+description: "Company analysis, stakeholder mapping, and meeting agendas."
+products: ["Chat"]
+tier: "Starter"
+readTime: "8 min"
+---
+
+The best salespeople don't wing it. They walk into every call knowing the company, the stakeholders, and the angles. Claude turns a 15-minute research sprint into a complete pre-call brief that makes you sound like you've been following the prospect for months.
+
+## The 15-Minute Pre-Call Workflow
+
+<StepByStep
+  steps={[
+    { title: "Company snapshot (3 min)", description: "Get an overview of the company, recent news, funding, and key metrics. Paste their website URL and any LinkedIn info you have." },
+    { title: "Stakeholder mapping (5 min)", description: "Identify who you're meeting, their likely priorities based on role and seniority, and their decision-making power." },
+    { title: "Pain point hypothesis (3 min)", description: "Based on their industry, company size, and role, predict their top 3 pain points and map them to your solution." },
+    { title: "Conversation starters (2 min)", description: "Generate 3 natural openers based on their recent activity, company news, or shared connections." },
+    { title: "Meeting agenda (2 min)", description: "Create a loose agenda that positions you as a peer, not a pitcher. Send it 30 minutes before the call." }
+  ]}
+/>
+
+<MiniQuiz
+  question="What makes pre-call research most effective?"
+  options={[
+    { label: "Gathering as much company history and background as possible", correct: false, explanation: "Depth of research for its own sake wastes time. Knowing their founding year doesn't help you close — knowing their current pain points does." },
+    { label: "Producing actionable intel: pain point hypotheses, tailored questions, and a meeting agenda", correct: true, explanation: "The goal isn't to know everything — it's to walk in with hypotheses to validate, smart questions to ask, and an agenda that positions you as a peer. Actionable beats comprehensive." },
+    { label: "Memorizing the prospect's LinkedIn profile and recent posts", correct: false, explanation: "Familiarity with their profile helps with openers, but reciting their resume back to them isn't research — it's flattery. The value is in connecting their situation to your solution." },
+    { label: "Spending at least 30 minutes per call to be thorough", correct: false, explanation: "More time doesn't equal better prep. A focused 15-minute workflow with the right prompt produces a better brief than 30 minutes of unfocused Googling." }
+  ]}
+/>
+
+## The All-In-One Research Prompt
+
+This is the workhorse. Paste it into Claude before any sales call and fill in the brackets.
+
+<PromptBlock
+  title="Complete pre-call research brief"
+  prompt="I have a sales call tomorrow with [name], [title] at [company]. Help me prepare a comprehensive pre-call brief.\n\nI need:\n1. Company overview: what they do, approximate size, recent news or milestones, and competitive position\n2. Stakeholder profile: [name]'s likely priorities based on their role, what keeps them up at night, and their decision-making power\n3. Industry pain points: top 3 challenges companies like theirs face right now\n4. Our relevance: how [our product/service] maps to their likely needs — be specific\n5. Conversation starters: 3 natural openers based on something specific about them or their company (not generic flattery)\n6. Discovery questions: 5 questions that show I've done my homework and uncover real buying signals\n7. Watch-outs: potential objections they'll raise and how to handle each one\n8. Meeting agenda: a 30-minute agenda I can send ahead of time that positions this as a peer conversation\n\nAbout us: [brief description of what we sell]\nOur ICP: [who we typically sell to]\nHow we found this lead: [source — inbound, referral, outbound, etc.]"
+  variables={[
+    { name: "name", placeholder: "Sarah Chen" },
+    { name: "title", placeholder: "VP of Marketing" },
+    { name: "company", placeholder: "Shopify Plus merchant doing $20M/year" },
+    { name: "our product/service", placeholder: "AI-powered customer analytics platform" },
+    { name: "brief description of what we sell", placeholder: "We help e-commerce companies track and improve customer lifetime value" },
+    { name: "who we typically sell to", placeholder: "VPs of Marketing at e-commerce companies, $5M-$50M revenue" },
+    { name: "source — inbound, referral, outbound, etc.", placeholder: "They downloaded our LTV benchmarking report" }
+  ]}
+/>
+
+<TipCallout type="tip">
+If you have their LinkedIn profile, company About page, or a recent press release, paste it directly into the chat. Claude works much better with real data than assumptions. Copy-paste beats summarizing every time.
+</TipCallout>
+
+## Prompts by Call Type
+
+Different calls need different prep. Here are specialized prompts for the four most common sales call types.
+
+### Discovery Call Prep
+
+The goal is to ask smart questions, not pitch. Your prep should focus on hypotheses to validate.
+
+<PromptBlock
+  title="Discovery call preparation"
+  prompt="I have a discovery call with [name], [title] at [company]. This is our first conversation.\n\nBased on what I know about them:\n- Company: [what they do, size, industry]\n- How they found us: [source]\n- What they said when booking: [any context from the form or email]\n\nHelp me prepare:\n1. Three hypotheses about their situation I should validate on this call\n2. For each hypothesis, give me 2 discovery questions — one open-ended, one specific\n3. A natural way to open the call that references something specific about them\n4. The ONE thing I should learn by the end of this call to know if they're a real opportunity\n5. A suggested next step to propose if the call goes well\n\nKeep this practical. I want to sound informed, not scripted."
+  variables={[
+    { name: "name", placeholder: "Mark Johnson" },
+    { name: "title", placeholder: "Head of Revenue" },
+    { name: "company", placeholder: "B2B SaaS, 50 employees, Series A" },
+    { name: "what they do, size, industry", placeholder: "Project management tool for agencies, ~$3M ARR" },
+    { name: "source", placeholder: "Inbound demo request" },
+    { name: "any context from the form or email", placeholder: "Said they're struggling with sales forecasting accuracy" }
+  ]}
+/>
+
+### Demo Call Prep
+
+They've already shown interest. Now you need to show them exactly how you solve their specific problem.
+
+<PromptBlock
+  title="Demo call preparation"
+  prompt="I have a demo call with [name] at [company]. Here's what I learned from our discovery call:\n\n[Paste your discovery call notes here]\n\nBased on these notes, help me prepare:\n1. The 3 features/capabilities I should demo, ranked by their relevance to this prospect's specific pain points\n2. For each feature, a transition phrase that connects it to something they said in discovery\n3. A talk track for the opening 2 minutes that recaps what I heard and sets up why I'm showing what I'm showing\n4. Two customer stories I should reference (give me the structure — I'll fill in real names): industry-relevant wins that mirror their situation\n5. Anticipated questions they'll ask during the demo and how to answer them\n6. The ask at the end: what's the natural next step based on where they are in their buying process?"
+  variables={[
+    { name: "name", placeholder: "Sarah Chen" },
+    { name: "company", placeholder: "Acme Corp" }
+  ]}
+/>
+
+### Renewal / Expansion Call Prep
+
+Existing customer, different dynamic. You're proving ongoing value, not initial fit.
+
+<PromptBlock
+  title="Renewal or expansion call prep"
+  prompt="I have a renewal call with [name] at [company]. They've been a customer for [duration].\n\nHere's what I know about their account:\n- Current plan/tier: [plan details]\n- Usage data: [key metrics — seats, volume, engagement]\n- Support tickets: [any notable issues]\n- Last QBR notes: [summary]\n- Contract renewal date: [date]\n\nHelp me prepare:\n1. A value summary I can present in 2 minutes: what they've achieved since becoming a customer\n2. Three usage-based talking points (positive trends to highlight or low usage to address proactively)\n3. An expansion opportunity pitch: based on their usage, what additional features or higher tier makes sense\n4. If they push back on renewal: the three most likely objections and responses\n5. A QBR-style one-pager I can send after the call summarizing value delivered and recommendations"
+  variables={[
+    { name: "name", placeholder: "Lisa Park" },
+    { name: "company", placeholder: "TechFlow Inc" },
+    { name: "duration", placeholder: "14 months" },
+    { name: "plan details", placeholder: "Growth plan, 25 seats, $2,400/month" },
+    { name: "key metrics — seats, volume, engagement", placeholder: "22 of 25 seats active, 1,200 actions/month, up 30% from Q1" },
+    { name: "any notable issues", placeholder: "Two tickets about API latency in January, both resolved" },
+    { name: "summary", placeholder: "Discussed expanding to marketing team, concerned about onboarding time" },
+    { name: "date", placeholder: "April 15, 2026" }
+  ]}
+/>
+
+### Executive / Champion Call Prep
+
+When you're meeting the economic buyer or an internal champion who needs to sell your solution upward.
+
+<PromptBlock
+  title="Executive meeting prep"
+  prompt="I have a meeting with [name], [title] at [company]. They are the [role in deal — economic buyer / champion / influencer].\n\nContext on the deal:\n- What we sell: [product/service]\n- Deal size: [approximate value]\n- Where we are in the process: [stage]\n- Their team's pain point: [what the team told us]\n- What this person cares about: [their likely priorities based on role]\n\nHelp me prepare:\n1. Reframe our value prop for this person's level. They don't care about features — what business outcome do we drive?\n2. Three talking points that connect our solution to their strategic priorities (revenue growth, cost reduction, risk mitigation, or competitive advantage)\n3. The business case in 3 sentences: what changes if they buy, what happens if they don't\n4. Likely concerns at their level (budget, implementation risk, internal politics) and how to address each\n5. The specific ask: what do I need from this person to advance the deal?\n6. One provocative insight or data point that earns their respect in the first 2 minutes"
+  variables={[
+    { name: "name", placeholder: "David Kim" },
+    { name: "title", placeholder: "CFO" },
+    { name: "company", placeholder: "GrowthMetrics" },
+    { name: "role in deal — economic buyer / champion / influencer", placeholder: "Economic buyer — final sign-off on budget" },
+    { name: "product/service", placeholder: "Revenue analytics platform" },
+    { name: "approximate value", placeholder: "$48K/year" },
+    { name: "stage", placeholder: "Post-demo, champion is our main contact on the ops team" },
+    { name: "what the team told us", placeholder: "Manual reporting takes 2 days/month, numbers don't match across tools" },
+    { name: "their likely priorities based on role", placeholder: "Cash flow visibility, reducing manual finance work, accurate forecasting" }
+  ]}
+/>
+
+## The Pre-Call Research Project
+
+If you run a lot of sales calls, set up a Claude Project with your company context loaded in. This way you don't have to re-explain who you are and what you sell every time.
+
+<StepByStep
+  title="Set up your sales prep Project"
+  steps={[
+    { title: "Create a new Project called 'Sales Prep'", description: "In Claude, go to Projects and create a new one. Name it something like 'Sales Call Prep' or '[Company] Sales Research'." },
+    { title: "Add your company context", description: "Upload or paste: your product overview, ICP description, pricing tiers, top 3 case studies, common objections and responses, and your sales process stages." },
+    { title: "Add a custom instruction", description: "In the Project instructions, write: 'You are helping me prepare for sales calls. I sell [product] to [ICP]. When I give you a prospect's info, generate a complete pre-call brief. Be specific and actionable, not generic.'" },
+    { title: "Use it before every call", description: "Open the Project, paste the prospect's details, and get a tailored brief in under 2 minutes. The context carries over, so Claude already knows your product, pricing, and differentiators." }
+  ]}
+/>
+
+<TipCallout type="note">
+Projects keep your company context persistent across conversations. Instead of re-explaining your product every time, you just paste the prospect's info and get a tailored brief. This cuts your prep time from 15 minutes to 3.
+</TipCallout>
+
+## After the Call: Debrief Prompt
+
+Don't let call insights die in your memory. Immediately after hanging up, paste your notes into Claude.
+
+<PromptBlock
+  title="Post-call debrief and next steps"
+  prompt="I just finished a [call type] with [name] at [company]. Here are my raw notes:\n\n[Paste your notes here]\n\nHelp me process this:\n1. Key takeaways: what did I learn about their situation, budget, timeline, and decision process?\n2. Buying signals: what positive indicators did I hear? What concerns?\n3. Next steps: what did we agree to? What should I do before our next interaction?\n4. Follow-up email: draft a concise follow-up email that references specific things they said, confirms next steps, and keeps momentum\n5. CRM update: give me a 3-sentence deal summary I can paste into our CRM\n6. Risk assessment: on a scale of 1-5, how likely is this deal to close and why?"
+  variables={[
+    { name: "call type", placeholder: "discovery call" },
+    { name: "name", placeholder: "Sarah Chen" },
+    { name: "company", placeholder: "Acme Corp" }
+  ]}
+/>
+
+<RealWorldProof
+  quote="I used to spend 30 minutes before every call Googling the company and reading LinkedIn profiles. Now I paste everything into Claude and get a better brief in 3 minutes. I'm doing 2 more calls per day just from the time savings."
+  author="Head of Sales, B2B SaaS ($8M ARR)"
+  context="Runs 6-8 discovery calls per day across enterprise accounts"
+/>
+
+## Common Mistakes
+
+<ScenarioCard
+  scenario="You paste a prospect's LinkedIn URL into Claude and ask it to research them."
+  answer="Claude can't browse the web. Instead, copy-paste the actual text from their LinkedIn profile, company website, or any relevant articles. Raw text input always beats asking Claude to fetch something it can't access."
+  prompt="Here's the LinkedIn profile text for my next call. Analyze this person's likely priorities and concerns based on their role, experience, and recent activity: [paste profile text]"
+/>
+
+<ScenarioCard
+  scenario="You use the same generic pre-call prompt for a $5K deal and a $500K enterprise deal."
+  answer="Scale matters. For smaller deals, use the All-In-One Research Prompt. For enterprise deals, use the Executive Meeting Prep prompt and layer in org chart analysis, multiple stakeholder profiles, and a formal business case. Match your prep depth to the deal size."
+/>
+
+<ScenarioCard
+  scenario="You get a great pre-call brief from Claude but never update it after the actual conversation."
+  answer="The real value compounds when you feed call outcomes back into Claude. After every call, run the Post-Call Debrief prompt. Over a multi-touch deal, Claude builds an increasingly accurate picture of the prospect's needs, objections, and buying process."
+/>

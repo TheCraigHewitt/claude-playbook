@@ -1,0 +1,118 @@
+---
+title: "Win/Loss Analysis"
+description: "Pattern analysis across deals to improve close rates."
+products: ["Chat", "Code"]
+tier: "Operator"
+readTime: "10 min"
+---
+
+Most sales teams know their close rate but can't tell you *why* they win or lose. The data is scattered across CRM notes, call recordings, and individual rep memory. Claude turns this scattered data into actionable patterns.
+
+Two approaches here: **Chat** for quick deal-by-deal analysis from your notes, and **Code** for automated cohort analysis when you have structured CRM data.
+
+## Quick Analysis: Paste Your Deal Notes
+
+The simplest version. After any closed deal (won or lost), paste your notes and let Claude find the pattern.
+
+<PromptBlock
+  title="Single deal win/loss analysis"
+  prompt="I just [won/lost] a deal. Help me analyze what happened and extract lessons.\n\nDEAL DETAILS:\n- Company: [company name]\n- Deal size: [value]\n- Sales cycle length: [how long from first touch to close/loss]\n- Decision maker(s): [who was involved]\n- Competitor(s): [who we were up against, if known]\n- Our champion: [who was on our side internally]\n\nTIMELINE:\n[Walk through the deal chronologically — key meetings, turning points, objections, what went well, what went poorly]\n\nOUTCOME: [Won/Lost]\nIF LOST: The stated reason was [what they told you]\n\nAnalyze this deal:\n1. TURNING POINTS: What were the 2-3 moments that most influenced the outcome?\n2. WHAT WORKED: What did we do well that we should repeat?\n3. WHAT DIDN'T: What should we have done differently?\n4. REAL REASON: Based on the timeline, is the stated reason for losing (or winning) the actual reason? What was really going on?\n5. SIGNALS WE MISSED: Were there early warning signs (or buying signals) we should have caught sooner?\n6. PLAYBOOK UPDATE: What should we change in our sales process based on this deal?\n7. PATTERN MATCH: Does this remind you of any common deal patterns? (e.g., 'champion left mid-deal', 'bought on emotion then got cold feet', 'committee decision killed momentum')"
+  variables={[
+    { name: "won/lost", placeholder: "lost" },
+    { name: "company name", placeholder: "TechFlow Inc" },
+    { name: "value", placeholder: "$48K/year" },
+    { name: "how long from first touch to close/loss", placeholder: "11 weeks" },
+    { name: "who was involved", placeholder: "VP Sales (champion), CFO (final approval), CTO (technical evaluation)" },
+    { name: "who we were up against, if known", placeholder: "Clari and InsightSquared" },
+    { name: "who was on our side internally", placeholder: "VP Sales was our champion, but left for another company 3 weeks before decision" }
+  ]}
+/>
+
+## Batch Analysis: Multiple Deals
+
+The real insights come from analyzing deals in groups. After you've closed 10+ deals in a quarter, run this analysis.
+
+<PromptBlock
+  title="Quarterly win/loss batch analysis"
+  prompt="Here are all the deals we closed (won and lost) this quarter. Analyze them as a group and find patterns.\n\n[Paste deal summaries — for each deal include: company, size, outcome, sales cycle length, competitor, stated reason for win/loss, and 2-3 sentences of context]\n\nI want to know:\n\n1. WIN PATTERNS\n- What do our wins have in common? (industry, deal size, champion profile, sales cycle length)\n- Which reps are winning and what are they doing differently?\n- What's our average winning deal size and cycle length?\n\n2. LOSS PATTERNS\n- What do our losses have in common?\n- Where in the sales cycle are we losing most deals?\n- Are we losing to specific competitors? Which ones and why?\n- What's the most common stated reason for loss? Is it the real reason?\n\n3. COMPETITIVE ANALYSIS\n- How do we perform against each competitor?\n- What positioning works when we win against [competitor]? What fails?\n\n4. PROCESS GAPS\n- At what stage do deals stall most often?\n- Are there qualifying criteria we should add to prevent wasted cycles?\n- What's our conversion rate at each stage?\n\n5. ACTIONABLE RECOMMENDATIONS\n- Top 3 things to change in our sales process next quarter\n- Specific playbook updates for each major competitor\n- Training priorities for the team based on where we're weakest"
+/>
+
+<TipCallout type="tip">
+Don't sugarcoat your deal notes. Claude's analysis is only as good as the honesty in your input. "We lost because of budget" might be what the prospect said, but if the real reason was a weak demo, write that down. The uncomfortable truths are where the real improvements live.
+</TipCallout>
+
+## Automated Cohort Analysis with Claude Code
+
+If your CRM has structured deal data, Claude Code can run the analysis programmatically across hundreds of deals.
+
+<PromptBlock
+  title="CRM deal data cohort analysis"
+  prompt="I've exported our closed deal data from [CRM name]. The file is at [file path].\n\nRun a comprehensive win/loss cohort analysis. Break the data down by:\n\n1. BY TIME PERIOD: Win rate by month/quarter. Are we getting better or worse?\n2. BY DEAL SIZE: Win rate by deal size bracket. Where's our sweet spot?\n3. BY INDUSTRY: Which industries do we win most in?\n4. BY SOURCE: Inbound vs. outbound vs. referral — which source produces the best win rates?\n5. BY REP: Win rate by sales rep (anonymize if you prefer — Rep A, Rep B, etc.)\n6. BY SALES CYCLE LENGTH: What's the optimal cycle length? Do deals that take longer than X days have materially worse outcomes?\n7. BY COMPETITOR: Win rate when competing against each known competitor\n8. BY ENTRY POINT: Does the first product/feature discussed correlate with win rate?\n9. BY STAKEHOLDERS: Do deals with more stakeholders close better or worse? What's the ideal number?\n10. BY DISCOUNT: Do discounted deals close more often? What's the impact on deal size?\n\nFor each cohort, calculate:\n- Win rate\n- Average deal size (won vs. lost)\n- Average sales cycle length\n- Sample size (flag any cohorts with fewer than 10 deals)\n\nGenerate:\n1. A summary report with key findings\n2. A CSV with all the breakdowns\n3. Top 5 most actionable insights with specific recommendations"
+  variables={[
+    { name: "CRM name", placeholder: "Salesforce" },
+    { name: "file path", placeholder: "~/Desktop/closed-deals-2025.csv" }
+  ]}
+/>
+
+<RealWorldProof
+  quote="The cohort analysis showed us something we'd never noticed: deals where the CTO was involved in the first call had a 62% win rate. Deals where the CTO joined later had a 23% win rate. Same product, same reps — just different timing of stakeholder involvement. We changed our qualification process to require CTO involvement upfront and our Q3 close rate jumped 15 points."
+  author="VP of Sales, Enterprise SaaS"
+  context="Analyzed 340 closed deals over 18 months"
+/>
+
+## Loss Reason Deep Dive
+
+The stated reason for a loss is almost never the full story. Claude can help you read between the lines.
+
+<PromptBlock
+  title="Loss reason analysis and recategorization"
+  prompt="Here are our lost deals from the last 6 months with the 'loss reason' field from our CRM:\n\n[Paste the data — company, deal size, loss reason, any additional notes]\n\nThe problem: reps select generic loss reasons from a dropdown. 'Budget', 'Timing', 'Went with competitor' don't tell us enough.\n\nFor each lost deal:\n1. Based on the deal notes and context, what's the REAL reason we lost? Recategorize using these more specific categories:\n   - Never had budget (bad qualification)\n   - Had budget but we lost the ROI argument\n   - Champion left or was reassigned\n   - Committee killed it (too many stakeholders)\n   - Competitor won on price\n   - Competitor won on product/features\n   - Competitor won on relationships\n   - Implementation concerns (too complex or risky)\n   - Status quo won (decided to do nothing)\n   - Timing — deal was real but delayed past our tracking window\n   - Bad fit — should never have been in pipeline\n\n2. After recategorizing all deals, show me the real distribution of loss reasons vs. the CRM dropdown distribution\n3. For the top 3 real loss reasons, give me specific recommendations to address each one\n4. Flag deals that were 'bad fit' — these represent wasted pipeline. What qualifying criteria would have filtered them out early?"
+/>
+
+<BeforeAfter
+  before={{ label: "CRM loss reasons (what reps reported)", content: "Budget: 35%\nTiming: 25%\nWent with competitor: 20%\nNo response: 15%\nOther: 5%" }}
+  after={{ label: "Real loss reasons (after analysis)", content: "Status quo won (decided to do nothing): 28%\nBad qualification (never a real deal): 22%\nCompetitor won on relationships: 15%\nChampion left or lost influence: 12%\nCompetitor won on features: 10%\nWe lost the ROI argument: 8%\nImplementation concerns: 5%" }}
+  annotation="The CRM said 'Budget' was the #1 issue. The real analysis showed most 'budget' losses were actually 'the prospect decided to do nothing.' Completely different problem, completely different solution."
+/>
+
+## Win Analysis: What Your Best Reps Do Differently
+
+Winning patterns are just as important as losing patterns.
+
+<PromptBlock
+  title="Top performer analysis"
+  prompt="Here are the won deals from our top 3 reps and our bottom 3 reps over the last 6 months:\n\n[Paste deal data for both groups]\n\nCompare the two groups and find what top performers do differently:\n\n1. DEAL SELECTION: Do top reps pursue different types of deals? (size, industry, stakeholder profile)\n2. SPEED: How quickly do they move from stage to stage vs. bottom performers?\n3. STAKEHOLDER ENGAGEMENT: Do they involve more or different stakeholders?\n4. PRICING: Do they discount more or less? How do they handle pricing conversations?\n5. OBJECTION HANDLING: What objections come up in their deals vs. the bottom group?\n6. SALES CYCLE: Is their cycle faster? If so, where do they save time?\n7. LOSS PATTERNS: When top reps lose, why? Is it different from when bottom reps lose?\n\nThen create:\n1. A 'Top Performer Playbook' — the 5 specific behaviors that differentiate winners\n2. A coaching plan for bottom performers — what to focus on first\n3. Qualifying criteria updates based on the types of deals top performers choose to pursue"
+/>
+
+## Setting Up Ongoing Win/Loss Tracking
+
+Don't wait for quarterly reviews. Build the habit into your weekly process.
+
+<PromptBlock
+  title="Weekly deal review template"
+  prompt="Here are this week's closed deals (won and lost):\n\n[Paste this week's deal outcomes]\n\nQuick analysis:\n1. For each deal, one-sentence lesson learned\n2. Any patterns across this week's outcomes?\n3. Anything that should trigger an update to our objection playbook, competitive battlecards, or sales process?\n4. Compare this week to our trailing 4-week average — are we trending up or down on close rate?\n5. One thing to discuss at Monday's sales meeting based on this data"
+/>
+
+<ScenarioCard
+  scenario="Your team closes 5-10 deals per month and you don't have structured CRM data — just scattered notes and emails."
+  answer="Start with the single-deal analysis prompt after every closed deal. Keep a running document (even a Google Doc) where you paste each analysis. After a month, paste the whole document into Claude and ask for pattern analysis. You don't need perfect CRM data to get insights — you need honest notes and consistent analysis."
+  prompt="Here are my win/loss analyses from the past month. Each one was done individually after the deal closed. Now look at them together and find patterns I missed when analyzing each deal in isolation."
+/>
+
+<ScenarioCard
+  scenario="You're a solo founder closing your own deals and wondering if win/loss analysis is worth the time."
+  answer="Especially worth it for solo founders. You don't have a team to give you perspective — Claude replaces the sales manager who'd normally catch your blind spots. Even analyzing 5 deals will reveal patterns. The most common finding for solo founders: you're spending too much time on deals that were never going to close."
+/>
+
+<TipCallout type="note">
+The best time to do win/loss analysis is immediately after the outcome — when the details are fresh. Set a calendar reminder: every time a deal closes (win or loss), spend 10 minutes with Claude running the single-deal analysis. Your end-of-quarter batch analysis will be dramatically better with fresh, detailed inputs.
+</TipCallout>
+
+## Turning Insights Into Action
+
+Analysis without action is just intellectual exercise. Here's how to close the loop.
+
+<PromptBlock
+  title="Win/loss insights to process changes"
+  prompt="Based on our win/loss analysis, here are the key findings:\n\n[Paste your analysis summary]\n\nNow help me turn these into concrete process changes:\n\n1. For each finding, propose a specific, measurable change to our sales process\n2. Estimate the impact: if we implement this change, what's the likely effect on close rate?\n3. Prioritize: rank changes by (impact x ease of implementation)\n4. Create an implementation plan: who needs to do what, by when?\n5. Define success metrics: how will we know if each change is working?\n6. Draft a 'state of sales' memo I can share with the team that presents the findings, the changes, and the rationale — without finger-pointing at individual reps"
+/>

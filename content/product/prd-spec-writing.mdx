@@ -1,0 +1,289 @@
+---
+title: "PRD and Spec Writing"
+description: "Turn rough ideas into structured product requirements. Multi-turn refinement with Claude."
+products: ["Chat", "CoWork"]
+tier: "Operator"
+readTime: "10 min"
+---
+
+Product requirements documents are the connective tissue between "we should build this" and "here's exactly what to build." The problem is they take forever to write, nobody enjoys writing them, and the first draft is never right anyway.
+
+Claude is exceptionally good at this. You describe the idea, Claude structures the PRD, you refine it in conversation, and you end up with a spec your engineering team can actually use.
+
+## From Rough Idea to Structured PRD
+
+<PromptBlock
+  title="PRD from a Rough Idea"
+  prompt={`I have a product idea I need to turn into a proper PRD. Here's the rough concept:
+
+\${roughIdea}
+
+Write a PRD with these sections:
+
+**1. PROBLEM STATEMENT** (2-3 sentences)
+What problem does this solve? Who has this problem? Why does it matter now?
+
+**2. TARGET USER**
+- Primary persona: Who uses this feature directly?
+- Secondary persona: Who benefits indirectly?
+- Who is this NOT for?
+
+**3. SUCCESS METRICS**
+3-5 measurable outcomes that tell us this feature worked. Be specific — "increased engagement" is not a metric. "DAU of feature > 500 within 30 days of launch" is.
+
+**4. USER STORIES**
+Write 5-8 user stories in the format:
+"As a [persona], I want to [action] so that [outcome]."
+Prioritize: Must-have vs Nice-to-have
+
+**5. FUNCTIONAL REQUIREMENTS**
+Detailed list of what the system must do. Be specific enough that an engineer could estimate the work:
+- Input/output behavior
+- Edge cases
+- Error states
+- Permissions/access control
+
+**6. NON-FUNCTIONAL REQUIREMENTS**
+- Performance expectations (response time, throughput)
+- Scale requirements (how many users, how much data)
+- Security/privacy considerations
+- Accessibility requirements
+
+**7. OUT OF SCOPE**
+Explicitly list what this feature does NOT include. This prevents scope creep.
+
+**8. OPEN QUESTIONS**
+List 3-5 things that still need to be decided before engineering starts. Flag these clearly.
+
+**9. DEPENDENCIES**
+What else needs to exist or change for this feature to work?
+
+Keep the total PRD under 3 pages. Dense and specific beats long and vague.`}
+  variables={[
+    { name: "roughIdea", placeholder: "We need a way for customers to set up automated reports that email them weekly. They should be able to pick which metrics to include, set the schedule, and choose recipients. Some customers have asked for Slack delivery too." }
+  ]}
+/>
+
+<TipCallout type="tip">
+The "Out of Scope" section is the most important part of a PRD. Without it, engineering will assume features you didn't intend, stakeholders will expect things you didn't promise, and the project scope will expand silently. Be explicit about what you're NOT building.
+</TipCallout>
+
+<MiniQuiz
+  question="What makes a PRD prompt produce the most useful output from Claude?"
+  options={[
+    { label: "Following a standard PRD template exactly as written", correct: false, explanation: "Templates provide structure, but blindly following one without adapting it to your specific product and context produces generic specs that don't help engineering." },
+    { label: "Including comprehensive context: the problem, target user, success metrics, edge cases, and what's explicitly out of scope", correct: true, explanation: "The more context you provide — especially the 'Out of Scope' section — the more specific and actionable the PRD will be. Ambiguity in the prompt means ambiguity in the spec, which means more meetings before engineering can start." },
+    { label: "Writing detailed feature specifications with exact UI layouts", correct: false, explanation: "Jumping straight to UI details skips the most important parts: the problem statement, success metrics, and edge cases. Features without context for 'why' lead to building the wrong thing precisely." },
+    { label: "Keeping the prompt as short as possible so Claude can fill in the gaps", correct: false, explanation: "Short prompts produce generic PRDs. Every gap you leave, Claude fills with assumptions — and those assumptions may not match your product, users, or constraints." }
+  ]}
+/>
+
+## Multi-Turn PRD Refinement
+
+A good PRD is never done in one pass. Use Claude as a collaborative sparring partner.
+
+<StepByStep
+  steps={[
+    { title: "First pass: structure", description: "Use the prompt above to get a structured first draft. Don't worry about getting everything right — focus on coverage." },
+    { title: "Challenge the scope", description: "Ask Claude: 'What's the minimum version of this we could ship and still validate the hypothesis? Strip it down to the absolute MVP.'" },
+    { title: "Add edge cases", description: "Ask Claude: 'What edge cases am I missing? What happens when X fails, when Y is empty, when Z has 10,000 items instead of 10?'" },
+    { title: "Engineering review prep", description: "Ask Claude: 'What questions will engineering ask about this spec? Draft answers for the top 5.'" },
+    { title: "Stakeholder version", description: "Ask Claude to write a 1-page summary for stakeholders who don't need the technical detail." }
+  ]}
+/>
+
+<PromptBlock
+  title="MVP Scoping"
+  prompt={`Looking at the PRD we just wrote, help me scope the MVP:
+
+1. Which user stories are truly must-have for the first version?
+2. Which requirements can be hardcoded or simplified for v1? (e.g., "support 3 preset templates instead of custom templates")
+3. What's the simplest implementation that would let us validate whether users actually want this?
+4. What can we defer to v2 without undermining the core value proposition?
+
+I want to ship something users can try in \${timeline}. What's realistic?`}
+  variables={[
+    { name: "timeline", placeholder: "3 weeks" }
+  ]}
+/>
+
+<PromptBlock
+  title="Edge Case Discovery"
+  prompt={`Review this PRD and identify edge cases I haven't considered:
+
+\${prdContent}
+
+For each edge case:
+| Edge Case | What Happens | Recommended Behavior | Priority |
+
+Focus on:
+- Empty states (no data, no users, no permissions)
+- Scale limits (what if there are 100,000 items?)
+- Concurrency (what if two users edit the same thing?)
+- Permissions (what if a user's access changes while they're in a flow?)
+- Data integrity (what if the source data is malformed, missing fields, or duplicated?)
+- Error recovery (what happens when an external API fails mid-operation?)
+- Timezone handling (if dates/times are involved)
+
+Don't list every possible edge case — focus on the ones most likely to bite us in production.`}
+  variables={[
+    { name: "prdContent", placeholder: "[paste your PRD here]" }
+  ]}
+/>
+
+## Loading Product Context into Claude
+
+Set up a Project with your product context so every PRD starts from shared understanding.
+
+<PromptBlock
+  title="Product Context for Projects"
+  prompt={`Save this as project instructions for all product work:
+
+PRODUCT: \${productName}
+DESCRIPTION: \${productDescription}
+
+ARCHITECTURE:
+- \${architectureNotes}
+
+USERS:
+- \${userTypes}
+
+EXISTING FEATURES:
+- \${featureList}
+
+TECH STACK:
+- \${techStack}
+
+DESIGN SYSTEM:
+- \${designSystem}
+
+CONVENTIONS:
+- Feature flags for all new features
+- All new endpoints require authentication
+- All user-facing text must support internationalization
+- \${conventions}
+
+When I ask you to write a PRD, always:
+1. Check if the feature overlaps with or depends on existing features
+2. Use our established patterns (not novel architecture)
+3. Include feature flag spec
+4. Consider impact on existing users (migration, breaking changes)
+5. Flag anything that requires infrastructure changes`}
+  variables={[
+    { name: "productName", placeholder: "ProjectFlow" },
+    { name: "productDescription", placeholder: "B2B project management SaaS for mid-market teams (50-500 employees)" },
+    { name: "architectureNotes", placeholder: "React frontend, Node.js API, PostgreSQL, hosted on AWS" },
+    { name: "userTypes", placeholder: "Admin, Manager, Contributor, Viewer (read-only)" },
+    { name: "featureList", placeholder: "Project boards, task management, time tracking, reporting, integrations (Slack, Jira)" },
+    { name: "techStack", placeholder: "React 18, Node.js 20, PostgreSQL 15, Redis, S3" },
+    { name: "designSystem", placeholder: "Custom component library based on Radix UI primitives" },
+    { name: "conventions", placeholder: "REST APIs, camelCase, automated tests required for all new endpoints" }
+  ]}
+/>
+
+## Technical Spec from PRD
+
+Once the PRD is approved, translate it into a technical spec for engineering.
+
+<PromptBlock
+  title="Technical Spec"
+  prompt={`Convert this PRD into a technical specification:
+
+\${prdContent}
+
+TECHNICAL SPEC FORMAT:
+
+**1. SYSTEM DESIGN**
+- High-level architecture diagram (describe it in text)
+- New components/services needed
+- Changes to existing components
+
+**2. DATA MODEL**
+- New tables/collections with field definitions, types, constraints
+- Changes to existing tables
+- Migration strategy (if modifying existing data)
+
+**3. API DESIGN**
+For each new endpoint:
+- Method and path
+- Request body (with types)
+- Response body (with types)
+- Authentication/authorization
+- Rate limiting
+- Error responses
+
+**4. BUSINESS LOGIC**
+Pseudocode or detailed description of core logic:
+- Input validation rules
+- Processing steps
+- State transitions
+- Side effects (emails, notifications, webhooks)
+
+**5. TESTING STRATEGY**
+- Unit tests: what to test
+- Integration tests: critical paths
+- Edge cases from the PRD mapped to specific test cases
+
+**6. ROLLOUT PLAN**
+- Feature flag strategy
+- Migration steps
+- Rollback plan
+- Monitoring/alerting to add
+
+**7. ESTIMATED EFFORT**
+Break down by component:
+| Component | Estimate | Dependencies | Risk |`}
+  variables={[
+    { name: "prdContent", placeholder: "[paste your PRD here]" }
+  ]}
+/>
+
+<BeforeAfter
+  before={{
+    content: "PRD says 'Users can schedule automated reports.' Engineering asks: What format? What delivery method? What if the data source is unavailable? What timezone? Can they cancel? Can they edit? What permissions? Two meetings later, you still haven't started building."
+  }}
+  after={{
+    content: "PRD specifies: PDF format (v1, CSV in v2), email delivery (Slack deferred to v2), retry 3x with 5-minute intervals then notify user, user's timezone from profile settings, cancel and edit via settings page, only workspace admins can create schedules for others. Engineering starts building on day one."
+  }}
+  annotation="The level of detail in the PRD directly determines how many meetings engineering needs before they can start."
+/>
+
+## Stakeholder Communication
+
+Different audiences need different views of the same feature.
+
+<PromptBlock
+  title="Stakeholder Summary"
+  prompt={`I have a detailed PRD. Write three versions for different audiences:
+
+**VERSION 1: ENGINEERING** (already have the full PRD — this is a kickoff summary)
+- 5 bullet points covering: what we're building, why, key technical decisions, timeline, first milestone
+- Under 200 words
+
+**VERSION 2: EXECUTIVE TEAM**
+- 3-4 sentences: what it does, why it matters, expected impact on [metric], target ship date
+- No technical details
+- Under 100 words
+
+**VERSION 3: CUSTOMER-FACING** (for changelog/announcement)
+- What's new and why they should care
+- How to use it
+- What's coming next
+- Under 150 words, friendly tone
+
+The PRD:
+\${prdContent}`}
+  variables={[
+    { name: "prdContent", placeholder: "[paste your PRD here]" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="You wrote a PRD and engineering says it's too vague to estimate. They have 8 clarifying questions. You don't know the answers to half of them."
+  answer="Paste the questions into Claude along with the PRD. Claude will propose reasonable defaults for the ambiguous items, flag which ones genuinely need a product decision, and draft updated PRD sections."
+  prompt="Engineering came back with these questions about my PRD. Help me answer them. For each question: (1) propose a reasonable default if it's a standard pattern, (2) flag it if it genuinely needs a product decision from me, (3) draft the updated PRD section with the answer included. Questions: [paste engineering's questions]"
+/>
+
+<TipCallout type="note">
+The goal of a PRD is not completeness — it's clarity. A 2-page PRD that's unambiguous about scope, edge cases, and success metrics is better than a 10-page PRD that covers everything but commits to nothing. If your PRD has more than 5 "TBD" items, it's not ready for engineering.
+</TipCallout>

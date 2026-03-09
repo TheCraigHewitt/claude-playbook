@@ -1,0 +1,144 @@
+---
+title: "Difficult Conversations"
+description: "Communication templates for the hardest conversations leaders face. Scenario-based preparation."
+products: ["Chat"]
+tier: "Operator"
+readTime: "12 min"
+---
+
+Nobody teaches you how to have difficult conversations. You learn by fumbling through them, lying awake the night before, and hoping you don't say the wrong thing. Claude won't sit in the room with you, but it can help you prepare so well that you walk in with clarity instead of anxiety.
+
+## The Preparation Framework
+
+Every difficult conversation follows the same preparation structure, regardless of the topic:
+
+<StepByStep
+  steps={[
+    { title: "Define the outcome you want", description: "Not 'I need to talk about their performance.' What specifically should be different after this conversation?" },
+    { title: "Separate facts from feelings", description: "Claude helps you distinguish between observable behaviors and your interpretation of them." },
+    { title: "Anticipate their perspective", description: "What's their likely reaction? What might they say that's valid?" },
+    { title: "Script the hardest 30 seconds", description: "The opening matters most. Get those words right." },
+    { title: "Plan the recovery", description: "If it goes sideways, what's your fallback? How do you re-center?" }
+  ]}
+/>
+
+## The Master Preparation Prompt
+
+Use this for any difficult conversation, then jump to the scenario-specific section below for refinement.
+
+<PromptBlock
+  title="Difficult conversation preparation"
+  prompt="I need to have a difficult conversation with [person and relationship]. Here's the situation:\n\n**What happened:** [describe the facts — observable behaviors, specific incidents]\n**What I feel:** [be honest about your emotions — frustrated, disappointed, concerned]\n**What I want to happen after this conversation:** [specific desired outcome]\n**What I know about their perspective:** [anything relevant — their stress level, recent context, personality]\n**Constraints:** [anything I can't say, HR guidance, timing factors]\n\nHelp me prepare:\n1. Separate my facts from my interpretations — what's objectively true vs. what I'm inferring?\n2. Write an opening statement (3-4 sentences) that is direct, specific, and not accusatory\n3. Anticipate their top 3 likely responses and suggest how I should handle each\n4. Give me 2-3 questions I should ask to make this a dialogue, not a monologue\n5. Draft a closing statement that's clear about next steps and expectations\n6. What's the one thing I should absolutely NOT say?"
+  variables={[
+    { name: "person and relationship", placeholder: "my direct report of 2 years, a Senior Engineer" },
+    { name: "describe the facts", placeholder: "Missed 3 sprint commitments in a row, started coming to standup late or skipping them, quality of code reviews has dropped" },
+    { name: "be honest about your emotions", placeholder: "Frustrated because I've hinted at this twice and nothing changed. Worried something personal might be going on." },
+    { name: "specific desired outcome", placeholder: "They acknowledge the pattern and we agree on a concrete plan to get back on track within 2 weeks" },
+    { name: "anything relevant", placeholder: "They went through a breakup recently. They were a top performer for 18 months before this." }
+  ]}
+/>
+
+## Scenario: Addressing Underperformance
+
+<PromptBlock
+  title="Performance conversation"
+  prompt="I need to address declining performance with [employee name], [role]. I've already had [number] informal conversations that haven't led to change.\n\nThe pattern: [describe specific behaviors and timeline]\nBusiness impact: [how is this affecting the team/company?]\nContext I should consider: [anything personal, organizational, or environmental]\n\nGenerate:\n1. A direct opening that names the pattern without listing every instance (that feels like an ambush)\n2. A bridge statement that shows I'm on their side ('I want to help you succeed, and here's what I'm seeing...')\n3. A clear statement of expectations going forward — specific, measurable, time-bound\n4. How to handle these responses:\n   - 'I didn't realize it was that bad'\n   - 'I've been dealing with personal stuff'\n   - 'I don't agree with your assessment'\n   - Silence / emotional shutdown\n5. Closing that clarifies consequences without making threats"
+  variables={[
+    { name: "employee name", placeholder: "Jake Torres" },
+    { name: "role", placeholder: "Sales Development Rep" },
+    { name: "number", placeholder: "two" }
+  ]}
+/>
+
+<BeforeAfter
+  before={{
+    content: "Jake, I want to talk to you about your performance. You've been missing your targets and your call quality isn't where it needs to be. You missed quota last month and the month before that, and I've heard from a few people that your energy in team meetings has been low. I need you to step it up."
+  }}
+  after={{
+    content: "Jake, I want to have an honest conversation about what I've been observing over the past two months. You've missed quota in both October and November — 72% and 68% respectively — and your discovery call conversion rate dropped from 35% to 18%. You were one of our strongest reps for most of this year, which is why this shift stands out to me. Before I share my thoughts on what I think needs to change, I want to hear from you: what's going on from your perspective?"
+  }}
+  annotation="The second version uses specific data instead of vague criticism, acknowledges their track record, and opens with a genuine question. It's just as direct, but it's fair."
+/>
+
+## Scenario: Letting Someone Go
+
+<PromptBlock
+  title="Termination conversation preparation"
+  prompt="I need to terminate [employee name], [role]. This has been decided. Help me prepare for the conversation.\n\nReason: [why — performance, role elimination, restructuring]\nHistory: [tenure, performance trajectory, previous conversations]\nHR guidance: [what HR has told you about the process]\n\nI need:\n1. A script for the first 60 seconds — clear, compassionate, and final. Don't leave room for ambiguity about the decision.\n2. Responses for:\n   - 'Can I have another chance?'\n   - 'Is this because of [specific incident]?'\n   - 'I'm going to talk to a lawyer'\n   - Anger / accusations\n   - Tears / emotional breakdown\n3. Transition language to the logistics (last day, severance, benefits, references)\n4. A closing statement that preserves their dignity\n5. What NOT to say (things that create legal risk or unnecessary pain)\n\nTone: direct, empathetic, and brief. This should take 15-20 minutes maximum."
+  variables={[
+    { name: "employee name", placeholder: "Alex" },
+    { name: "role", placeholder: "Customer Success Manager" }
+  ]}
+/>
+
+<TipCallout type="warning">
+Claude can help you prepare for termination conversations, but always run your plan by HR or legal counsel first. Claude doesn't know your company's specific policies, employment laws for your jurisdiction, or the full context of any accommodation requests or protected class considerations.
+</TipCallout>
+
+## Scenario: Delivering Tough Feedback to a Peer
+
+<PromptBlock
+  title="Peer feedback conversation"
+  prompt="I need to give direct feedback to a peer — [peer name], [their role]. We're at the same level and neither of us reports to the other.\n\nThe issue: [what's happening]\nImpact on me/my team: [how it affects you]\nOur relationship history: [context about your dynamic]\n\nThis is tricky because I have no authority here — only influence. Help me:\n1. Frame this as observation + impact, not criticism\n2. Open in a way that doesn't put them on the defensive\n3. Script a request that's specific and actionable\n4. Prepare for 'that's not my problem' or 'you should take that up with [boss]'\n5. Suggest how to preserve the working relationship regardless of outcome"
+  variables={[
+    { name: "peer name", placeholder: "Dana" },
+    { name: "their role", placeholder: "Head of Sales" }
+  ]}
+/>
+
+## Scenario: Salary and Promotion Conversations
+
+<PromptBlock
+  title="Denying a raise or promotion request"
+  prompt="[Employee name] has asked for a [raise/promotion] and I need to say no — at least for now.\n\nWhat they asked for: [specifics]\nWhy I'm saying no: [honest reasons]\nWhat would need to change for a yes: [specific criteria]\nTheir likely reaction: [what you expect]\n\nHelp me:\n1. Open with genuine acknowledgment of their contribution (not flattery — specific recognition)\n2. Deliver the 'no' clearly without burying it in compliments\n3. Explain the reasoning in a way that's transparent and fair\n4. Give them a concrete path to getting what they want — with specific milestones and a timeline\n5. Close by reinforcing that I value them and this is a 'not yet,' not a 'never' (if that's true)\n\nDon't give me corporate HR language. This should sound like a human who respects them."
+  variables={[
+    { name: "Employee name", placeholder: "Riya Patel" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="Your best engineer asks for a 30% raise, citing a competing offer. You can't match it. They're critical to the team and you don't want to lose them."
+  answer="Be transparent about your constraints. Don't make promises you can't keep. Focus on what you CAN offer — equity, title, flexibility, scope — and be honest about whether you can close the gap over time. The worst outcome isn't them leaving; it's them staying resentful because you made vague promises."
+  prompt="My best engineer has a competing offer that's 30% above their current salary. I can offer maybe 12-15% and additional equity. Help me prepare a retention conversation that:\n1. Acknowledges the market reality honestly\n2. Presents my best offer clearly (not drip-feeding concessions)\n3. Includes non-financial value — what staying here offers that money doesn't\n4. Respects their autonomy to choose without guilt-tripping\n5. Has a clean exit if they decide to leave — maintaining the relationship for a potential boomerang hire"
+/>
+
+## Scenario: Addressing Interpersonal Conflict
+
+<PromptBlock
+  title="Mediating team conflict"
+  prompt="Two members of my team — [person A] and [person B] — have a conflict that's affecting the team.\n\nPerson A's perspective: [what they've told you]\nPerson B's perspective: [what they've told you]\nWhat I've observed directly: [your own observations]\nImpact on the team: [how it's showing up]\n\nHelp me:\n1. Identify what's actually at the root (task conflict vs. relationship conflict vs. process conflict)\n2. Draft separate prep conversations with each person — what to ask, what to say\n3. If I bring them together: script an opening that sets ground rules without being patronizing\n4. Give me 3 facilitation questions that move toward resolution\n5. Draft the 'minimum viable agreement' I should push for — what's the smallest behavior change from each that would solve the problem?"
+  variables={[
+    { name: "person A", placeholder: "Marcus (engineering lead)" },
+    { name: "person B", placeholder: "Priya (product manager)" }
+  ]}
+/>
+
+## The Night-Before Prompt
+
+The night before a difficult conversation, when your anxiety is highest:
+
+<PromptBlock
+  title="Night-before conversation prep"
+  prompt="Tomorrow I have a conversation I'm dreading. Here's the full context:\n\n[dump everything — the situation, your fears, what could go wrong, what you want to happen]\n\nI need:\n1. Reassurance grounded in reality — not 'you'll be great!' but an honest assessment of the difficulty level and what's in my control\n2. The 3 most important things to remember during the conversation\n3. A physical note card I can have in front of me — bullet points I can glance at if I lose my train of thought\n4. What the conversation will feel like 10 minutes in if it's going well vs. if it's going sideways — so I can recalibrate in real time\n5. A grounding sentence I can say out loud before I walk in"
+/>
+
+<RealWorldProof
+  quote="I prepped for a termination conversation with Claude and my HR partner said it was the most well-handled termination she'd seen in 15 years. The person walked out of the room with their dignity intact. That matters to me."
+  author="Director of Product"
+  context="First-time manager handling their first termination"
+/>
+
+## After the Conversation
+
+<PromptBlock
+  title="Post-conversation debrief"
+  prompt="I just had the difficult conversation I prepped for. Here's what actually happened:\n\n[describe how it went — what you said, how they reacted, what was decided, how you feel]\n\nHelp me:\n1. Process this — what went well and what I'd do differently next time\n2. Draft any follow-up communication needed (email summary, HR notification, etc.)\n3. Identify if there are any commitments I need to track\n4. Give me an honest assessment: did this conversation achieve its goal?"
+/>
+
+## Common Mistakes
+
+**Don't over-script.** Claude helps you prepare the key moments — the opening, the pivot points, the close. If you memorize a script, you'll sound robotic and lose the ability to respond authentically.
+
+**Don't use Claude as an avoidance tool.** Spending three hours perfecting your opening statement is procrastination in disguise. Prepare for 30 minutes, then have the conversation.
+
+**Don't outsource your courage.** No prompt will make a hard conversation easy. Claude gives you clarity and structure. The willingness to walk into the room is yours.

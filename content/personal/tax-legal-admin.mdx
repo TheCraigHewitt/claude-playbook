@@ -1,0 +1,143 @@
+---
+title: "Tax, Legal, and Admin with AI"
+description: "PDF processing, contract review, expense categorization, and administrative workflows that used to eat your weekends."
+products: ["Chat", "Code"]
+tier: "Operator"
+readTime: "11 min"
+---
+
+Admin work is the tax on being a business owner. Tax prep, contract review, expense categorization, insurance renewals, compliance paperwork — nobody starts a company to do this stuff, but it consumes entire weekends if you let it pile up.
+
+Claude can handle the grunt work. Not the judgment calls — those are still yours — but the reading, organizing, categorizing, and drafting that makes admin so time-consuming.
+
+## Tax Document Processing
+
+Every year, the same fire drill: gather forms, organize them, figure out what's missing, send everything to your accountant in a format they can actually use.
+
+<PromptBlock
+  title="Tax document organization"
+  prompt="I'm organizing my tax documents for [tax year]. I'm going to upload documents one at a time. For each one:\n\n1. Identify what type of document it is (W-2, 1099-NEC, 1099-INT, K-1, etc.)\n2. Extract the key information: payer/source, amount, tax ID\n3. Suggest a standardized filename: [Year]_[DocType]_[Source].pdf\n4. Add it to a running summary table with: document type, source, amount, status\n\nAfter I've uploaded everything, tell me:\n- Which common documents might be missing (based on what you see)\n- A summary I can forward to my accountant\n- Total income by category\n\nContext: I'm [filing status] with [income types]."
+  variables={[
+    { name: "tax year", placeholder: "2025" },
+    { name: "filing status", placeholder: "married filing jointly" },
+    { name: "income types", placeholder: "W-2 employment, SaaS business income (LLC), investment accounts, rental property" }
+  ]}
+/>
+
+<TipCallout type="warning">
+Claude can read your tax documents and organize information, but it is not a tax advisor. Use Claude to organize and prepare; use a CPA to file and advise. Never make tax decisions based solely on Claude's interpretation.
+</TipCallout>
+
+## Contract Review
+
+You get a 15-page vendor agreement. Your lawyer charges $500/hour. Before you send it to legal, let Claude do the first pass.
+
+<PromptBlock
+  title="Contract review first pass"
+  prompt="Review this contract and give me a plain-English assessment:\n\n[upload or paste the contract]\n\n1. **What am I agreeing to?** (summary in 3-5 bullets — no legalese)\n2. **Term and termination** — How long is this for? How do I get out? Are there auto-renewal traps?\n3. **Financial terms** — What do I pay, when, and what triggers additional costs?\n4. **Liability and indemnification** — Am I taking on unusual risk? Is the liability balanced or one-sided?\n5. **IP and data** — Who owns what? Can they use my data? What happens to my data if I terminate?\n6. **Red flags** — Anything I should push back on or get my lawyer to review specifically\n7. **Missing provisions** — Anything a contract like this should have but doesn't?\n\nI'm the [buyer/seller]. Flag anything that's unusual or unfavorable for my side."
+  variables={[
+    { name: "buyer/seller", placeholder: "buyer (I'm purchasing their SaaS product)" }
+  ]}
+/>
+
+<BeforeAfter
+  before={{
+    content: "Send the full 15-page contract to your lawyer. Wait 3 days. Get a $1,500 bill and a 4-page memo. Half the memo covers things you already understood."
+  }}
+  after={{
+    content: "Claude reviews the contract in 30 seconds. You get plain-English risks and red flags. Send your lawyer only the flagged sections with specific questions. Lawyer spends 1 hour instead of 3. Bill: $500 instead of $1,500."
+  }}
+  annotation="Claude doesn't replace your lawyer — it makes your lawyer more efficient (and cheaper)."
+/>
+
+<PromptBlock
+  title="Compare two contract versions (redline analysis)"
+  prompt="I have two versions of a contract — the original they sent me and the revised version after my edits. Compare them:\n\nOriginal: [upload or paste]\nRevised: [upload or paste]\n\n1. List every change, categorized as: favorable to me / unfavorable / neutral\n2. For each unfavorable change, suggest pushback language\n3. Are there any of my requested changes that were NOT incorporated?\n4. Overall: did the revision move in my favor, their favor, or balanced?"
+/>
+
+## Expense Categorization
+
+<PromptBlock
+  title="Categorize business expenses"
+  prompt="Here's a list of business expenses from [time period]. Categorize each one for tax purposes:\n\n[paste expense list — date, vendor, amount, description]\n\nFor each expense:\n1. **Category:** (Office supplies, Software/SaaS, Travel, Meals, Professional services, Marketing, etc.)\n2. **Tax deductible?** (Yes / Likely / Needs CPA review / No)\n3. **Notes:** Any flags (e.g., meals are 50% deductible, personal/business mixed use needs allocation)\n\nAt the end, give me:\n- Total by category\n- Total deductible amount (estimated)\n- Any expenses that look like they might be miscategorized or need receipts"
+  variables={[{ name: "time period", placeholder: "Q4 2025" }]}
+/>
+
+## Insurance and Benefits Review
+
+<PromptBlock
+  title="Insurance policy review"
+  prompt="I uploaded my [insurance type] policy. I'm paying [annual premium]. Help me understand what I have:\n\n1. **What's covered** (plain English, not policy language)\n2. **What's NOT covered** (the exclusions and limitations that matter)\n3. **Deductibles and limits** (summarize the key financial exposure)\n4. **Gaps** — Given my situation ([your context]), what risks am I NOT covered for?\n5. **Questions for my broker** — What should I ask about before renewal?\n6. **Is this a reasonable price?** — Based on the coverage level, does this feel in line with typical policies of this type?"
+  variables={[
+    { name: "insurance type", placeholder: "business liability (E&O + general liability)" },
+    { name: "annual premium", placeholder: "$3,200" },
+    { name: "your context", placeholder: "SaaS company, 8 employees, $1.5M revenue, handling customer data" }
+  ]}
+/>
+
+## NDA and Standard Agreement Review
+
+For common agreements you see regularly:
+
+<PromptBlock
+  title="NDA quick review"
+  prompt="Review this NDA and answer these specific questions:\n\n[upload NDA]\n\n1. Is this mutual or one-way? If one-way, who's protected?\n2. What's the confidentiality period? (during the relationship and after termination)\n3. What's excluded from confidential information? (standard carve-outs present?)\n4. Is there a non-solicit or non-compete buried in here? (some 'NDAs' sneak these in)\n5. What jurisdiction/governing law?\n6. Can I sign this as-is, or should I request changes?\n\nKeep the response under 200 words. I've seen a hundred NDAs — just tell me if this one has anything weird."
+/>
+
+## Administrative Document Drafting
+
+<PromptBlock
+  title="Draft a business policy"
+  prompt="Draft a [policy type] for my company. Context:\n\n**Company:** [company name], [size], [industry]\n**What prompted this:** [why you need this policy now]\n**Key requirements:** [what the policy needs to cover]\n**Tone:** Professional but not corporate — we're a [size] company, not a Fortune 500\n\nKeep it under [length]. Include an effective date placeholder and a version number. Make it practical — people should be able to read this in 5 minutes and know exactly what's expected."
+  variables={[
+    { name: "policy type", placeholder: "remote work policy" },
+    { name: "company name", placeholder: "Acme Analytics" },
+    { name: "size", placeholder: "30 people" },
+    { name: "industry", placeholder: "B2B SaaS" },
+    { name: "length", placeholder: "2 pages" }
+  ]}
+/>
+
+## Claude Code for Automated Admin
+
+For recurring admin tasks, Claude Code takes this to another level.
+
+<PromptBlock
+  title="Automated expense report (Claude Code)"
+  prompt="I have a CSV export from my corporate card. Read the file at [file path] and:\n\n1. Categorize each transaction (use standard IRS categories)\n2. Flag any transactions over $500 that need receipts\n3. Flag potential personal expenses mixed in\n4. Generate a formatted expense report as a PDF\n5. Create a summary by category with totals\n6. Output a CSV that's formatted for upload to [accounting software]"
+  variables={[
+    { name: "file path", placeholder: "~/Downloads/amex-statement-q4.csv" },
+    { name: "accounting software", placeholder: "QuickBooks" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="You're renewing a vendor contract and they've sent you a 'standard renewal' with a 15% price increase buried on page 8. You're not sure if the terms have changed."
+  answer="Upload both the original and renewal contracts into Claude. Ask for a side-by-side comparison focusing on: price changes, term changes, and any new clauses. You'll spot the buried price increase in seconds instead of reading 20 pages. Draft a pushback email referencing the specific clause."
+  prompt="Compare my original vendor contract with the renewal they just sent. Flag EVERY change, especially: pricing, payment terms, auto-renewal provisions, termination rights, and scope of services. Highlight anything that's worse for me in the renewal. Draft a response pushing back on any unfavorable changes."
+/>
+
+## Compliance Checklists
+
+<PromptBlock
+  title="Generate a compliance checklist"
+  prompt="I need to make sure my company is compliant with [regulation/requirement]. Create a checklist:\n\n**Company type:** [your company description]\n**Current state:** [what you think you're already doing]\n**Deadline:** [if applicable]\n\nFor each checklist item:\n1. What's required (plain English)\n2. What evidence/documentation I need\n3. Status: likely compliant / needs review / likely non-compliant (based on what I've told you)\n4. Priority: critical / important / nice-to-have\n\nSort by priority. Flag anything where I should definitely consult a specialist."
+  variables={[
+    { name: "regulation/requirement", placeholder: "SOC 2 Type II readiness" },
+    { name: "your company description", placeholder: "B2B SaaS, 30 employees, handling customer data, AWS-hosted" }
+  ]}
+/>
+
+<RealWorldProof
+  quote="Tax season used to take me 3 weekends of organizing documents, categorizing expenses, and preparing everything for my accountant. This year, I uploaded everything into Claude over lunch breaks during the week. My accountant said it was the most organized submission she'd ever received from me."
+  author="Founder/CEO"
+  context="Solo founder running a $2M ARR SaaS company"
+/>
+
+## Common Mistakes
+
+**Don't rely on Claude for legal or tax advice.** Claude can read, organize, summarize, and flag — but it cannot replace professional advice for decisions with legal or financial consequences. Use Claude to prepare, not to decide.
+
+**Don't upload confidential documents without considering your data policies.** If you're reviewing a contract with sensitive terms, make sure you're comfortable with how Claude handles that data. Business-tier plans have stronger data retention policies.
+
+**Don't skip the human review.** Claude might miss nuance in a contract that a lawyer would catch. Claude might miscategorize an expense that your accountant would flag. The value is in the speed, not in eliminating professional oversight.

@@ -1,0 +1,125 @@
+---
+title: "Meeting Notes and Action Items"
+description: "Paste a transcript, get structured notes, clear action items, and follow-up emails in seconds."
+products: ["Chat"]
+tier: "Starter"
+readTime: "9 min"
+---
+
+The average meeting produces three things: vague memories, scattered notes, and zero follow-through. Claude turns a raw transcript into structured notes, clear owners, and ready-to-send follow-up emails — in under a minute.
+
+## The Core Workflow
+
+The pattern is simple: paste transcript, get structured output. But the quality depends entirely on what structure you ask for.
+
+<PromptBlock
+  title="Meeting notes from transcript"
+  prompt="Here's a transcript from a [meeting type] between [participants]. Extract structured meeting notes:\n\n1. **Summary** (3-5 sentences) — What was this meeting about and what was decided?\n2. **Key Decisions** — Numbered list of every decision made, with who made it\n3. **Action Items** — Table format: Action | Owner | Deadline | Priority\n4. **Open Questions** — Things raised but not resolved\n5. **Parking Lot** — Topics mentioned but deferred to a future meeting\n6. **Notable Quotes** — Any statements that should be captured verbatim (commitments, objections, key insights)\n\nBe specific about ownership. 'The team will follow up' is not an action item. '[Person name] will send the revised proposal by [date]' is.\n\n[Paste transcript]"
+  variables={[
+    { name: "meeting type", placeholder: "product roadmap review" },
+    { name: "participants", placeholder: "CEO (Sarah), VP Product (James), Engineering Lead (Priya), and Head of CS (Marcus)" }
+  ]}
+/>
+
+<TipCallout type="tip">
+Always include participant names and roles in your prompt. Claude can then attribute decisions and action items to specific people instead of leaving ownership ambiguous.
+</TipCallout>
+
+## Meeting-Type Templates
+
+Different meetings need different structures. Here are templates for the meetings that eat most of your week.
+
+### 1:1 Manager Meetings
+
+<PromptBlock
+  title="1:1 meeting notes"
+  prompt="Here's the transcript from my 1:1 with [person, their role]. Extract:\n\n1. **Status Updates** — What they shared about their work/projects\n2. **Blockers** — What's slowing them down (and any solutions discussed)\n3. **Feedback Given** — Any feedback I gave (for my records)\n4. **Feedback Received** — Anything they flagged for me\n5. **Career/Growth** — Any development topics discussed\n6. **Action Items** — What each of us committed to doing\n7. **Mood/Energy Check** — How did they seem? Any concerns about engagement or burnout?\n\nFormat for my private notes — not for sharing with them.\n\n[Paste transcript]"
+  variables={[
+    { name: "person, their role", placeholder: "Alex, senior engineer" }
+  ]}
+/>
+
+### Sales or Discovery Calls
+
+<PromptBlock
+  title="Sales call notes"
+  prompt="Here's the transcript from a [sales/discovery] call with [prospect name] at [company]. Extract:\n\n1. **Prospect Profile** — Company size, role, industry, current solution\n2. **Pain Points** — What problems did they describe? (Use their exact words where possible)\n3. **Budget Signals** — Any mentions of budget, timeline, or decision-making process\n4. **Objections** — Concerns or pushback they raised\n5. **Competition** — Any other solutions they mentioned evaluating\n6. **Next Steps** — What was agreed to happen next\n7. **Deal Assessment** — Based on this conversation, how qualified is this opportunity? (Hot / Warm / Cold) and why\n8. **CRM Notes** — A 2-3 sentence summary formatted for pasting into our CRM\n\n[Paste transcript]"
+  variables={[
+    { name: "prospect name", placeholder: "David Chen" },
+    { name: "company", placeholder: "ScaleUp Logistics" }
+  ]}
+/>
+
+### Board or Investor Meetings
+
+<PromptBlock
+  title="Board meeting notes"
+  prompt="Here's the transcript from our [board meeting / investor update]. Extract:\n\n1. **Decisions Made** — Formal decisions or approvals\n2. **Board Feedback** — Key pushback, suggestions, or concerns from board members (attributed)\n3. **Commitments** — What we committed to the board (and by when)\n4. **Questions Raised** — Questions we need to answer before next meeting\n5. **Strategic Direction** — Any shifts in strategic guidance\n6. **Follow-Up Items** — What we need to send/prepare post-meeting\n\nThis is a formal record. Be precise about who said what.\n\n[Paste transcript]"
+  variables={[]}
+/>
+
+### Cross-Functional Project Meetings
+
+<PromptBlock
+  title="Project sync notes"
+  prompt="Here's the transcript from a cross-functional project meeting for [project name]. Teams present: [teams]. Extract:\n\n1. **Progress Updates** — What each team reported (attributed by team)\n2. **Blockers and Dependencies** — What's stuck and what's waiting on whom\n3. **Decisions** — What was decided and by whom\n4. **Scope Changes** — Any additions, cuts, or modifications to project scope\n5. **Risk Flags** — New risks identified or existing risks escalated\n6. **Action Items** — Table: Action | Owner (team + person) | Due Date\n7. **Next Meeting** — Date, time, and any pre-work required\n\n[Paste transcript]"
+  variables={[
+    { name: "project name", placeholder: "Q2 Platform Migration" },
+    { name: "teams", placeholder: "Engineering, Product, Customer Success" }
+  ]}
+/>
+
+## Generating Follow-Up Emails
+
+The highest-leverage use: turn meeting notes directly into follow-up emails that hold people accountable.
+
+<PromptBlock
+  title="Follow-up email from meeting notes"
+  prompt="Based on these meeting notes, draft a follow-up email to [recipients].\n\nInclude:\n1. Brief summary of what we discussed (3-4 sentences max)\n2. Decisions made (bulleted)\n3. Action items with owners and deadlines (table format)\n4. Next meeting date/time if applicable\n5. Any materials or links to share\n\nTone: [tone]. Keep it under 200 words. The goal is to create a shared record that makes it easy for everyone to know what they owe and by when.\n\n[Paste meeting notes]"
+  variables={[
+    { name: "recipients", placeholder: "all meeting participants" },
+    { name: "tone", placeholder: "friendly but clear — this is a commitment record, not a recap" }
+  ]}
+/>
+
+<BeforeAfter
+  before="Hi everyone, great meeting today! We covered a lot of ground. Please see below for notes. Let me know if I missed anything. Looking forward to our next sync!"
+  after="Here's what we agreed to today. Three decisions, five action items (owners and dates below). Flag anything that's wrong by EOD tomorrow — otherwise these are locked.\n\n[Decisions table]\n[Action items table]\n\nNext meeting: Thursday 3/14, 2pm ET."
+  explanation="Meeting follow-ups should be commitment records, not social pleasantries. Make it easy to scan, hard to misunderstand, and impossible to claim you didn't know what you owed."
+/>
+
+## Processing Multiple Meetings
+
+If you record all your meetings, batch-process them at the end of the day.
+
+<PromptBlock
+  title="Daily meeting batch processing"
+  prompt="I had [X] meetings today. For each transcript below, give me:\n1. One-line summary\n2. Action items (mine only — what I personally need to do)\n3. Deadlines\n\nThen at the end, create a consolidated to-do list across all meetings, sorted by deadline. Flag any conflicts (overlapping deadlines or contradictory action items).\n\n--- Meeting 1: [label] ---\n[Paste transcript]\n\n--- Meeting 2: [label] ---\n[Paste transcript]\n\n--- Meeting 3: [label] ---\n[Paste transcript]"
+  variables={[
+    { name: "X", placeholder: "4" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="You just finished a heated product meeting where the team disagreed on the roadmap. Two people think they won the argument. You need to send notes that everyone agrees on."
+  answer="When a meeting had conflict, the follow-up email is political. Ask Claude to extract the notes, then explicitly tell it: 'The key tension was between [view A] and [view B]. State what was actually decided versus what's still unresolved. Don't smooth over the disagreement — make it clear what was decided and what needs further discussion.'"
+  prompt="This meeting had significant disagreement. Extract notes that are fair to all parties:\n\n1. What was actually decided (with evidence from the transcript)\n2. What was NOT decided — topics where we had discussion but no resolution\n3. Competing viewpoints — summarize each side's position neutrally\n4. Recommended next steps — how do we resolve the open items?\n\nBe precise. If someone says 'I think we agreed to X' but the transcript shows no clear agreement, flag it as unresolved, not decided.\n\n[Paste transcript]"
+/>
+
+## Making This a Habit
+
+The tools work. The hard part is remembering to use them. Here's the system.
+
+<StepByStep
+  steps={[
+    { title: "Record every meeting", description: "Use Otter, Fireflies, Fathom, or your platform's built-in recording. No transcript means no leverage. Make recording the default, not the exception." },
+    { title: "Process within 2 hours", description: "Meeting notes lose value fast. Process the transcript while context is fresh. If you batch at end-of-day, do it before you leave." },
+    { title: "Send follow-up within 4 hours", description: "The follow-up email creates accountability. The longer you wait, the more people's memories of what was 'agreed' will diverge." },
+    { title: "Track action items in one system", description: "After Claude extracts action items, move them into your task management system (Asana, Linear, Notion, whatever). Meeting notes in a Claude chat aren't a task system." },
+    { title: "Review weekly", description: "Every Friday, paste the week's action items into Claude and ask: 'What's overdue? What got done? What should carry forward to next week?'" }
+  ]}
+/>
+
+<TipCallout type="tip">
+If your meeting recording tool exports to text, you can automate this entire flow. Zapier or Make can send transcripts to Claude's API, generate notes, and post them to Slack or email — zero manual work after the meeting ends.
+</TipCallout>

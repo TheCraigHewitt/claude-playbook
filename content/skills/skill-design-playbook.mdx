@@ -1,0 +1,306 @@
+---
+title: "Skill Design Playbook"
+description: "How to write skills that work every time: descriptions, progressive disclosure, examples, and the testing loop."
+products: ["Chat", "CoWork", "Code"]
+tier: "Builder"
+readTime: "12 min"
+---
+
+Building a skill that works once is easy. Building one that works reliably across dozens of uses — with different inputs, edge cases, and contexts — requires design thinking. This playbook covers the patterns that separate a good skill from a great one.
+
+## The "Onboarding Doc" Mindset
+
+The single most important skill design principle: **write your skill as if you're onboarding a brilliant new hire.**
+
+This person is incredibly capable but has never worked with you before. They need to know:
+
+- What their role is
+- How to approach the work
+- What "good" looks like
+- What mistakes to avoid
+- When to ask questions instead of guessing
+
+When you write a skill with this mindset, everything changes. You stop writing commands and start writing briefings.
+
+<ScenarioCard
+  scenario="You're writing a skill for drafting customer apology emails. Your first instinct is to write: 'When given a customer complaint, write an apology email.'"
+  answer="Think like you're onboarding a new support lead. They need to know: What's your company's communication style? How transparent are you about root causes? What do you always offer vs. never offer? What tone mistakes would get them fired? Write ALL of that into the skill."
+  prompt="You are a customer communications specialist. Our approach to apologies:\n\n- Always acknowledge the impact on the customer first, before explaining what happened\n- Be transparent about root causes — never say 'technical difficulties' without specifics\n- Offer a concrete next step, not just 'we're sorry'\n- Never blame the customer, even indirectly\n- Never promise it won't happen again (promise what we're doing to reduce the chance)\n- Tone: empathetic, confident, not groveling\n\nBad example: 'We sincerely apologize for any inconvenience caused by recent technical difficulties.'\n\nGood example: 'Your data export failed yesterday at 3 PM EST because our queue processor hit a memory limit. This affected 200 accounts including yours. We've increased the memory allocation and added monitoring to catch this before it affects you again.'"
+/>
+
+<MiniQuiz
+  question="What's the most important principle when designing a skill?"
+  options={[
+    { label: "Being as detailed and comprehensive as possible", correct: false, explanation: "More detail isn't always better. Front-loading thousands of words dilutes the important instructions. Progressive disclosure — layering information so Claude loads what it needs when it needs it — is more effective." },
+    { label: "Writing it like an onboarding document for a new team member", correct: true, explanation: "The onboarding doc mindset changes everything. Instead of writing commands, you write briefings — explaining the role, the approach, what good looks like, and what mistakes to avoid. This is how you get reliable output across dozens of uses." },
+    { label: "Using proper markdown formatting and headers", correct: false, explanation: "Good formatting helps, but it's a structural concern, not the core principle. A beautifully formatted skill with weak instructions will still produce poor output." },
+    { label: "Including as many code examples as possible", correct: false, explanation: "Examples are valuable, but they serve the larger goal of showing Claude what 'good' looks like. The mindset of onboarding a capable new hire is what drives all the other design decisions." }
+  ]}
+/>
+
+## Writing Descriptions That Tell Claude WHEN
+
+The most overlooked part of a skill is the description. In Claude Code, the description at the top of the file determines whether Claude can find and suggest the right skill.
+
+**Bad description:**
+```
+# Content Helper
+Help with content tasks.
+```
+
+**Good description:**
+```
+# YouTube Idea Refiner
+Take a raw video idea and sharpen it into a shoot-ready concept
+with scored evaluation, title options, thumbnail concepts, and
+hook scripts. Also handles batch ideation when no idea is provided.
+```
+
+The good description tells Claude:
+- **What triggers it** — "raw video idea" or "no idea provided"
+- **What it produces** — "scored evaluation, title options, thumbnail concepts, hook scripts"
+- **What modes it has** — "sharpen" mode and "batch ideation" mode
+
+<TipCallout type="tip">
+Write your skill description to answer this question: "If someone asked 'when should I use this?', what would you tell them?" Put that answer in the description.
+</TipCallout>
+
+## Progressive Disclosure
+
+Don't dump everything on Claude at once. Layer your instructions so Claude loads what it needs, when it needs it.
+
+### The Three-Layer Pattern
+
+**Layer 1: Identity and Approach (always loaded)**
+
+```markdown
+## Instructions
+
+You are a financial analyst for a SaaS business.
+Your job is to turn raw metrics into strategic insights.
+
+**Your approach:**
+- Lead with the insight, not the data
+- Compare to benchmarks, not just history
+- Flag anomalies before they become crises
+- Be direct about bad news
+```
+
+**Layer 2: Context Files (loaded on demand)**
+
+```markdown
+## Before Starting
+
+Read these files for context:
+- `context/metrics-current.md` — Current benchmarks and targets
+- `context/team-structure.md` — Who to reference for delegation
+```
+
+**Layer 3: Deep Reference (only when needed)**
+
+```markdown
+## Reference
+
+For detailed competitive analysis, see `context/competitors.md`.
+For historical trend data, see `context/metrics-history.md`.
+Only reference these when the analysis requires comparison data.
+```
+
+This pattern keeps the core instructions lean while making deep context available when relevant.
+
+### Why Progressive Disclosure Matters
+
+Claude has a large context window, but attention is finite. When you front-load thousands of words of instructions, the later parts get less weight. Progressive disclosure ensures the most important instructions (identity, approach, guardrails) get maximum attention.
+
+## Including Examples
+
+Examples are the highest-leverage addition to any skill. One example communicates more than ten paragraphs of instructions.
+
+### The "Before/After" Pattern
+
+Show Claude what bad output looks like and what good output looks like:
+
+```markdown
+## Quality Standard
+
+**Bad output (don't do this):**
+"The metrics show some concerning trends that the team
+should probably look into when they have a chance."
+
+**Good output (do this):**
+"MRR churn jumped from 2.1% to 3.4% this month — the
+largest single-month increase in 12 months. The spike
+correlates with the pricing change on February 1. Three
+of the five churned accounts cited pricing in their
+cancellation surveys. Recommendation: review whether
+the pricing change net-positive by March 15."
+```
+
+### The "Annotated Example" Pattern
+
+Show an example output with annotations explaining why each part works:
+
+```markdown
+## Example Output
+
+> **Action Items**
+> | # | Action | Owner | Deadline |
+> |---|--------|-------|----------|
+> | 1 | Review Q2 pricing proposal | Sarah | March 10 |
+
+^ Notice: specific action (not "think about pricing"),
+named owner (not "the team"), hard deadline (not "soon").
+```
+
+### How Many Examples
+
+- **Minimum:** 1 example (a bad/good comparison)
+- **Ideal:** 2-3 examples showing different scenarios
+- **Maximum:** Don't include more than 5 — diminishing returns, wasted context
+
+<TipCallout type="warning">
+Never include a "bad" example without a "good" alternative. Claude sometimes pattern-matches to examples even when they're labeled as what not to do. Always pair bad examples with their corrections.
+</TipCallout>
+
+## Multi-Mode Skills
+
+Many real-world skills handle multiple scenarios with a single file. The pattern:
+
+```markdown
+## Input
+
+**Mode:** $ARGUMENTS
+
+Parse the first word to determine mode:
+- **"prep [meeting details]"** — Pre-meeting preparation
+- **"followup [paste notes]"** — Post-meeting processing
+- **"review"** — Review all past meeting notes for patterns
+
+If no arguments provided, ask which mode.
+```
+
+This is powerful because related workflows share context. A meeting prep skill and a meeting follow-up skill need the same background information — putting them in one file means that context loads once.
+
+### Real Example: Multi-Mode Meeting Prep
+
+<PromptBlock
+  title="Multi-mode skill with shared context"
+  prompt="# Meeting Prep + Follow-Up\n\nStructured preparation and post-meeting processing for any meeting type.\n\n## Input\n\n**Meeting type:** $ARGUMENTS\n\nParse the first word to determine mode:\n- 'advisory [client context]' — Advisory client call prep\n- 'investor [context]' — Exit/investor conversation prep  \n- 'followup [meeting notes]' — Post-meeting processing\n\nIf no arguments provided, ask what type of meeting.\n\n## Before Starting\n\nRead context files based on meeting type:\n- All types: context/00-quick-reference.md\n- Advisory: context/offer-details.md, context/frameworks.md\n- Investor: context/financials.md, context/exit-parameters.md\n- Followup: Read any recent decision journal entries"
+/>
+
+## The "Ask Before You Assume" Pattern
+
+The most important guardrail in any skill: **make Claude ask clarifying questions before generating output.**
+
+Without this guardrail, Claude fills every gap with plausible-sounding guesses. With it, Claude pauses and asks — which means every piece of output is grounded in real information.
+
+```markdown
+## Instructions
+
+Before generating any content, ask 2-3 clarifying questions
+about the specific angle, constraints, and reference examples.
+Don't assume and generate.
+
+**Questions to consider:**
+- Who is the specific audience for this piece?
+- What's the one thing we want them to take away?
+- Are there any examples or references to match?
+- What format or length constraints exist?
+```
+
+This single pattern eliminates the #1 complaint about AI output: "It's generic."
+
+<ScenarioCard
+  scenario="You built a blog post skill but the output always feels generic and surface-level, even though your instructions are detailed."
+  answer="Add a mandatory clarification step. Before writing, the skill should ask: 'What's the one insight that makes this post worth reading? What specific experience or data do you have to back it up? Who specifically should read this?' The answers to these questions are what make content specific and valuable."
+  prompt="## Before Writing\n\nDo NOT start drafting until you've asked and received answers to:\n1. What's the one non-obvious insight in this piece?\n2. What specific experience, data, or example proves it?\n3. Who specifically is this for? (Not 'business owners' — which business owners?)\n\nThese answers become the spine of the piece. Without them, the post will be generic."
+/>
+
+## Testing and Iterating
+
+Skills improve through use. Here's the testing loop:
+
+### The First Three Uses
+
+Run your skill with three different inputs. After each, evaluate:
+
+1. **Did it follow the process?** If it skipped steps, your workflow instructions aren't clear enough.
+2. **Is the output format correct?** If it deviated from the template, make the template more explicit.
+3. **Did it make things up?** If yes, strengthen the guardrails.
+4. **Was the tone right?** If not, add a tone example (not just a tone description).
+
+### What to Fix First
+
+| Problem | Fix |
+|---------|-----|
+| Skips steps | Number the steps explicitly. Add "Do NOT proceed to step 3 until step 2 is complete." |
+| Wrong format | Add a complete output example, not just a template. |
+| Makes things up | Add "If information is not available, say so. Do NOT fabricate." |
+| Too verbose | Add word/length limits. "Each section under 100 words." |
+| Too generic | Add "Ask before you assume" guardrail and include specific examples. |
+| Wrong tone | Add before/after tone examples, not just tone labels. |
+
+### The Refinement Cycle
+
+After your first three uses:
+
+1. Identify the top 2 problems
+2. Fix them in the skill file
+3. Run three more tests
+4. Repeat until output is consistently useful
+
+Most skills need 2-3 refinement cycles to become reliable. After that, they stabilize and you rarely need to touch them again.
+
+<TipCallout type="note">
+Keep a log of what you changed and why. When you build your next skill, you'll have a library of patterns to draw from.
+</TipCallout>
+
+## Advanced Patterns
+
+### Chained Context Loading
+
+Instead of loading everything upfront, load context in stages:
+
+```markdown
+## Step 1: Read context/00-quick-reference.md
+Use this for initial framing.
+
+## Step 2: Based on the topic, read the relevant deep-context file:
+- If pricing-related: context/04-offers-pricing.md
+- If audience-related: context/03-ideal-customer.md
+- If content-related: context/07-content-strategy.md
+```
+
+### Output Location Conventions
+
+Always specify where output goes:
+
+```markdown
+## Output
+
+Save to: output/[type]-[YYYY-MM-DD]-[slug].md
+
+Example: output/meeting-notes-2026-03-08-q2-planning.md
+```
+
+This creates a searchable archive of everything the skill produces.
+
+### Self-Assessment
+
+Have the skill evaluate its own output:
+
+```markdown
+## After Generating
+
+Review your output against these criteria:
+- [ ] Every action item has an owner
+- [ ] Every decision has a rationale
+- [ ] Follow-up email is under 200 words
+- [ ] No fabricated information
+
+If any criterion fails, fix the output before presenting.
+```
+
+## What's Next
+
+You now know how to design skills that work reliably. The next playbook covers [using skills in Claude Chat and CoWork](/claude-playbook/skills/skills-chat-cowork) — uploading skill packs, using pre-built skills, and combining skills for complex workflows.

@@ -1,0 +1,147 @@
+---
+title: "Brand Voice System"
+description: "Create a comprehensive style guide that Claude uses everywhere — so every piece of content sounds like you."
+products: ["Chat", "Projects"]
+tier: "Starter"
+readTime: "12 min"
+---
+
+Consistency is what separates a brand from a person posting on the internet. When every blog post, email, social post, and support response sounds like it came from the same brain, people trust you more — even if they can't explain why. A brand voice system built for Claude gives you that consistency at scale.
+
+## Why You Need a Voice System (Not Just a Style Guide)
+
+A traditional style guide tells humans what to do. A voice system tells Claude how to write. The difference matters because Claude needs different signals than a human writer:
+
+- Humans understand "be conversational" intuitively. Claude needs examples.
+- Humans can feel when something sounds "off brand." Claude needs explicit criteria.
+- Humans know your inside jokes and history. Claude needs them documented.
+
+The goal: build a system so thorough that you can put it in a Claude Project and every output sounds like your best writer on their best day.
+
+## Step 1: Voice Analysis
+
+Before you can codify your voice, you need to understand it. Most founders have a distinctive voice but have never analyzed it formally.
+
+<PromptBlock
+  title="Voice analysis from writing samples"
+  prompt="I'm pasting [X] pieces of content that represent my brand voice at its best. These include [types of content — blog posts, emails, social posts, etc.].\n\nAnalyze my brand voice across these dimensions:\n\n**Tone Spectrum** — Rate each on a 1-5 scale with specific evidence:\n- Formal ←→ Casual\n- Serious ←→ Playful\n- Authoritative ←→ Collaborative\n- Technical ←→ Accessible\n- Restrained ←→ Enthusiastic\n\n**Structural Patterns:**\n- Average sentence length\n- Average paragraph length\n- Use of fragments vs. complete sentences\n- How I open pieces (pattern recognition)\n- How I close pieces\n- Transitional phrases and connectors\n\n**Vocabulary:**\n- Words and phrases I use frequently\n- Words and phrases I clearly avoid\n- Industry jargon: do I use it, define it, or avoid it?\n- Contractions: always, sometimes, or never?\n\n**Distinctive Habits:**\n- Rhetorical devices (questions, lists, em dashes, parentheticals, etc.)\n- Use of humor (type, frequency)\n- How I handle disagreement or contrarian takes\n- How I reference data (formal citations vs. casual references)\n- Personal storytelling patterns\n\nBe extremely specific. Generic observations like 'conversational tone' aren't useful. I need observations like 'Uses sentence fragments for emphasis, especially after making a bold claim — e.g., [example from my writing].'\n\n[Paste 8-12 writing samples]"
+  variables={[
+    { name: "X", placeholder: "10" },
+    { name: "types of content — blog posts, emails, social posts, etc.", placeholder: "3 blog posts, 3 newsletter editions, and 4 LinkedIn posts" }
+  ]}
+/>
+
+## Step 2: Build the Voice Guide
+
+Take Claude's analysis and turn it into a structured guide that Claude can reference in every conversation.
+
+<PromptBlock
+  title="Brand voice guide document"
+  prompt="Based on your analysis of my writing, create a comprehensive Brand Voice Guide formatted for use as Claude Project instructions. This guide should enable any Claude conversation to produce content that matches my voice.\n\nStructure:\n\n1. **Voice Summary** (2-3 sentences) — The essence of how we sound\n\n2. **Tone Parameters** — Specific settings Claude should use:\n   - Primary tone: [what]\n   - Secondary tone: [what]\n   - Tone to avoid: [what]\n   - When to adjust: [situations where tone shifts — e.g., support emails vs. blog posts]\n\n3. **Language Rules:**\n   - DO use: [specific words, phrases, constructions]\n   - DON'T use: [specific words, phrases, constructions]\n   - Jargon policy: [when to use industry terms, when to explain]\n   - Contractions: [yes/no/when]\n   - Sentence length target: [range]\n   - Paragraph length target: [range]\n\n4. **Structural Templates:**\n   - Blog post structure: [pattern]\n   - Newsletter structure: [pattern]\n   - Social post structure: [pattern]\n   - Email structure: [pattern]\n\n5. **Examples** — For each content type, include one 'this is right' example and one 'this is wrong' example with explanation\n\n6. **Decision Rules** — For edge cases:\n   - When in doubt about formality: [do this]\n   - When handling sensitive topics: [do this]\n   - When writing about competitors: [do this]\n   - When the topic is outside our expertise: [do this]\n\nFormat this as a clean document I can paste directly into Claude Project instructions."
+  variables={[]}
+/>
+
+<TipCallout type="tip">
+Your voice guide should fit in under 1,500 words. If it's longer, Claude will lose track of the nuances. Be specific but concise. A few strong examples beat pages of abstract guidelines.
+</TipCallout>
+
+## Step 3: Test and Calibrate
+
+A voice guide is only as good as the output it produces. Test it across content types and iterate.
+
+<StepByStep
+  steps={[
+    { title: "Create a test Project", description: "Paste your voice guide into a new Claude Project's instructions." },
+    { title: "Generate 5 test pieces", description: "Ask Claude to write: a blog post intro, a cold email, a LinkedIn post, a customer support response, and a product announcement. Use different topics for each." },
+    { title: "Compare against real samples", description: "Put Claude's output side-by-side with your actual writing. Grade each piece: Does this sound like me? What's off?" },
+    { title: "Identify gaps", description: "Where Claude consistently misses your voice, add more specific guidance. If it's too formal, add: 'Default to contractions. Use fragments for emphasis.' If it's too casual, add examples of the right register." },
+    { title: "Iterate until it's right", description: "Update the voice guide based on your testing. Repeat until you can read Claude's output and not immediately know it's AI." }
+  ]}
+/>
+
+<BeforeAfter
+  before="Voice guide entry: 'Our tone is professional yet approachable. We aim to be helpful and informative while maintaining a friendly demeanor.'"
+  after="Voice guide entry: 'We write like a smart friend giving advice over coffee. Contractions always. Sentences average 12-15 words. Open with a claim or story, never a definition. Use 'you' more than 'we.' When we disagree with conventional wisdom, state it directly: 'This is wrong. Here's why.' — don't hedge with 'some might argue.' Examples: [paste two examples].'"
+  explanation="The 'before' is too vague for Claude to act on. Every AI model can produce 'professional yet approachable.' The 'after' gives Claude specific, measurable instructions that produce a distinctive voice."
+/>
+
+## Step 4: Channel-Specific Adaptations
+
+Your voice should be consistent but not identical across channels. A LinkedIn post and a support email shouldn't sound exactly the same.
+
+<PromptBlock
+  title="Channel-specific voice adaptations"
+  prompt="Using my core brand voice guide as the foundation, create channel-specific adaptations for each platform we use:\n\n1. **Blog posts** — How does the voice adapt for long-form? (Tone, complexity, personal stories?)\n2. **Newsletter** — How is this more personal than the blog? (What gets added? What gets removed?)\n3. **LinkedIn** — How does the voice work in 200-word posts? (What stays, what changes?)\n4. **X/Twitter** — How does the voice compress into 280 characters? (What's the essence?)\n5. **Customer support emails** — How does the voice adapt for problem-solving? (Empathy levels, formality?)\n6. **Sales emails** — How does the voice adapt for prospecting? (Confidence without arrogance?)\n7. **Internal comms** — How does the voice adapt for team communication? (More casual? More direct?)\n\nFor each channel: describe the adaptation in 2-3 sentences, give one example of how the same idea would be expressed on this channel vs. the blog.\n\nCore voice guide:\n[Paste or reference your voice guide]"
+  variables={[]}
+/>
+
+## Loading Your Voice Guide
+
+How you load your brand voice system depends on which Claude product you use:
+
+<ProductPicker products={["Chat", "CoWork", "Code"]}>
+  {{
+    Chat: <div>
+      <p><strong>Paste your voice guide into Project Instructions.</strong> Create a Project called "Brand Content" and paste the full voice guide as the project instructions. Every conversation in that Project will use your voice automatically.</p>
+      <p>Upload 2-3 of your best writing samples as Project files for Claude to reference when matching your voice.</p>
+    </div>,
+    CoWork: <div>
+      <p><strong>Add the voice guide to your team's shared context.</strong> This ensures every team member gets consistent, on-brand output regardless of who's prompting Claude.</p>
+      <p>Add role-specific voice adjustments — your support team might need a slightly different tone than your marketing team, but both should sound like the same brand.</p>
+    </div>,
+    Code: <div>
+      <p><strong>Add the voice guide to your CLAUDE.md</strong> or create a dedicated <code>context/voice-guide.md</code> file referenced from CLAUDE.md. Claude Code reads it automatically every session.</p>
+      <p>Build a <code>/voice-check</code> skill that takes any draft and scores it against your voice guide. Run it before publishing anything.</p>
+    </div>
+  }}
+</ProductPicker>
+
+## Using the Voice System Day-to-Day
+
+### Quick Voice Check
+
+<PromptBlock
+  title="Voice check on existing content"
+  prompt="Review this piece against our brand voice guide:\n\n[Paste content]\n\nVoice guide: [paste or reference from Project]\n\nScore each dimension 1-5:\n- Tone match\n- Vocabulary match\n- Structural match\n- Overall 'does this sound like us?'\n\nFor any score below 4:\n- Quote the specific section that's off\n- Explain what's wrong\n- Rewrite it to match our voice\n\nIf the overall score is 4+, just confirm it's on-voice and flag any minor adjustments."
+  variables={[]}
+/>
+
+### Voice Onboarding for New Writers
+
+<PromptBlock
+  title="Writer onboarding with voice guide"
+  prompt="I'm onboarding a new [writer/contractor/team member] who will be creating content for our brand. Using our voice guide, create:\n\n1. **Quick-start reference** — The 5 most important voice rules they need to follow (one page max)\n2. **Common mistakes** — 5 things new writers typically get wrong about our voice, with before/after examples\n3. **Writing exercise** — 3 short prompts they can practice with, plus what 'good' looks like for each\n4. **Self-check rubric** — A 5-question checklist they can run on their own writing before submitting\n\nVoice guide:\n[Paste or reference your voice guide]"
+  variables={[]}
+/>
+
+### Multi-Brand Management
+
+If you manage multiple brands or products, each needs its own voice system.
+
+<PromptBlock
+  title="Multi-brand voice differentiation"
+  prompt="I manage content for [X] brands. Each needs a distinct voice. Help me differentiate them clearly so Claude doesn't blur them together.\n\nBrands:\n1. [Brand 1] — [one sentence description, audience]\n2. [Brand 2] — [one sentence description, audience]\n3. [Brand 3] — [one sentence description, audience]\n\nFor each brand, define:\n- Voice in 3 adjectives\n- One sentence that captures the voice perfectly\n- A 'this brand would say / this brand would never say' comparison\n- One example paragraph on the same topic (so I can see the differences)\n\nThen create a comparison matrix showing how each brand handles: humor, formality, jargon, storytelling, and calls to action."
+  variables={[
+    { name: "X", placeholder: "2" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="You just hired a freelance writer. Their first draft is technically good but doesn't sound like your brand at all. You need to redirect them without crushing their enthusiasm."
+  answer="Don't just say 'this doesn't sound right.' Show them exactly what right looks like. Paste their draft into Claude alongside your voice guide and ask for a side-by-side rewrite with annotations explaining every change. Send the writer the annotated version — it's specific, constructive feedback that teaches them your voice instead of just rejecting their work."
+  prompt="A new writer submitted this draft. It's good content but doesn't match our brand voice. Rewrite it to match our voice guide, and for every change you make, add an inline annotation explaining WHY you changed it and what voice rule it follows.\n\nOriginal draft:\n[Paste draft]\n\nVoice guide:\n[Paste or reference voice guide]\n\nFormat the output so I can share it with the writer as a learning document."
+/>
+
+## Maintaining Voice Over Time
+
+Your voice will evolve. Build in a quarterly review.
+
+<PromptBlock
+  title="Quarterly voice audit"
+  prompt="Here are 10 pieces of content we published this quarter:\n\n[Paste content or links]\n\nCurrent voice guide:\n[Paste or reference voice guide]\n\nAudit:\n1. How consistent is our voice across these pieces? (Rate 1-5 with evidence)\n2. Has our voice naturally evolved? (Any new patterns emerging?)\n3. Where are we drifting from our guide? (Specific examples)\n4. Should the guide be updated to reflect intentional evolution?\n5. Which piece best represents our voice right now? (Use this as the new benchmark)\n\nRecommend any updates to the voice guide based on this audit."
+  variables={[]}
+/>
+
+<TipCallout type="tip">
+The ultimate test of your brand voice system: can a new team member paste it into a Claude Project and produce content you'd publish with minimal edits? If yes, your system works. If you're still heavily rewriting every output, the guide needs more specific examples and fewer abstract descriptions.
+</TipCallout>

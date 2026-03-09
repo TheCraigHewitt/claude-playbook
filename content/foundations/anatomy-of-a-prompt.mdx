@@ -1,0 +1,224 @@
+---
+title: "The Anatomy of a Great Prompt"
+description: "Role, Context, Task, Format, Constraints — the RCTFC framework."
+products: ["Chat"]
+tier: "Starter"
+readTime: "12 min"
+---
+
+Most people write prompts like they're typing into a search bar. Short, vague, missing context. Then they're surprised when the output is generic.
+
+Here's the framework that fixes that.
+
+## The RCTFC Framework
+
+Every great prompt has five elements. You don't need all five every time, but the more you include, the better your results.
+
+<StepByStep
+  steps={[
+    { title: "Role", description: "Who should Claude be? A marketing strategist, a CFO, a copywriter, a devil's advocate? This shapes the lens through which Claude approaches the task." },
+    { title: "Context", description: "What does Claude need to know? Company info, audience, previous work, constraints, background. The briefing." },
+    { title: "Task", description: "What specifically do you want? Be precise. 'Write a blog post' is different from 'Write a 1,200-word blog post comparing three approaches to customer onboarding.'" },
+    { title: "Format", description: "How should the output look? Bullet points, table, narrative, email format, specific sections? Tell Claude the structure." },
+    { title: "Constraints", description: "What are the boundaries? Word count, tone, things to avoid, audience reading level, specific requirements." }
+  ]}
+  title="The five elements"
+/>
+
+## Why This Works
+
+RCTFC works because it mirrors how you'd brief a real person. Nobody walks into a consultant's office and says "do marketing." You explain who you are, what you need, and what the constraints are. Claude works the same way.
+
+The framework also eliminates the most common failure mode: ambiguity. Every element you add removes a dimension of guessing. And every time Claude guesses, the output gets more generic.
+
+## Building a Prompt Step by Step
+
+Let's take a real task and build it up using RCTFC.
+
+**The task:** You need a cold email for your SaaS product.
+
+<BeforeAfter
+  before={{
+    label: "Without RCTFC",
+    content: "Write a cold email for my SaaS product."
+  }}
+  after={{
+    label: "With RCTFC",
+    content: "Role: You are an experienced B2B sales copywriter who specializes in cold outreach for SaaS companies.\n\nContext: Our product is Acme Analytics — we help e-commerce companies track and improve customer lifetime value. Our key differentiator is one-click Shopify integration (competitors require 2-week implementations). Target audience: VPs of Marketing at e-commerce companies doing $5M-$50M revenue.\n\nTask: Write a cold email that gets a response. The goal is to book a 15-minute demo call.\n\nFormat: Subject line + email body. Keep the email under 125 words. Use short paragraphs (2-3 sentences max).\n\nConstraints: No buzzwords ('revolutionary', 'game-changing'). No fake personalization. Don't mention competitors by name. Tone should be professional but conversational — like a knowledgeable peer, not a salesperson."
+  }}
+  annotation="The second prompt gives Claude everything it needs to produce something genuinely useful on the first try."
+/>
+
+## When You Don't Need All Five
+
+Not every prompt needs the full RCTFC treatment. Here's the practical guide:
+
+**Quick tasks (Task only):**
+> "Summarize this email thread in 3 bullet points: [paste]"
+
+For simple, well-defined tasks, a clear Task is often enough. Claude will infer reasonable defaults for everything else.
+
+**Medium tasks (Role + Context + Task):**
+> "You're a financial analyst. Here's our Q3 revenue data: [paste data]. Identify the three most significant trends and explain why they matter."
+
+When the output needs a specific perspective or you're providing data, add Role and Context.
+
+**Complex tasks (Full RCTFC):**
+> The full framework. Proposals, content pieces, strategic analysis, anything where quality matters and you want to minimize back-and-forth.
+
+<TipCallout type="tip">
+When in doubt, add more context. You can always remove elements from the framework, but you can't get back the time spent on three rounds of "that's not quite right, try again."
+</TipCallout>
+
+## The Role Element Deep Dive
+
+The Role is the most underused element. It fundamentally changes how Claude approaches your task — not just the content, but the entire analytical framework.
+
+<PromptBlock
+  title="Same task, different roles"
+  prompt="Review this pricing proposal and identify concerns.\n\n[As a CFO]: Focus on financial risks, margin impact, and cash flow implications.\n\n[As a sales leader]: Focus on what will make this hard to close deals and where deals will stall.\n\n[As a customer]: Focus on what would make you hesitate to buy and where you'd push back."
+  variables={[
+    { name: "pricing proposal", placeholder: "Paste your pricing document here" }
+  ]}
+/>
+
+Each role surfaces different insights from the same document. The CFO catches margin risk. The sales leader spots friction in the buying process. The customer flags confusing pricing tiers. All three perspectives are valuable — and you can get all three in one conversation.
+
+**Effective roles for business operators:**
+
+- **Devil's advocate** — Forces Claude to challenge your assumptions instead of validating them
+- **Industry analyst** — Gets structured, data-oriented analysis
+- **Executive coach** — Gets thoughtful questions and frameworks, not just answers
+- **Experienced copywriter** — Gets punchy, conversion-focused writing
+- **Board member** — Gets the hard questions you haven't thought of
+
+## The Context Element Deep Dive
+
+Context is where most people underinvest. Here's what to include:
+
+**Company context:** What you do, your market, your size, your stage. Claude writes very differently for a 5-person startup vs. a 500-person enterprise.
+
+**Audience context:** Who will read this? Their role, sophistication level, what they care about, what they already know.
+
+**Situational context:** What prompted this task? A customer complaint, a board meeting, a competitive move? The "why" behind the request shapes the output.
+
+**Historical context:** What have you tried before? What's worked and what hasn't? This prevents Claude from suggesting things you've already ruled out.
+
+<PromptBlock
+  title="Context-rich prompt"
+  prompt="Context: We're a B2B SaaS company ($8M ARR, 200 customers) that sells to mid-market e-commerce companies. We just lost our 3rd enterprise customer this quarter to [Competitor X], who launched a cheaper tier. Our churn has increased from 3% to 5% monthly.\n\nOur CEO is presenting to the board next week and needs a retention strategy that we can execute with our current team of 12 (no new hires approved until Q3).\n\nTask: Draft a 90-day retention plan that addresses the competitive threat without a price cut. Include specific tactics, owners, and success metrics."
+  variables={[
+    { name: "Competitor X", placeholder: "Your competitor's name" }
+  ]}
+/>
+
+## The Format Element Deep Dive
+
+Format is the secret weapon for getting output you can actually use. Without format guidance, Claude defaults to long-form prose with headers — which is fine for some tasks but terrible for others.
+
+**Formats that work well:**
+
+| Format | When to Use | Example Instruction |
+|--------|-------------|-------------------|
+| Bullet points | Quick reference, lists | "Bullet points, no more than 10 items" |
+| Table | Comparisons, data | "Create a table comparing the three options" |
+| Email format | Communications | "Subject line + body, under 150 words" |
+| Executive summary | Board/leadership | "3-sentence summary, then supporting details" |
+| Step-by-step | Processes, instructions | "Numbered steps with expected time for each" |
+| Pros/cons | Decision-making | "Two columns: arguments for and against" |
+| Script format | Presentations, videos | "Speaker notes with slide suggestions" |
+
+<TipCallout type="tip">
+One of the most useful format instructions: "Start with the recommendation, then explain why." This forces Claude to lead with the answer instead of burying it in analysis.
+</TipCallout>
+
+## The Constraints Element Deep Dive
+
+Constraints are the guardrails that prevent Claude from going off track. They're especially important for writing tasks.
+
+**Common constraints that improve output:**
+
+- **Word/length limits** — "Under 200 words" or "2-3 paragraphs max"
+- **Tone restrictions** — "No jargon" or "Write at an 8th-grade reading level"
+- **Content exclusions** — "Don't mention pricing" or "Don't reference competitors by name"
+- **Audience calibration** — "They already know what our product does, don't re-explain it"
+- **Structural rules** — "One idea per paragraph" or "Lead with the data, then interpret"
+
+## Common Patterns That Work
+
+These are copy-paste patterns you can use in any conversation:
+
+### The Devil's Advocate
+
+<PromptBlock
+  title="Challenge my thinking"
+  prompt="I'm about to make a decision and I want you to challenge my assumptions. Don't validate my thinking — poke holes in it. Ask me the questions I'm not asking myself. Be direct about where my logic is weak.\n\nHere's my plan: [describe your plan]"
+  variables={[
+    { name: "describe your plan", placeholder: "Paste your plan or decision here" }
+  ]}
+/>
+
+### The Structured Analysis
+
+<PromptBlock
+  title="Get organized output"
+  prompt="Analyze this and format your response as:\n1. Executive Summary (3 sentences max)\n2. Key Findings (bullet points, prioritized)\n3. Recommendations (numbered, with effort level: low/medium/high)\n4. Risks (if any, with mitigation suggestions)\n\nHere's what I need you to analyze: [paste content]"
+  variables={[
+    { name: "paste content", placeholder: "The document or data to analyze" }
+  ]}
+/>
+
+### The Iterative Draft
+
+<PromptBlock
+  title="Start rough, refine together"
+  prompt="Let's work on this iteratively. Start with a rough first draft — don't try to be perfect. I'll give you specific feedback, and we'll refine from there.\n\nHere's what I need: [describe the task]\n\nAfter the draft, tell me what decisions you made and where you'd like my input."
+  variables={[
+    { name: "describe the task", placeholder: "What you need Claude to write or create" }
+  ]}
+/>
+
+### The Multi-Perspective Analysis
+
+<PromptBlock
+  title="See all angles"
+  prompt="Analyze this from three perspectives:\n1. The optimistic case — what goes right and why\n2. The pessimistic case — what could go wrong and why\n3. The realistic case — what's most likely to happen\n\nThen tell me which perspective I should weight most heavily and why.\n\nHere's the situation: [describe the situation]"
+  variables={[
+    { name: "describe the situation", placeholder: "The decision or situation to analyze" }
+  ]}
+/>
+
+## A Complete Example
+
+Let's put it all together with a real scenario:
+
+<ScenarioCard
+  scenario="You're preparing for a board meeting and need to present your Q3 results. Revenue was up 15% but churn increased by 2 percentage points. You need to frame this honestly but constructively."
+  answer="Use the Role element to get Claude thinking like a board communication expert. Provide the full data context. Ask for multiple framing options so you can choose the one that fits your board's style."
+  prompt="Role: You are a seasoned startup advisor who has coached dozens of founders through board presentations.\n\nContext: Q3 results — revenue up 15% QoQ ($1.2M to $1.38M), but churn increased from 4% to 6% monthly. We believe churn is due to a pricing change we made mid-quarter. We've already reverted the pricing for affected customers and churn has started declining in the last two weeks.\n\nTask: Help me frame these results for my board. I need to be honest about churn while showing we've already acted on it and have a clear path forward.\n\nFormat: 1) Opening paragraph for the board deck, 2) Three talking points I should prepare, 3) Anticipated tough questions with suggested answers.\n\nConstraints: Don't sugarcoat the churn — board members are experienced operators and they'll see through spin. Be direct but show command of the situation. No corporate jargon."
+/>
+
+## The RCTFC Cheat Sheet
+
+Keep this handy until the framework becomes second nature:
+
+| Element | Question to Ask Yourself | Skip If... |
+|---------|-------------------------|------------|
+| **Role** | What expertise does this need? | The task is straightforward |
+| **Context** | What would a new hire need to know? | Claude already has it (via Project instructions) |
+| **Task** | What specifically do I want? | Never skip this |
+| **Format** | How should the output look? | Default prose is fine |
+| **Constraints** | What are the boundaries? | There aren't any meaningful ones |
+
+<MiniQuiz
+  question="Which RCTFC element should you never skip?"
+  options={[
+    { label: "Role — Claude always needs to know who to be", correct: false, explanation: "Role is powerful but optional for simple tasks. Claude defaults to a helpful assistant." },
+    { label: "Task — Claude always needs to know what you want", correct: true, explanation: "Correct. Without a clear task, Claude is guessing. Everything else can be optional, but the task is the one non-negotiable element." },
+    { label: "Format — Claude needs structure to produce good output", correct: false, explanation: "Format helps a lot, but Claude can produce useful output with default formatting. The task is more fundamental." }
+  ]}
+/>
+
+## Next Steps
+
+You now have the framework. The next playbook — [Projects, Memory & Skills](/claude-playbook/foundations/projects-memory-skills) — shows you how to make this context persistent so you don't have to write a full RCTFC prompt every time. You'll bake the Role, Context, and Constraints into your Project instructions, and your daily prompts become just Task + Format.

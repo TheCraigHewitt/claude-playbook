@@ -1,0 +1,163 @@
+---
+title: "Build a Team Knowledge Base"
+description: "Using CoWork to build shared institutional knowledge."
+products: ["CoWork"]
+tier: "Operator"
+readTime: "10 min"
+---
+
+Every company has a knowledge problem. Critical information lives in Slack threads, someone's head, a Google Doc from 2023 nobody can find, or a Notion page with 14 nested sub-pages. CoWork solves this by giving your team a shared space where Claude organizes, retrieves, and applies institutional knowledge.
+
+This isn't about building another wiki nobody reads. It's about creating a system where the answer to "how do we do X?" is always 30 seconds away.
+
+## Why CoWork for Knowledge Management
+
+Traditional knowledge bases fail for two reasons: nobody wants to write documentation, and nobody wants to search through documentation. CoWork changes both sides:
+
+- **Input is effortless**: Team members dump raw information (notes, transcripts, emails) and Claude organizes it
+- **Retrieval is natural**: Ask a question in plain English, get the answer — no searching through folders or tags
+- **Knowledge stays current**: Claude flags stale information and prompts updates
+- **Context carries over**: Claude remembers previous conversations and connects related topics
+
+## Setting Up Your Knowledge Base
+
+<StepByStep
+  title="Knowledge base structure"
+  steps={[
+    { title: "Create your CoWork space", description: "Start a new CoWork space called 'Team Knowledge Base' or '[Company] Knowledge Hub.' Give access to everyone who needs it." },
+    { title: "Define your categories", description: "Create clear sections based on how your team actually looks for information — by function, by process, or by topic. Start with 5-7 categories, not 20." },
+    { title: "Seed it with existing knowledge", description: "Gather existing documentation — Google Docs, Notion pages, SOPs, onboarding guides. Upload or paste them into CoWork. Claude organizes them into your categories." },
+    { title: "Establish the contribution habit", description: "Set a simple rule: if you explain something to a coworker, also explain it to CoWork. Takes 2 minutes. Saves the next person 30." },
+    { title: "Assign knowledge owners", description: "Each category gets an owner who reviews and updates their section monthly. Without owners, knowledge bases rot." }
+  ]}
+/>
+
+## What to Include
+
+The most valuable knowledge base content is the stuff that's hardest to find anywhere else.
+
+<PromptBlock
+  title="Knowledge base content audit"
+  prompt="Help me figure out what should go in our team knowledge base.\n\nOUR COMPANY: [brief description — what you do, team size, how long you've been around]\nCURRENT DOCUMENTATION: [where does knowledge live today? Notion, Google Drive, Slack, nowhere?]\n\nGenerate a prioritized content plan:\n\n1. CRITICAL KNOWLEDGE (must have from day one)\n- Things a new hire needs to know in their first week\n- Processes that break when the person who runs them is out\n- Information that's asked about in Slack more than once a month\n- Tribal knowledge that only 1-2 people have\n\n2. HIGH VALUE (add within first month)\n- Customer-facing policies and procedures\n- Decision logs: why we made key decisions and the reasoning\n- Vendor relationships: who we use, why, key contacts, contract terms\n- Tool guides: how we use our tools (not the tool's docs — our specific setup)\n\n3. NICE TO HAVE (build over time)\n- Meeting templates and agendas\n- Team norms and communication preferences\n- Retrospective learnings\n- Industry context and competitive intel\n\nFor each item, note:\n- Who knows this today? (the source)\n- How should it be captured? (brain dump, existing doc, interview)\n- Estimated effort to document"
+  variables={[
+    { name: "brief description — what you do, team size, how long you've been around", placeholder: "B2B SaaS, project management tool, 30 employees, 4 years old" },
+    { name: "where does knowledge live today? Notion, Google Drive, Slack, nowhere?", placeholder: "Mix of Notion (partially maintained), Google Drive (chaotic), Slack search (mostly), and people's heads (for everything important)" }
+  ]}
+/>
+
+## Adding Knowledge to CoWork
+
+### The Brain Dump Method
+
+The fastest way to capture knowledge: talk to CoWork like you're explaining something to a new hire.
+
+<PromptBlock
+  title="Brain dump knowledge capture"
+  prompt="I want to document something for our team knowledge base. Here's a brain dump of what I know about [topic]:\n\n[Just start talking/typing. Don't worry about structure, order, or completeness. Include:\n- What this is and why it matters\n- How it works\n- Important context or history\n- Gotchas or things people always get wrong\n- Who to talk to for more info\n- Any links, tools, or resources related to this]\n\nOrganize this into a clean knowledge base article with:\n1. TITLE: Clear, searchable title\n2. SUMMARY: 2-3 sentence overview (what is this and why should I care?)\n3. DETAILS: Structured content with headers and bullet points\n4. RELATED: Links to related topics in the knowledge base\n5. OWNER: Who maintains this article\n6. LAST UPDATED: Today's date\n7. TAGS: 3-5 tags for discoverability"
+  variables={[
+    { name: "topic", placeholder: "how our billing system works" }
+  ]}
+/>
+
+### The Meeting Capture Method
+
+After any meeting where decisions were made or knowledge was shared:
+
+<PromptBlock
+  title="Meeting notes to knowledge base entries"
+  prompt="Here are notes from a meeting where we discussed [topic]. Extract the institutional knowledge and add it to our knowledge base.\n\nMEETING NOTES:\n[Paste your notes or transcript]\n\nExtract and organize:\n1. DECISIONS MADE: What was decided? By whom? What was the reasoning?\n2. ACTION ITEMS: Who's doing what by when? (for tracking, not the knowledge base)\n3. NEW KNOWLEDGE: What information was shared that the team should have access to going forward?\n4. PROCESS CHANGES: Did this meeting result in any changes to how we do things?\n5. CONTEXT: Any background information that was discussed that would help future readers understand the decision\n\nFor each knowledge item extracted, create a separate knowledge base article (or update an existing one if this adds to something we already have documented)."
+  variables={[
+    { name: "topic", placeholder: "Q2 pricing changes and the reasoning behind them" }
+  ]}
+/>
+
+### The Slack Thread Method
+
+The best knowledge often surfaces in Slack and then disappears.
+
+<PromptBlock
+  title="Slack thread to knowledge base"
+  prompt="Here's a Slack thread where someone asked a question and got a useful answer. Capture this for the knowledge base so the next person doesn't have to ask.\n\nSLACK THREAD:\n[Paste the thread]\n\nCreate a knowledge base entry:\n1. TITLE: Phrase it as the question someone would ask (e.g., 'How do I request a refund for a customer?')\n2. ANSWER: Clear, step-by-step answer based on the thread\n3. CONTEXT: When does this come up? Who typically needs this?\n4. RELATED: What other knowledge base topics relate to this?\n5. GOTCHAS: Were there any caveats or edge cases mentioned in the thread?"
+/>
+
+<TipCallout type="tip">
+Set up a Slack integration or habit: when someone writes a helpful answer in Slack, react with a specific emoji (like a bookmark). At the end of each week, someone collects the bookmarked threads and pastes them into CoWork. This captures knowledge passively — no extra work for the person sharing knowledge.
+</TipCallout>
+
+## Building a Decision Log
+
+One of the most valuable (and most neglected) types of institutional knowledge: why you made the decisions you made.
+
+<PromptBlock
+  title="Decision log entry"
+  prompt="We just made an important decision. Log it in our knowledge base.\n\nDECISION: [what was decided]\nDATE: [when]\nDECIDED BY: [who made the call]\nCONTEXT: [what prompted this decision — the problem or opportunity]\nOPTIONS CONSIDERED: [what alternatives were on the table]\nWHY THIS OPTION: [the reasoning — what factors mattered most]\nTRADE-OFFS: [what we gave up by choosing this option]\nEXPECTED OUTCOMES: [what we expect to happen as a result]\nREVIEW DATE: [when we should revisit this decision — 3 months, 6 months, etc.]\nREVERSIBILITY: [how hard is it to reverse this if it doesn't work out?]\n\nFormat this as a decision log entry. These should be scannable — when someone in the future asks 'why do we do it this way?' they should find their answer in 30 seconds."
+  variables={[
+    { name: "what was decided", placeholder: "Switching from Stripe to Paddle for payment processing" },
+    { name: "when", placeholder: "March 2026" },
+    { name: "who made the call", placeholder: "CEO with input from Finance and Engineering" },
+    { name: "what prompted this decision — the problem or opportunity", placeholder: "Stripe doesn't handle EU VAT compliance natively, and we're expanding into Europe" }
+  ]}
+/>
+
+<RealWorldProof
+  quote="Six months after starting our decision log, our new Head of Product said it was the most valuable resource in the company. Every time she wanted to change something, the log told her why the current approach was chosen, what was tried before, and what constraints still applied. She saved weeks of relitigating old decisions."
+  author="COO, SaaS Startup (40 employees)"
+  context="Decision log with 47 entries spanning 18 months of company decisions"
+/>
+
+## Knowledge Base Maintenance
+
+A knowledge base without maintenance becomes a knowledge graveyard.
+
+<PromptBlock
+  title="Monthly knowledge base review"
+  prompt="It's time for our monthly knowledge base review. Here's a summary of our current content:\n\n[List your knowledge base articles — titles are enough, or paste the table of contents]\n\nHelp me with the maintenance review:\n\n1. STALENESS CHECK: Based on the topics and dates, which articles are most likely to be outdated? (Things that change frequently: pricing, team structure, tool configurations, vendor relationships)\n\n2. GAP CHECK: Based on common team questions I've heard this month — [list any recent questions people asked] — what's missing from the knowledge base?\n\n3. USAGE CHECK: Which categories probably get used most? Which are probably orphaned? (Suggest a plan for pruning low-value content)\n\n4. CONSOLIDATION: Are there any articles that overlap and should be merged?\n\n5. QUALITY CHECK: Rate the overall knowledge base health:\n- Completeness (1-10)\n- Freshness (1-10)\n- Organization (1-10)\n- Actionability (1-10)\n\n6. THIS MONTH'S PRIORITIES: Top 3 articles to update, create, or retire"
+/>
+
+## Structuring for Different Team Sizes
+
+### Small Team (5-15 people)
+
+<PromptBlock
+  title="Small team knowledge base structure"
+  prompt="Design a knowledge base structure for a team of [number] people. We're a [company description].\n\nKeep it simple — we don't need enterprise-level organization. Design for:\n- Fast setup (we should be able to seed this in one afternoon)\n- Low maintenance (nobody has time to be a full-time knowledge manager)\n- High discoverability (anyone should find any answer in under 60 seconds)\n\nSuggested structure with starter articles for each section. For each article, give me the title and a one-sentence description of what it should cover."
+  variables={[
+    { name: "number", placeholder: "12" },
+    { name: "company description", placeholder: "B2B SaaS, selling to mid-market e-commerce companies, teams: Engineering, Sales, CS, Marketing" }
+  ]}
+/>
+
+### Growing Team (15-50 people)
+
+At this size, you need more structure and clearer ownership.
+
+<PromptBlock
+  title="Growing team knowledge base structure"
+  prompt="We've grown to [number] people and our knowledge base needs to scale. Currently we have [current state — describe what exists].\n\nDesign an upgraded structure that:\n1. Supports department-specific knowledge that other departments can still access\n2. Has clear ownership for each section\n3. Includes an onboarding path for new hires (what to read, in what order)\n4. Supports multiple levels of detail (quick reference for experienced team members, full context for new ones)\n5. Integrates with our tools: [list your tools]\n\nAlso create:\n- A 'Knowledge Base Contribution Guide' — simple rules for how to add and update content\n- An 'Article Template' — consistent format for all knowledge base entries\n- A 'Knowledge Base Health Dashboard' — what metrics to track and how often to review"
+  variables={[
+    { name: "number", placeholder: "35" },
+    { name: "current state — describe what exists", placeholder: "Scattered Notion pages, some Google Docs, most knowledge in Slack or people's heads" },
+    { name: "list your tools", placeholder: "Slack, Notion, HubSpot, Jira, Google Workspace" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="Your team already has a Notion wiki, but nobody maintains it and it's full of outdated information."
+  answer="Don't start over. Export the Notion content, paste it into CoWork, and tell Claude: 'This is our existing knowledge base. It's probably 50% outdated. Help me triage: for each article, mark it as (1) still current, (2) needs update, or (3) should be archived. Then generate a plan to update the ones that need it.' Rehabilitating existing docs is always faster than starting from scratch."
+  prompt="Here's our existing Notion knowledge base content. Triage each article: is it (1) still current and useful, (2) has useful bones but needs updating, or (3) should be archived? For category 2, list what specifically needs updating."
+/>
+
+<ScenarioCard
+  scenario="People on your team don't contribute to the knowledge base because they say they don't have time."
+  answer="The problem isn't time — it's friction. Nobody has 30 minutes to write a knowledge base article. But everyone has 2 minutes to paste a Slack message into CoWork and let Claude format it. Lower the bar: the only requirement is a brain dump. Claude does the formatting. Set a 'Knowledge Friday' tradition — 5 minutes per person, one brain dump each."
+/>
+
+<BeforeAfter
+  before={{ label: "How teams find answers today", content: "1. Search Slack (find a thread from 8 months ago, half the context is missing)\n2. Ask in #general (wait 2 hours, get 3 different answers)\n3. Find the Google Doc (if you can guess the right search terms)\n4. DM the person who probably knows (interrupt their work)\n5. Give up and figure it out yourself (reinvent the wheel)\n\nAverage time to find an answer: 15-30 minutes\nProbability of finding the RIGHT answer: 60%" }}
+  after={{ label: "How teams find answers with CoWork", content: "1. Ask CoWork: 'How do we handle refund requests for annual plans?'\n2. Get the answer with full context, steps, and edge cases\n\nAverage time to find an answer: 30 seconds\nProbability of finding the RIGHT answer: 95%" }}
+  annotation="The math is simple. A 30-person team with each person searching for answers twice a day saves 15+ hours per week. That's a full-time employee's worth of productivity recovered."
+/>
+
+<TipCallout type="note">
+The knowledge base you actually use is better than the knowledge base you plan to build. Start with 10 articles covering the 10 questions asked most often. Add one article per week. In 3 months you'll have a comprehensive, battle-tested knowledge base built from real team needs.
+</TipCallout>

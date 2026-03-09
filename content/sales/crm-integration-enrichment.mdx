@@ -1,0 +1,155 @@
+---
+title: "CRM Integration & Data Enrichment"
+description: "Connect, clean, normalize, and enrich your CRM data."
+products: ["Code"]
+tier: "Power User"
+readTime: "12 min"
+---
+
+Your CRM is probably a mess. Duplicate records, inconsistent formatting, missing fields, stale data. Every sales team knows this. Nobody fixes it because it's tedious, manual work that takes weeks.
+
+Claude Code can clean your entire CRM in an afternoon. Export, normalize, deduplicate, enrich, and re-import — all through conversation, no coding required.
+
+## The CRM Cleanup Workflow
+
+<StepByStep
+  steps={[
+    { title: "Export your data", description: "Pull a full export from your CRM — contacts, companies, deals. CSV is fine. Most CRMs have a bulk export feature." },
+    { title: "Audit and assess", description: "Claude Code reads your export, identifies data quality issues, and gives you a cleanup plan before touching anything." },
+    { title: "Normalize and standardize", description: "Fix formatting inconsistencies — phone numbers, company names, job titles, addresses. One standard format across every record." },
+    { title: "Deduplicate", description: "Find and merge duplicate records using fuzzy matching. Claude handles the edge cases (TechFlow vs. TechFlow Inc. vs. TechFlow, Inc)." },
+    { title: "Enrich", description: "Add missing data — industry, company size, technology stack, recent funding. Fill the gaps that make segmentation possible." },
+    { title: "Re-import", description: "Format the cleaned data for import back into your CRM. Claude generates the file in exactly the format your CRM expects." }
+  ]}
+/>
+
+## Step 1: Export and Audit
+
+Start by getting your data out and understanding what you're working with.
+
+<PromptBlock
+  title="CRM data audit"
+  prompt="I just exported my CRM data. The file is at [file path]. It's a CSV export from [CRM name].\n\nBefore we clean anything, audit the data and tell me:\n\n1. OVERVIEW: How many records? What fields are included? Date range of the data?\n2. COMPLETENESS: For each field, what percentage is filled vs. empty? Which fields are most sparse?\n3. CONSISTENCY: Are there formatting inconsistencies? (e.g., phone numbers in different formats, states as abbreviations vs. full names, company names with/without Inc.)\n4. DUPLICATES: How many likely duplicates can you spot? What's the duplication rate?\n5. STALENESS: Based on 'last updated' dates, how much of the data hasn't been touched in 6+ months?\n6. DATA QUALITY SCORE: On a scale of 1-10, how clean is this data? What's the single biggest issue?\n7. CLEANUP PLAN: Prioritized list of what to fix first, with estimated impact\n\nDon't change anything yet. Just give me the assessment."
+  variables={[
+    { name: "file path", placeholder: "~/Desktop/crm-export.csv" },
+    { name: "CRM name", placeholder: "HubSpot" }
+  ]}
+/>
+
+<TipCallout type="tip">
+Always export a backup before starting cleanup. Ask Claude Code to copy your original file to a `-backup` version first. One command: "Before we start, make a backup copy of this file." If anything goes wrong, you can start over.
+</TipCallout>
+
+## Step 2: Normalize and Standardize
+
+This is the tedious work that Claude Code handles in seconds.
+
+<PromptBlock
+  title="Normalize CRM data"
+  prompt="Now let's clean up the data at [file path]. Apply these normalization rules:\n\nCOMPANY NAMES:\n- Remove legal suffixes (Inc., LLC, Ltd.) unless they're part of the brand\n- Standardize capitalization (Title Case)\n- Fix common misspellings you can identify\n\nCONTACT NAMES:\n- Title Case for first and last names\n- Move any titles (Mr., Mrs., Dr.) to a separate field\n- Flag names that look like test data (e.g., 'Test User', 'asdf')\n\nPHONE NUMBERS:\n- Standardize to [phone format] format\n- Flag invalid numbers (wrong digit count, clearly fake)\n\nEMAIL ADDRESSES:\n- Lowercase all emails\n- Flag invalid formats\n- Flag generic addresses (info@, sales@, admin@) — these aren't real contacts\n\nJOB TITLES:\n- Standardize common variations (VP → Vice President, Dir → Director, etc.) — pick one standard and apply it\n- Create a 'title_level' field: C-Suite, VP, Director, Manager, IC, Unknown\n\nADDRESSES:\n- Standardize state abbreviations\n- Standardize country names\n\nINDUSTRY:\n- Map free-text industry entries to a standard list of [number] categories\n\nSave the normalized data to [output path]. Also save a changelog showing every change made, so I can review."
+  variables={[
+    { name: "file path", placeholder: "~/Desktop/crm-export.csv" },
+    { name: "phone format", placeholder: "+1 (XXX) XXX-XXXX" },
+    { name: "number", placeholder: "20" },
+    { name: "output path", placeholder: "~/Desktop/crm-normalized.csv" }
+  ]}
+/>
+
+<BeforeAfter
+  before={{ content: "Company: techflow inc\nName: sarah chen\nPhone: 5551234567\nEmail: Sarah.Chen@Techflow.com\nTitle: vp of marketing\nState: California\nIndustry: saas / software" }}
+  after={{ content: "Company: TechFlow\nName: Sarah Chen\nPhone: +1 (555) 123-4567\nEmail: sarah.chen@techflow.com\nTitle: Vice President of Marketing\nTitle Level: VP\nState: CA\nIndustry: SaaS" }}
+  annotation="Every field standardized in one pass. Across 5,000 records, this would take a human days. Claude Code does it in minutes."
+/>
+
+## Step 3: Deduplicate
+
+Duplicates are the worst. They cause double-emails, split deal history, and make reporting unreliable.
+
+<PromptBlock
+  title="Find and merge duplicate records"
+  prompt="Find duplicate records in the normalized data at [file path].\n\nMATCHING RULES (in priority order):\n1. EXACT MATCH: Same email address → definite duplicate\n2. STRONG MATCH: Same company + same last name + similar first name (fuzzy match) → likely duplicate\n3. POSSIBLE MATCH: Same company + same title level → review needed\n4. PHONE MATCH: Same phone number → definite duplicate (different people don't share phone numbers)\n\nFor each set of duplicates:\n1. Identify the 'master' record (the one with the most complete data and most recent activity)\n2. Merge data from the secondary record(s) into the master — fill gaps, don't overwrite existing data\n3. Keep a record of which entries were merged and what data was combined\n\nGenerate three outputs:\n1. The deduplicated dataset at [output path]\n2. A merge log showing every merge decision\n3. A 'review needed' list for possible matches that need human judgment\n\nStats I want: total records before, total after, number of definite merges, number flagged for review."
+  variables={[
+    { name: "file path", placeholder: "~/Desktop/crm-normalized.csv" },
+    { name: "output path", placeholder: "~/Desktop/crm-deduped.csv" }
+  ]}
+/>
+
+<TipCallout type="warning">
+Always review the "possible match" list manually. Claude is good at fuzzy matching, but some edge cases need human judgment. "John Smith at Acme" and "Jonathan Smith at Acme" might be the same person — or might be father and son at the family business. Spend 10 minutes on the review list.
+</TipCallout>
+
+## Step 4: Enrich Missing Data
+
+Now that the data is clean, fill the gaps.
+
+<PromptBlock
+  title="Enrich CRM records with missing data"
+  prompt="Enrich the clean CRM data at [file path]. Many records are missing key fields.\n\nFor each record, attempt to fill in these fields using what you can infer from existing data:\n\n1. COMPANY SIZE: Based on the company name and industry, estimate employee count range (1-10, 11-50, 51-200, 201-500, 500+)\n2. REVENUE RANGE: Estimate annual revenue range based on company size and industry\n3. INDUSTRY: If blank, infer from company name, website domain, or other context\n4. TITLE LEVEL: If title exists but title_level is blank, categorize it\n5. LEAD SOURCE: If blank, check if the email domain or any notes suggest how they entered our system\n6. LIFECYCLE STAGE: Based on deal history and activity dates, suggest: Lead, MQL, SQL, Opportunity, Customer, Churned\n\nRules:\n- Mark every enriched field with a confidence level: High, Medium, Low\n- Don't overwrite existing data — only fill blanks\n- Create a field called 'enrichment_notes' for anything you're uncertain about\n\nSave to [output path] and give me enrichment stats: how many fields were filled, average confidence level, records that are still incomplete."
+  variables={[
+    { name: "file path", placeholder: "~/Desktop/crm-deduped.csv" },
+    { name: "output path", placeholder: "~/Desktop/crm-enriched.csv" }
+  ]}
+/>
+
+## Step 5: Re-Import
+
+Format the data exactly how your CRM expects it.
+
+<PromptBlock
+  title="Format for CRM re-import"
+  prompt="The enriched CRM data is at [file path]. Format it for import back into [CRM name].\n\nIMPORT REQUIREMENTS:\n[Paste your CRM's import field mapping requirements, or describe them]\n\nPlease:\n1. Map our field names to the CRM's expected field names\n2. Format dates, phone numbers, and other fields to match the CRM's expected format\n3. Split into batches of [batch size] records if the CRM has import limits\n4. Create a field mapping reference document so I can verify the mapping before importing\n5. Flag any fields in our data that don't have a matching CRM field — I may need to create custom fields first\n\nSave the import-ready files to [output folder]."
+  variables={[
+    { name: "file path", placeholder: "~/Desktop/crm-enriched.csv" },
+    { name: "CRM name", placeholder: "HubSpot" },
+    { name: "batch size", placeholder: "1000" },
+    { name: "output folder", placeholder: "~/Desktop/crm-import/" }
+  ]}
+/>
+
+## Decision Framework: Claude Code vs. Clay
+
+Clay is the leading data enrichment platform. It's powerful, but it's also $150-500/month. Here's when to use each:
+
+| Factor | Claude Code | Clay |
+|--------|-------------|------|
+| **One-time cleanup** | Best choice — no ongoing subscription needed | Overkill for a single cleanup job |
+| **Ongoing enrichment** | You'd need to re-run manually | Automated waterfall enrichment runs continuously |
+| **Data sources** | Works with what you give it — CSV exports, manual data | Connects to 75+ data providers natively |
+| **Deduplication** | Excellent for batch dedup with fuzzy matching | Good but not its primary strength |
+| **Cost** | Your Claude subscription (already paying for it) | $150-500/month on top of Claude |
+| **Complex workflows** | Conversation-based — you describe what you want | Visual workflow builder with pre-built templates |
+| **Best for** | Startups, small teams, one-time or quarterly cleanups | Mid-market teams with ongoing enrichment needs |
+
+<TipCallout type="note">
+The honest answer for most small teams: start with Claude Code. If you find yourself running the same enrichment workflow every week and wishing it were automated, that's when Clay earns its price tag. Don't buy Clay to solve a problem you could handle quarterly with Claude Code.
+</TipCallout>
+
+## Ongoing CRM Hygiene
+
+Clean data doesn't stay clean. Set up a quarterly CRM hygiene routine.
+
+<PromptBlock
+  title="Quarterly CRM health check"
+  prompt="It's time for our quarterly CRM health check. I've exported fresh data to [file path].\n\nCompare this to our last cleanup (the reference file is at [reference path]) and tell me:\n\n1. NEW RECORDS: How many new records since last quarter? What's the data quality of new entries vs. old?\n2. DEGRADATION: Have any previously clean fields gotten messy again? (People start entering data inconsistently over time)\n3. NEW DUPLICATES: Any new duplicates introduced since the last cleanup?\n4. STALE DATA: Records with no activity in 90+ days — how many and what should we do with them?\n5. FIELD USAGE: Are there fields nobody's filling in? Should we remove them or enforce them?\n6. SEGMENTATION CHECK: Based on the current data, are our segments (by industry, size, stage) still meaningful?\n\nGenerate a CRM Health Report I can share with the team, including:\n- Overall health score (1-10)\n- Top 3 issues to fix\n- Recommended actions with estimated time to complete"
+  variables={[
+    { name: "file path", placeholder: "~/Desktop/crm-export-q2.csv" },
+    { name: "reference path", placeholder: "~/Desktop/crm-enriched-q1.csv" }
+  ]}
+/>
+
+<RealWorldProof
+  quote="We had 12,000 contacts in HubSpot. After the Claude Code cleanup, we had 8,400 — 30% were duplicates or junk records. Our email deliverability jumped from 82% to 96% in the next campaign because we weren't sending to dead addresses anymore."
+  author="Marketing Operations Manager, B2B SaaS"
+  context="HubSpot CRM with 3 years of accumulated data from multiple sources"
+/>
+
+## Connecting CRM Data to Other Workflows
+
+Once your CRM is clean, it becomes the foundation for everything else in this playbook:
+
+- **Outbound at Scale**: Clean CRM data feeds better prospect lists
+- **Win/Loss Analysis**: Accurate deal data enables pattern recognition
+- **Revenue Operations**: Reliable CRM data powers dashboards and forecasting
+- **Pre-Call Research**: Enriched records mean Claude already has context before you prep for a call
+
+The cleanup takes an afternoon. The compound value lasts for years.

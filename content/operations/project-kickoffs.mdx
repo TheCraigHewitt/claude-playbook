@@ -1,0 +1,122 @@
+---
+title: "Project Kickoffs That Actually Work"
+description: "Generate briefs, timelines, and RACI matrices from a description."
+products: ["Chat"]
+tier: "Starter"
+readTime: "8 min"
+---
+
+Most projects fail before they start. The brief is vague, the timeline is a guess, nobody knows who owns what, and the kickoff meeting ends with "let's figure out the details later." Claude fixes this by generating complete project scaffolding from a plain-English description. You describe the project in 5 minutes, Claude returns a brief, timeline, RACI, and risk assessment.
+
+## The Kickoff Generator
+
+<PromptBlock
+  title="Complete project kickoff package"
+  prompt="I'm kicking off a new project. Generate a complete kickoff package from this description.\n\nPROJECT: [project name]\nDESCRIPTION: [what we're doing and why — 2-3 sentences is fine]\nSPONSOR: [who's funding/authorizing this]\nLEAD: [who's managing day-to-day]\nTEAM: [who's involved — names or roles]\nTIMELINE: [any hard deadlines or rough timeframe]\nBUDGET: [if applicable]\nSUCCESS LOOKS LIKE: [what does done look like? how will we measure success?]\n\nGenerate:\n\n1. PROJECT BRIEF (1 page)\n- Objective: what we're doing and why, in one paragraph\n- Scope: what's in and what's explicitly out\n- Success criteria: measurable outcomes\n- Key assumptions\n- Known risks\n\n2. TIMELINE WITH MILESTONES\n- Break the project into phases\n- Key milestones with target dates\n- Dependencies between phases\n- Buffer: where should we build in slack?\n\n3. RACI MATRIX\n- For each major deliverable or decision: who is Responsible, Accountable, Consulted, Informed\n- Use the team members I listed above\n\n4. RISK REGISTER\n- Top 5 risks: what could go wrong?\n- For each: likelihood (H/M/L), impact (H/M/L), mitigation plan, owner\n\n5. KICKOFF MEETING AGENDA\n- 30-minute agenda for the kickoff meeting\n- Key questions to align on\n- Decisions that need to be made in the meeting\n- Action items to assign"
+  variables={[
+    { name: "project name", placeholder: "Website Redesign" },
+    { name: "what we're doing and why — 2-3 sentences is fine", placeholder: "Redesigning our marketing website to improve conversion rates. Current site converts at 1.2%, industry average is 2.5%. We're losing deals because the site doesn't reflect our current product." },
+    { name: "who's funding/authorizing this", placeholder: "CEO" },
+    { name: "who's managing day-to-day", placeholder: "Marketing Director" },
+    { name: "who's involved — names or roles", placeholder: "Marketing Director, Designer, Developer, Content Writer, Product Manager (for messaging review)" },
+    { name: "any hard deadlines or rough timeframe", placeholder: "Must launch before Q3 (July 1) — we have a major campaign planned" },
+    { name: "if applicable", placeholder: "$25K for design agency + internal team time" },
+    { name: "what does done look like? how will we measure success?", placeholder: "New site live, conversion rate above 2%, bounce rate below 50%, positive feedback from sales team on messaging" }
+  ]}
+/>
+
+<TipCallout type="tip">
+Don't overthink the input. "We're migrating our CRM from HubSpot to Salesforce, 5 people involved, needs to be done by end of Q2" is enough for Claude to generate a solid first draft. You'll spend your time refining, not creating from scratch.
+</TipCallout>
+
+## Templates by Project Type
+
+### Product Launch
+
+<PromptBlock
+  title="Product launch kickoff"
+  prompt="We're launching a new [product/feature]. Generate a launch kickoff package.\n\nWHAT WE'RE LAUNCHING: [description]\nLAUNCH DATE: [target date]\nAUDIENCE: [who this is for]\nTEAM INVOLVED: [list roles/people]\n\nGenerate the standard kickoff package (brief, timeline, RACI, risks) plus these launch-specific elements:\n\n1. LAUNCH CHECKLIST by function:\n- Product: feature complete, QA, documentation\n- Marketing: landing page, email sequence, social, PR, blog post\n- Sales: battlecard, demo script, pricing update, FAQ\n- CS: support docs, known issues, escalation path\n- Engineering: monitoring, rollback plan, performance benchmarks\n\n2. GO/NO-GO CRITERIA\n- What must be true for us to launch on the target date?\n- What would cause us to delay?\n- Who makes the final go/no-go call?\n\n3. LAUNCH DAY RUN SHEET\n- Hour-by-hour plan for launch day\n- Who's monitoring what\n- Communication plan: internal and external\n\n4. POST-LAUNCH PLAN\n- First 48 hours: what to watch\n- First week: success metrics check\n- First month: full retrospective"
+  variables={[
+    { name: "product/feature", placeholder: "AI-powered email analytics feature" },
+    { name: "target date", placeholder: "April 15, 2026" },
+    { name: "who this is for", placeholder: "Existing customers on Growth and Enterprise plans" },
+    { name: "list roles/people", placeholder: "Product Manager, 2 Engineers, Designer, Marketing Lead, Sales Lead, CS Lead" }
+  ]}
+/>
+
+### Tool Migration
+
+<PromptBlock
+  title="Tool migration kickoff"
+  prompt="We're migrating from [old tool] to [new tool]. Generate a migration kickoff package.\n\nWHAT WE'RE MIGRATING: [what the tool does for us]\nUSERS AFFECTED: [how many people, which teams]\nDATA TO MIGRATE: [what data needs to move]\nTIMELINE: [when this needs to be done]\nWHY WE'RE SWITCHING: [the driver for the change]\n\nGenerate the standard kickoff package plus these migration-specific elements:\n\n1. DATA MIGRATION PLAN\n- What data moves, what gets archived, what gets left behind\n- Data mapping: old tool fields → new tool fields\n- Cleanup needed before migration\n- Validation plan: how to verify data integrity after migration\n\n2. PARALLEL RUN PLAN\n- How long will both tools run simultaneously?\n- What happens in the old tool vs. new tool during parallel run?\n- Cut-over criteria: when do we turn off the old tool?\n\n3. TRAINING PLAN\n- Who needs training? By when?\n- Training format: live sessions, documentation, or both?\n- Power users who can help others after training\n\n4. ROLLBACK PLAN\n- What triggers a rollback?\n- How do we rollback if the migration fails?\n- Data preservation during rollback\n\n5. COMMUNICATION PLAN\n- Announce timeline: when do affected users find out?\n- Weekly updates during migration\n- Support channels for questions and issues"
+  variables={[
+    { name: "old tool", placeholder: "HubSpot" },
+    { name: "new tool", placeholder: "Salesforce" },
+    { name: "what the tool does for us", placeholder: "CRM — contact management, deal tracking, pipeline reporting" },
+    { name: "how many people, which teams", placeholder: "15 people: Sales (8), CS (4), Marketing (3)" },
+    { name: "what data needs to move", placeholder: "5 years of contacts, companies, deals, notes, email logs, and custom properties" },
+    { name: "when this needs to be done", placeholder: "End of Q2 — June 30" },
+    { name: "the driver for the change", placeholder: "HubSpot can't handle our reporting needs, and Salesforce integrates with our new analytics platform" }
+  ]}
+/>
+
+### Vendor Evaluation
+
+<PromptBlock
+  title="Vendor evaluation kickoff"
+  prompt="We're evaluating vendors for [what you need]. Generate a vendor evaluation kickoff package.\n\nWHAT WE NEED: [the capability or tool]\nWHY NOW: [what triggered this evaluation]\nBUDGET: [range]\nTIMELINE FOR DECISION: [when we need to decide]\nDECISION MAKERS: [who's involved in the choice]\n\nGenerate:\n\n1. REQUIREMENTS DOCUMENT\n- Must-have requirements (deal breakers)\n- Nice-to-have requirements (differentiators)\n- Technical requirements (integration, security, performance)\n- Business requirements (pricing model, contract terms, support)\n\n2. EVALUATION SCORECARD\n- Scoring criteria with weights\n- Rating scale (1-5 with definitions for each level)\n- Template I can fill in for each vendor\n\n3. VENDOR SHORTLIST CRITERIA\n- How do we narrow from a long list to 3-5 finalists?\n- Red flags that immediately disqualify a vendor\n\n4. EVALUATION PROCESS\n- Step-by-step timeline: research → shortlist → demos → reference checks → decision\n- Questions to ask in each demo\n- Reference check questions\n- How we'll make the final decision (consensus, scoring, executive call)\n\n5. DECISION MEMO TEMPLATE\n- Template for documenting the final decision and rationale\n- Comparison table: finalists side by side\n- Risk assessment for the chosen vendor"
+  variables={[
+    { name: "what you need", placeholder: "project management tool" },
+    { name: "what triggered this evaluation", placeholder: "Outgrew Asana, team is frustrated with limitations" },
+    { name: "range", placeholder: "$500-2,000/month" },
+    { name: "when we need to decide", placeholder: "4 weeks" },
+    { name: "who's involved in the choice", placeholder: "COO (final decision), Engineering Lead, Marketing Lead, 2 power users" }
+  ]}
+/>
+
+## RACI Matrix Generator
+
+Sometimes you just need the RACI, not the full kickoff package.
+
+<PromptBlock
+  title="Standalone RACI matrix"
+  prompt="Generate a RACI matrix for this project.\n\nPROJECT: [project name]\nTEAM MEMBERS: [list everyone involved with their role]\n\nMAJOR DELIVERABLES/DECISIONS:\n[List the key deliverables, milestones, or decisions — or describe the project and I'll identify them]\n\nFor each deliverable or decision, assign:\n- R (Responsible): Who does the work\n- A (Accountable): Who makes the final call (only ONE person per row)\n- C (Consulted): Who provides input before the decision\n- I (Informed): Who needs to know after the decision\n\nRules:\n- Every row must have exactly one A\n- The A and R can be the same person for small teams\n- Flag any row where someone is both C and A (conflict of interest)\n- Flag any person who is R on more than 5 items (overloaded)\n\nOutput as a clean table I can paste into a doc or spreadsheet."
+  variables={[
+    { name: "project name", placeholder: "Q3 Marketing Campaign" },
+    { name: "list everyone involved with their role", placeholder: "Sarah (Marketing Director), Mike (Content Lead), Lisa (Designer), Tom (Developer), Dana (Sales Lead), Alex (CEO)" }
+  ]}
+/>
+
+<BeforeAfter
+  before={{ label: "Typical kickoff email", content: "Hey team — we're going to redesign the website. Let's meet Thursday to discuss. Bring your ideas." }}
+  after={{ label: "Kickoff with Claude-generated package", content: "Team — kicking off the website redesign. Attached is the project brief with scope, timeline, RACI, and risk register.\n\nPlease review before Thursday's kickoff. The meeting agenda is on the last page — we need to align on three decisions:\n1. Do we redesign in-house or hire an agency for the visual design?\n2. Are we migrating the blog as part of this project or Phase 2?\n3. Who owns the final sign-off on messaging?\n\nCome with your input on those three questions. 30 minutes, no longer." }}
+  annotation="The second version gets alignment before the meeting, not during it. The kickoff meeting becomes a decision-making session instead of a brainstorming session."
+/>
+
+## Post-Kickoff: Keeping Projects on Track
+
+The kickoff package isn't a one-time artifact. Use it throughout the project.
+
+<PromptBlock
+  title="Weekly project status update"
+  prompt="Generate a weekly status update for our project.\n\nPROJECT: [project name]\nORIGINAL TIMELINE: [key milestones and dates from the kickoff]\n\nTHIS WEEK'S PROGRESS:\n[Brain dump what happened this week — what got done, what didn't, any issues]\n\nGenerate a status update with:\n1. STATUS: Green / Yellow / Red (with one-sentence explanation)\n2. COMPLETED THIS WEEK: bullet list\n3. PLANNED FOR NEXT WEEK: bullet list\n4. BLOCKERS: anything preventing progress, with who needs to unblock it\n5. RISKS: any new risks that emerged, or existing risks that changed in likelihood\n6. TIMELINE CHECK: are we still on track for our milestones? If not, what's the revised estimate?\n7. DECISIONS NEEDED: any decisions the team or sponsor needs to make this week\n\nKeep it under 1 page. Executives should be able to read this in 2 minutes."
+  variables={[
+    { name: "project name", placeholder: "Website Redesign" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="You're a startup with 5 people. Do you really need RACI matrices and risk registers?"
+  answer="You don't need the formality, but you need the clarity. Even at 5 people, 'who owns this?' and 'what could go wrong?' are questions worth answering before you start. Use the kickoff generator but tell Claude: 'We're a 5-person startup. Keep this lightweight — I need clarity, not ceremony. One page max for the brief, simple RACI, top 3 risks only.'"
+  prompt="Generate a lightweight project kickoff for a 5-person startup. Skip the formality — I need a half-page brief, a simple 'who owns what' list, and the top 3 things that could go wrong. Keep it under 1 page total."
+/>
+
+<ScenarioCard
+  scenario="The project scope keeps changing after kickoff."
+  answer="Scope creep is a planning problem, not an execution problem. When scope changes, run the change through Claude: 'Here's the original scope. Here's the requested change. What's the impact on timeline, budget, and team capacity? Should we accept it, defer it, or trade it for something else in scope?' This forces a conscious decision instead of silent scope expansion."
+  prompt="We have a scope change request for our project. Original scope: [original]. Requested change: [change]. Analyze the impact on our timeline, budget, and team workload. Give me three options: accept with adjusted timeline, defer to Phase 2, or trade for something currently in scope."
+/>
+
+<TipCallout type="note">
+The kickoff package takes 10 minutes to generate and 15 minutes to review and customize. That 25 minutes saves hours of confusion, rework, and misalignment during the project. The ROI is absurd — do it for every project, even small ones.
+</TipCallout>

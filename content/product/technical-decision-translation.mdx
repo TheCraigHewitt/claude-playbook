@@ -1,0 +1,244 @@
+---
+title: "Technical Decision Translation"
+description: "When engineering gives you options you don't understand. Translate technical trade-offs into business impact."
+products: ["Chat"]
+tier: "Operator"
+readTime: "9 min"
+---
+
+Your engineering lead walks into your office and says: "We can either refactor the monolith into microservices, which takes 4 months, or we can add a caching layer with Redis, which takes 2 weeks but only solves 60% of the problem."
+
+You nod, pretend to understand, and ask for a recommendation. Then you spend the rest of the day wondering if you made the right call.
+
+Claude translates technical trade-offs into the language operators actually think in: cost, time, risk, and business impact.
+
+## The Translation Prompt
+
+<PromptBlock
+  title="Translate Technical Decision"
+  prompt={`My engineering team has given me a technical decision to make. I need help understanding the business implications.
+
+THEIR PROPOSAL:
+\${technicalProposal}
+
+THE OPTIONS THEY'VE PRESENTED:
+\${options}
+
+Translate this into terms a non-technical CEO/product leader can evaluate:
+
+1. **PLAIN ENGLISH EXPLANATION**
+What is each option actually doing? Explain it like I'm a smart businessperson, not an engineer. Use analogies if they help.
+
+2. **BUSINESS IMPACT COMPARISON**
+| Factor | Option A | Option B | \${optionC ? 'Option C' : ''} |
+- Upfront cost (time + money)
+- Ongoing cost
+- Impact on users (will they notice anything?)
+- Impact on team velocity (will this slow down feature development?)
+- Scale ceiling (when do we outgrow this solution?)
+- Risk if it fails
+
+3. **WHAT QUESTIONS SHOULD I ASK?**
+5 questions I should ask my engineering lead to make a better decision. These should reveal information that changes the calculus.
+
+4. **HIDDEN ASSUMPTIONS**
+What assumptions is each option making about our growth, traffic, team size, or product direction? If those assumptions are wrong, which option breaks worse?
+
+5. **MY RECOMMENDATION IF I WERE YOUR FRACTIONAL CTO**
+One paragraph: what I'd recommend and why, with the main risk clearly stated.`}
+  variables={[
+    { name: "technicalProposal", placeholder: "We need to improve our API response times. Average is 800ms, target is under 200ms." },
+    { name: "options", placeholder: "Option A: Refactor to microservices (4 months, 2 engineers). Option B: Add Redis caching layer (2 weeks, 1 engineer, solves ~60% of slow queries). Option C: Optimize database queries and add indexes (3 weeks, 1 engineer, solves ~40%)." },
+    { name: "optionC", placeholder: "true" }
+  ]}
+/>
+
+<TipCallout type="tip">
+Copy-paste the exact language your engineering team used. Don't paraphrase it — Claude needs to see the technical terms to translate them accurately. "They said something about microservices" is much less useful than their actual Slack message or document.
+</TipCallout>
+
+## Architecture Decisions
+
+When engineering proposes a significant architecture change, the business implications are often larger than they appear.
+
+<PromptBlock
+  title="Architecture Decision Review"
+  prompt={`My engineering team wants to make this architecture change:
+
+\${architectureChange}
+
+Their reasoning: \${reasoning}
+
+Timeline: \${timeline}
+Cost: \${cost}
+
+Help me evaluate this as a business decision:
+
+1. **WHAT THIS ACTUALLY MEANS**
+Plain English: what changes for us operationally? What changes for our customers?
+
+2. **THE REAL QUESTION**
+What's the actual business problem they're solving? Is this the right time to solve it? What triggers would tell us we MUST do this vs SHOULD do this vs COULD do this?
+
+3. **OPPORTUNITY COST**
+What are these engineers NOT building during this time? List the features or improvements that get delayed.
+
+4. **INCREMENTAL ALTERNATIVE**
+Is there a smaller version of this change that gets 80% of the benefit at 20% of the cost? (Engineers sometimes propose the "right" solution when the "good enough" solution is what the business needs right now.)
+
+5. **RISK ASSESSMENT**
+- What happens if we do this and it doesn't work?
+- What happens if we don't do this? When does it become urgent?
+- Can we reverse this decision if it's wrong?
+
+6. **DECISION FRAMEWORK**
+At what scale/revenue/traffic level does this become critical? Are we there now, or are we building for a future that may not arrive?`}
+  variables={[
+    { name: "architectureChange", placeholder: "Move from a monolithic Rails app to microservices with event-driven architecture using Kafka" },
+    { name: "reasoning", placeholder: "Current architecture won't scale past 10,000 concurrent users. We're at 3,000 now and growing 15% monthly." },
+    { name: "timeline", placeholder: "6 months for full migration, 2 months for first service extraction" },
+    { name: "cost", placeholder: "2 senior engineers full-time, plus increased AWS costs (~$3K/month more)" }
+  ]}
+/>
+
+<BeforeAfter
+  before={{
+    content: "Engineering says: 'We need to move to microservices.' You say: 'Okay, how long?' They say: '6 months.' You approve it because you trust your team."
+  }}
+  after={{
+    content: "You ask Claude to translate the proposal. You discover: (1) You won't hit the scale ceiling for 8 months at current growth. (2) There's a 2-week caching fix that buys 12 months of headroom. (3) The 6-month migration delays the billing feature your sales team needs in Q3. You choose the caching fix and revisit architecture in 6 months with more data."
+  }}
+  annotation="The right technical decision depends on business context that engineers don't always have. Translation enables better decisions, not second-guessing."
+/>
+
+## Vendor and Tool Decisions
+
+When engineering recommends a specific vendor, database, or framework.
+
+<PromptBlock
+  title="Vendor Decision Translation"
+  prompt={`Engineering recommends we switch from \${currentTool} to \${proposedTool}.
+
+Their reasoning:
+\${reasoning}
+
+Translate this for a business evaluation:
+
+1. **WHAT DOES THIS CHANGE FOR THE BUSINESS?**
+- Will customers notice? (performance, features, reliability)
+- Will the team be more productive?
+- Does this lock us into a vendor?
+
+2. **TOTAL COST OF OWNERSHIP**
+| Cost Category | Current (\${currentTool}) | Proposed (\${proposedTool}) |
+- License/subscription cost
+- Migration cost (engineering time)
+- Training/ramp-up time
+- Ongoing maintenance
+- Risk of migration issues
+
+3. **VENDOR LOCK-IN ASSESSMENT**
+How hard is it to switch away from \${proposedTool} later? What data or configurations become vendor-specific? Is there an open-source alternative that avoids lock-in?
+
+4. **TIMING**
+Is this urgent (current tool is failing) or strategic (better tool for the future)? What's the cost of waiting 6 months?
+
+5. **WHAT I'D ASK**
+Questions for the engineering team before approving:
+- Have you evaluated alternatives beyond \${proposedTool}?
+- Can we run both in parallel during migration?
+- What's the rollback plan if \${proposedTool} doesn't work out?
+- Is there a smaller proof-of-concept we can run first?`}
+  variables={[
+    { name: "currentTool", placeholder: "MySQL" },
+    { name: "proposedTool", placeholder: "PostgreSQL" },
+    { name: "reasoning", placeholder: "PostgreSQL has better JSON support, full-text search, and handles our data types more efficiently. MySQL is causing issues with our reporting queries." }
+  ]}
+/>
+
+## Technical Debt Conversations
+
+The most common technical decision that non-technical leaders struggle with: "How much time should we spend on technical debt?"
+
+<PromptBlock
+  title="Technical Debt Evaluation"
+  prompt={`My engineering team wants to dedicate \${allocation} of their time to technical debt for the next \${period}.
+
+Their justification: \${justification}
+
+Current team size: \${teamSize} engineers
+Current velocity: \${velocity}
+
+Help me evaluate this:
+
+1. **WHAT IS TECHNICAL DEBT IN BUSINESS TERMS?**
+Translate their specific technical debt items into business impact. For each item:
+| Debt Item | Business Impact If Ignored | Business Impact If Fixed | Risk of Ignoring |
+
+2. **VELOCITY MATH**
+If we allocate \${allocation} to debt, we lose X feature-weeks per quarter. Is the expected velocity improvement after debt reduction worth it?
+
+3. **PRIORITIZATION FRAMEWORK**
+Not all technical debt is equal. Help me categorize their items:
+- **Fix now** — Actively causing customer-facing issues or slowing the team significantly
+- **Fix soon** — Will become urgent within 3-6 months at current growth
+- **Fix eventually** — Real debt but not impacting anyone right now
+- **Don't fix** — Debt that's tolerable forever or will be replaced before it matters
+
+4. **ALTERNATIVE APPROACHES**
+Instead of a blanket allocation, should we:
+- Dedicate one sprint to debt every 6 weeks?
+- Fix debt in the area we're already working on (boy scout rule)?
+- Have one engineer on debt rotation while others ship features?
+
+5. **THE BUSINESS QUESTION**
+What would you want to see in 90 days to know this investment was worth it? Define success criteria that aren't just "cleaner code" but actual business outcomes.`}
+  variables={[
+    { name: "allocation", placeholder: "20%" },
+    { name: "period", placeholder: "Q2" },
+    { name: "justification", placeholder: "Test suite takes 45 minutes to run (should be 5), deploys are manual and error-prone (we had 2 incidents from bad deploys last month), and the search feature has performance issues that cause timeouts for 5% of queries" },
+    { name: "teamSize", placeholder: "6" },
+    { name: "velocity", placeholder: "about 3 medium features per sprint" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="Engineering wants to rewrite the authentication system. It works, but it's 'legacy code that's hard to modify.' Your product roadmap requires SSO in Q3. Is now the right time?"
+  answer="Ask Claude to evaluate whether the rewrite is necessary for SSO or if SSO can be built on top of the existing auth system. Often, you can build the feature first and refactor later — or the rewrite only makes sense if you're building SSO anyway."
+  prompt="Engineering wants to rewrite our authentication system (~6 weeks). It currently works but is hard to modify. We need SSO by Q3 (in 4 months). Questions: (1) Can we build SSO on top of the existing auth without the rewrite? (2) If we rewrite first, does that make SSO faster to build? (3) What's the risk of building SSO on the legacy auth and rewriting later? (4) Is there a path where we do a partial rewrite that enables SSO without a full 6-week effort?"
+/>
+
+## Ongoing Technical Communication
+
+Set up a standing workflow for translating engineering updates.
+
+<PromptBlock
+  title="Weekly Engineering Update Translation"
+  prompt={`Here's my engineering team's weekly update. Translate it for a non-technical audience:
+
+\${engineeringUpdate}
+
+Produce:
+
+1. **EXECUTIVE SUMMARY** (3 bullets)
+What the team accomplished this week in business terms. "Reduced page load time by 40%" not "Optimized database indexes."
+
+2. **PROGRESS AGAINST GOALS**
+Map the work against our quarterly goals:
+| Goal | Progress This Week | On Track? |
+
+3. **RISKS OR BLOCKERS** (in business terms)
+Any technical issues that could impact timelines, features, or customers. What should I know about?
+
+4. **NEXT WEEK PREVIEW**
+What's coming that I should be aware of — especially anything customer-facing or deadline-sensitive.
+
+Keep the total output under 200 words. I don't need to understand the technical details, just the business implications.`}
+  variables={[
+    { name: "engineeringUpdate", placeholder: "- Merged PR for new indexing strategy on transactions table, 60% query improvement\n- CI pipeline migration to GitHub Actions 80% complete\n- Found and fixed race condition in payment processing (was causing duplicate charges in ~0.1% of transactions)\n- Started spike on WebSocket implementation for real-time notifications\n- Blocked on API rate limits from Stripe for the billing migration" }
+  ]}
+/>
+
+<TipCallout type="note">
+This playbook isn't about second-guessing your engineering team. It's about making better decisions together. Engineers optimize for technical correctness. Product leaders optimize for business outcomes. Translation bridges the gap. The best technical decisions happen when both perspectives are fully understood.
+</TipCallout>

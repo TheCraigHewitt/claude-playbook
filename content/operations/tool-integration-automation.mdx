@@ -1,0 +1,172 @@
+---
+title: "Tool Integration & Workflow Automation"
+description: "Connect everything — the pattern for any tool integration."
+products: ["Code"]
+tier: "Power User"
+readTime: "15 min"
+---
+
+Every business runs on a stack of disconnected tools. Your CRM doesn't talk to your invoicing tool. Your support desk doesn't know about your product analytics. Your project management tool can't read your email. Claude Code is the universal connector — you describe what you want in plain English, and it figures out the API calls to make it happen.
+
+The pattern is always the same: **describe the workflow you want, and Claude Code builds the connection.** You don't need to understand APIs, webhooks, or data formats. You need to describe the business problem.
+
+## The Universal Integration Pattern
+
+<StepByStep
+  steps={[
+    { title: "Describe the workflow", description: "Tell Claude Code what you want to happen. 'When a new deal closes in HubSpot, create a project in ClickUp and send a Slack notification.'" },
+    { title: "Claude identifies the connections", description: "Claude determines which APIs to call, what data to pass between them, and what authentication is needed." },
+    { title: "Set up authentication", description: "Provide API keys as environment variables. Claude handles the rest." },
+    { title: "Test with real data", description: "Run the workflow once with a real example. Claude shows you every step and confirms the results." },
+    { title: "Save as a reusable skill", description: "Once it works, save it as a Claude Code slash command you can run anytime." }
+  ]}
+/>
+
+## The "Just Describe It" Approach
+
+The most powerful thing about Claude Code for integrations: you don't need to know how to use any API. You describe the business outcome and Claude figures out the implementation.
+
+<PromptBlock
+  title="Describe any integration"
+  prompt="I need to connect [tool A] and [tool B]. Here's what I want to happen:\n\n[Describe the workflow in plain English. Be specific about:\n- What triggers the workflow (when does it start?)\n- What data needs to move between the tools\n- What the end result should look like\n- Any conditions or filters (only for certain types of records, etc.)]\n\nMy API credentials:\n- [Tool A]: stored in environment variable [env var A]\n- [Tool B]: stored in environment variable [env var B]\n\nPlease:\n1. Confirm you understand the workflow\n2. Explain which API endpoints you'll use (in plain English, not code)\n3. Run a test with one real record so I can verify the result\n4. Show me the result before and after"
+  variables={[
+    { name: "tool A", placeholder: "Stripe" },
+    { name: "tool B", placeholder: "HubSpot" },
+    { name: "env var A", placeholder: "STRIPE_API_KEY" },
+    { name: "env var B", placeholder: "HUBSPOT_API_KEY" }
+  ]}
+/>
+
+<TipCallout type="tip">
+Be specific about what you want, not how to do it. "When a customer churns in Stripe, update their HubSpot contact to 'Churned' and create a win-back task in ClickUp assigned to the CS team" is a great prompt. "Use the Stripe webhook API and POST to HubSpot's contacts endpoint" is unnecessary — Claude already knows how to do that.
+</TipCallout>
+
+## Common Integration Recipes
+
+### New Customer → Full Stack Setup
+
+<PromptBlock
+  title="New customer onboarding automation"
+  prompt="When a new customer signs up (Stripe subscription created), I want the following to happen automatically:\n\n1. HUBSPOT: Create or update the contact with:\n   - Customer status: Active\n   - Plan tier: [pull from Stripe subscription]\n   - MRR: [pull from Stripe]\n   - Start date: today\n\n2. CLICKUP: Create a new onboarding project using our onboarding template with:\n   - Project name: '[Company Name] Onboarding'\n   - Assigned to: [default CS rep or based on round-robin]\n   - Due date: 14 days from today\n\n3. SLACK: Post to #new-customers:\n   - Customer name, plan tier, MRR\n   - Link to HubSpot contact\n   - Link to ClickUp onboarding project\n\n4. GMAIL: Send the welcome email using template [template name]\n\nAPI keys are in: STRIPE_API_KEY, HUBSPOT_API_KEY, CLICKUP_API_TOKEN, SLACK_WEBHOOK_URL\n\nTest this with our most recent new customer."
+/>
+
+### Support Ticket → Engineering Escalation
+
+<PromptBlock
+  title="Support to engineering escalation"
+  prompt="When a support ticket is tagged as 'engineering' in [support tool], I want:\n\n1. CREATE a bug/task in [engineering tool] with:\n   - Title: ticket subject line\n   - Description: full ticket content + customer context\n   - Priority: mapped from ticket priority\n   - Labels: 'customer-reported'\n   - Link back to the original support ticket\n\n2. UPDATE the support ticket with:\n   - Internal note: 'Escalated to engineering — [engineering tool] issue #[number]'\n   - Tag: 'engineering-escalated'\n\n3. NOTIFY in Slack #engineering-bugs:\n   - Ticket summary\n   - Customer name and plan tier (from CRM)\n   - Link to both the ticket and the engineering task\n\nAPI keys: [SUPPORT_API_KEY], [ENGINEERING_API_KEY], SLACK_WEBHOOK_URL, HUBSPOT_API_KEY (for customer context)"
+  variables={[
+    { name: "support tool", placeholder: "Intercom" },
+    { name: "engineering tool", placeholder: "Linear" },
+    { name: "SUPPORT_API_KEY", placeholder: "INTERCOM_API_KEY" },
+    { name: "ENGINEERING_API_KEY", placeholder: "LINEAR_API_KEY" }
+  ]}
+/>
+
+### Weekly Report Assembly
+
+<PromptBlock
+  title="Multi-source weekly report"
+  prompt="Every Monday morning, I want a weekly business report assembled from multiple sources:\n\n1. STRIPE: Revenue metrics (MRR, new customers, churn, failed payments)\n2. [CRM]: Pipeline summary (deals by stage, this week's closes, forecast)\n3. [ANALYTICS]: Key product metrics (DAU, feature adoption, trial conversions)\n4. [SUPPORT TOOL]: Support metrics (ticket volume, response time, CSAT)\n5. [PM TOOL]: Project status (completed tasks, blockers, sprint progress)\n\nAssemble all of this into a single report with:\n- Executive summary (5 bullet points)\n- Section for each source with key metrics and week-over-week trends\n- 'Attention needed' section: anything that's off-track or unusual\n- 'Wins this week' section: positive highlights\n\nFormat for Slack posting (use markdown) and also save as a PDF to [folder path].\n\nEnvironment variables: STRIPE_API_KEY, [CRM_KEY], [ANALYTICS_KEY], [SUPPORT_KEY], [PM_KEY]"
+  variables={[
+    { name: "CRM", placeholder: "HubSpot" },
+    { name: "ANALYTICS", placeholder: "Mixpanel" },
+    { name: "SUPPORT TOOL", placeholder: "Intercom" },
+    { name: "PM TOOL", placeholder: "ClickUp" },
+    { name: "CRM_KEY", placeholder: "HUBSPOT_API_KEY" },
+    { name: "ANALYTICS_KEY", placeholder: "MIXPANEL_API_KEY" },
+    { name: "SUPPORT_KEY", placeholder: "INTERCOM_API_KEY" },
+    { name: "PM_KEY", placeholder: "CLICKUP_API_TOKEN" },
+    { name: "folder path", placeholder: "~/Reports/Weekly/" }
+  ]}
+/>
+
+## Zapier + Claude Code: When to Use Each
+
+Zapier connects 8,000+ apps through a visual interface. Claude Code connects anything with an API through conversation. They're complementary, not competing.
+
+| Factor | Zapier | Claude Code |
+|--------|--------|-------------|
+| **Always-on triggers** | Best choice — monitors events in real-time (new email, form submission, etc.) | Not ideal — Claude Code runs on-demand, not as a background listener |
+| **Complex logic** | Limited to Zapier's filter/path system. Complex conditions get messy | Unlimited — describe any logic in plain English |
+| **Data transformation** | Basic formatting and mapping | Full text analysis, summarization, enrichment, AI-powered processing |
+| **Custom APIs** | Requires Webhooks or Code steps | Native — describe the API and Claude figures it out |
+| **Cost at scale** | $20-70/month for most businesses, more for high volume | Your Claude subscription (likely already paying) |
+| **Setup time** | Minutes for simple zaps, hours for complex ones | Minutes for anything — complexity doesn't change setup time much |
+| **Maintenance** | Low for simple zaps, high for complex multi-step zaps | Low — fix by describing the problem, not debugging a workflow builder |
+
+### The Best of Both Worlds
+
+<PromptBlock
+  title="Zapier trigger + Claude Code processing"
+  prompt="I want to combine Zapier's triggers with Claude Code's processing power. Here's my workflow:\n\nTRIGGER (Zapier handles this):\n[What event triggers the workflow? e.g., new form submission, new email, webhook from a tool]\n\nPROCESSING (Claude Code handles this):\n[What needs to happen with the data? e.g., analyze the content, enrich it, make decisions, update multiple tools]\n\nDesign this integration:\n1. What does Zapier need to do? (trigger + send data to Claude Code)\n2. How does Claude Code receive the data? (webhook, file drop, or manual trigger)\n3. What does Claude Code process and where does it send the results?\n4. What's the end-to-end flow from trigger to final output?\n\nKeep the Zapier side simple (trigger + webhook) and let Claude Code handle the complex logic."
+/>
+
+<RealWorldProof
+  quote="We replaced 14 Zapier zaps with 3 Claude Code skills. The zaps were doing simple A-to-B data moves that we'd outgrown — we needed AI to analyze the data between steps. Our monthly Zapier bill dropped from $73 to $20 (keeping the simple triggers), and the workflows actually do more than before."
+  author="Director of Operations, Agency"
+  context="16-person agency running marketing ops for 20+ clients"
+/>
+
+## Building Integration Skills
+
+Once a workflow is proven, save it as a reusable Claude Code skill.
+
+<PromptBlock
+  title="Save integration as a reusable skill"
+  prompt="I've tested this workflow and it works. Save it as a Claude Code skill.\n\nWORKFLOW NAME: [name]\nWHAT IT DOES: [one sentence description]\nTRIGGER: [when to run it — on demand, after a meeting, daily, etc.]\nINPUT NEEDED: [what the user needs to provide when running it]\n\nCreate a skill file (.claude/commands/[name].md) that:\n1. Describes what the skill does\n2. Lists required environment variables\n3. Specifies the expected input format\n4. Includes the full workflow logic\n5. Handles errors gracefully (what to do if an API is down, data is missing, etc.)\n6. Outputs a confirmation of what was done\n\nAlso create a test command so I can verify the skill works after changes."
+  variables={[
+    { name: "name", placeholder: "new-customer-setup" }
+  ]}
+/>
+
+## Troubleshooting Integrations
+
+When things go wrong (and they will), use Claude Code to diagnose.
+
+<PromptBlock
+  title="Diagnose integration failure"
+  prompt="Our [workflow name] integration isn't working. Here's what's happening:\n\nEXPECTED: [what should happen]\nACTUAL: [what's actually happening]\nLAST WORKING: [when did it last work correctly?]\nCHANGES: [anything that changed recently — tool updates, new team members, API key rotation]\n\nDiagnose:\n1. Test each API connection individually — which ones are working?\n2. Check authentication — have any API keys expired or been rotated?\n3. Test the data flow step by step — where does it break?\n4. Check for API changes — did any of the tools update their API?\n5. Look at error messages — what specifically is failing?\n\nGive me a diagnosis and the fix."
+  variables={[
+    { name: "workflow name", placeholder: "new customer onboarding automation" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="You want to connect a tool that Claude Code doesn't seem to know about."
+  answer="Claude Code can work with any tool that has a REST API — even if it's never heard of the specific tool. Find the tool's API documentation (usually at docs.[tool].com or [tool].com/developers), paste the relevant endpoints into Claude Code, and describe what you want. Claude reads the docs and builds the integration. This works for niche, industry-specific tools that Zapier doesn't support."
+  prompt="I need to connect to [tool name]. Here's their API documentation: [paste relevant API docs]. I want to [describe what you want]. Build this integration using their API."
+/>
+
+<ScenarioCard
+  scenario="You're worried about an integration accidentally modifying or deleting data."
+  answer="Two safeguards: (1) Use read-only API keys for any integration that only needs to read data. (2) For write operations, always run in 'preview' mode first — tell Claude: 'Show me exactly what you're going to do before doing it.' Claude will list every API call with the data it plans to send. You review and approve before anything changes. Start every new integration this way until you trust it."
+/>
+
+## The Integration Inventory
+
+Track what you've connected and maintain it.
+
+<PromptBlock
+  title="Integration inventory and health check"
+  prompt="Help me create and maintain an inventory of all our Claude Code integrations.\n\nCURRENT INTEGRATIONS:\n[List your integrations — tool connections, automated workflows, skills]\n\nFor each integration, document:\n1. What tools are connected\n2. What the workflow does\n3. What triggers it (on-demand, scheduled, event-based)\n4. Which environment variables / API keys it uses\n5. When it was last tested\n6. Who owns it (who to contact if it breaks)\n\nThen run a health check:\n- Test each API connection\n- Verify all environment variables are set\n- Flag any API keys that might be close to expiration\n- Identify integrations that haven't been used in 30+ days (candidates for cleanup)\n- Check for redundant integrations (two workflows doing similar things)"
+/>
+
+<TipCallout type="note">
+The most common integration failure mode isn't technical — it's organizational. Someone rotates an API key and forgets to update the environment variable. Someone cancels a tool subscription. Someone changes the CRM field names. Keep your integration inventory updated and review it monthly. A 10-minute monthly check prevents hours of debugging.
+</TipCallout>
+
+## Where to Start
+
+Don't try to connect everything at once. Here's the priority order for most businesses:
+
+| Priority | Integration | Why | Complexity |
+|----------|-------------|-----|------------|
+| 1 | Meeting notes → PM tool | Highest frequency, saves the most time per week | Low |
+| 2 | CRM → notifications (Slack/email) | Everyone needs to know about new deals and churn | Low |
+| 3 | Payment tool → CRM | Revenue data should flow automatically, not be entered manually | Medium |
+| 4 | Support → Engineering | Escalations are time-sensitive and error-prone when manual | Medium |
+| 5 | Multi-source reporting | Replaces hours of weekly spreadsheet work | Medium |
+| 6 | Full workflow orchestration | End-to-end processes across 3+ tools | High |
+
+Build one integration per week. Test it for a week before building the next one. By month two, your entire operational stack is connected.

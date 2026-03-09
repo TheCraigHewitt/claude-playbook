@@ -1,0 +1,168 @@
+---
+title: "Getting Started: Claude Code in VS Code"
+description: "Step-by-step installation for Mac and Windows. VS Code setup (not terminal). Your first conversation."
+products: ["Code"]
+tier: "Starter"
+readTime: "12 min"
+---
+
+You don't need to use the terminal. You don't need to be a developer. You need VS Code (a free app) and about 15 minutes. By the end of this guide, you'll have Claude Code running and you'll have completed your first real task.
+
+## Why VS Code (Not the Terminal)
+
+The terminal is where developers live. VS Code is a friendly middle ground — it's a free application from Microsoft that gives you a visual interface for working with Claude Code. You can see your files on the left, your Claude conversation in the center, and any output Claude generates in real time.
+
+Think of VS Code as the "desktop app" for Claude Code. You can use the terminal directly if you want to, but VS Code is the recommended starting point for non-developers.
+
+## Installation: Mac
+
+<StepByStep
+  steps={[
+    { title: "Install VS Code", description: "Go to code.visualstudio.com and download the Mac version. Open the .dmg file and drag VS Code to your Applications folder. Launch it." },
+    { title: "Install Node.js", description: "Go to nodejs.org and download the LTS (Long Term Support) version for Mac. Run the installer — click through the defaults. This is required for Claude Code to run." },
+    { title: "Install Claude Code", description: "In VS Code, open the terminal (View → Terminal, or press Ctrl+backtick). Type: npm install -g @anthropic-ai/claude-code and press Enter. Wait for it to finish." },
+    { title: "Authenticate", description: "In the same terminal, type: claude and press Enter. It will open your browser to log in with your Anthropic account. Log in and return to VS Code." },
+    { title: "Verify it works", description: "You should see Claude's prompt waiting for your input. Type: What can you help me with? and press Enter. If Claude responds, you're set up." }
+  ]}
+  title="Mac setup (15 minutes)"
+/>
+
+## Installation: Windows
+
+<StepByStep
+  steps={[
+    { title: "Install VS Code", description: "Go to code.visualstudio.com and download the Windows version. Run the installer with default settings." },
+    { title: "Install Node.js", description: "Go to nodejs.org and download the LTS version for Windows. Run the installer — check the box for 'Automatically install the necessary tools' if it appears." },
+    { title: "Install Claude Code", description: "In VS Code, open the terminal (View → Terminal). Type: npm install -g @anthropic-ai/claude-code and press Enter. Wait for it to finish." },
+    { title: "Authenticate", description: "In the terminal, type: claude and press Enter. Log in via your browser when prompted." },
+    { title: "Verify it works", description: "When Claude's prompt appears, type a test message. If it responds, you're ready." }
+  ]}
+  title="Windows setup (15 minutes)"
+/>
+
+<TipCallout type="note">
+You need a Claude Max plan or an Anthropic API key to use Claude Code. The Max plan ($100/month as of early 2026) is the simplest option — it includes Claude Code usage. If you're on a Pro plan, you'll need to upgrade or use API credits.
+</TipCallout>
+
+## Your First Conversation
+
+Now that Claude Code is running, let's do something real. Not "hello world" — something you'll actually use.
+
+### Starter Task: Organize a Folder
+
+<PromptBlock
+  title="Your first Claude Code task"
+  prompt="Look at the files in my Downloads folder. Tell me:\n1. How many files are there?\n2. Group them by file type (PDFs, images, spreadsheets, etc.)\n3. Which files are larger than 50MB?\n4. Which files haven't been opened in 30+ days?\n\nDon't move anything yet — just report what you find."
+/>
+
+This is a great first task because:
+- It's immediately useful (everyone's Downloads folder is a mess)
+- It demonstrates file access (Claude Code can read your file system)
+- It's safe (you're just looking, not changing anything)
+- It takes 30 seconds
+
+### Second Task: Analyze a Spreadsheet
+
+<PromptBlock
+  title="Analyze a real spreadsheet"
+  prompt="Read the spreadsheet at [file path]. Tell me:\n1. How many rows and columns?\n2. What does this data appear to represent?\n3. Summary statistics for any numeric columns\n4. Any obvious data quality issues (blanks, duplicates, outliers)?\n5. The 3 most interesting patterns you notice"
+  variables={[{ name: "file path", placeholder: "~/Documents/sales-data-q4.csv" }]}
+/>
+
+<ScenarioCard
+  scenario="You're nervous about Claude Code reading your files. What if it does something you don't want?"
+  answer="Claude Code always asks for permission before taking actions. When it wants to read a file, write a file, or run a command, it shows you what it's about to do and waits for you to approve. You're always in control. Start with read-only tasks (like analyzing files) until you're comfortable."
+  prompt="Before you do anything, explain exactly what files you're going to access and what commands you're going to run. Wait for my approval before each step."
+/>
+
+## Understanding the Interface
+
+When you're talking to Claude Code in VS Code, here's what you see:
+
+**The conversation panel** — This is where you type and where Claude responds. It looks like a chat, but Claude can also show you files it's reading, commands it wants to run, and results of actions it's taken.
+
+**Permission prompts** — Whenever Claude wants to do something (read a file, write a file, run a command), it asks you first. You'll see a message like "Claude wants to run: ls ~/Downloads" with options to Allow or Deny.
+
+**The file explorer** — On the left side of VS Code, you can see your project files. If you open Claude Code in a specific folder, that folder appears here.
+
+<TipCallout type="tip">
+To start Claude Code in a specific folder, open VS Code, then go to File → Open Folder and select the folder you want to work in. When you start Claude Code from the terminal, it will have context about that folder and all its contents.
+</TipCallout>
+
+## The Working Directory Concept
+
+Claude Code operates from a "working directory" — the folder where it starts. This matters because:
+
+- Claude can see all files in this folder and subfolders
+- When Claude creates files, they go here by default
+- Your CLAUDE.md file (more on this later) lives here
+
+For most operators, you'll want to create a dedicated folder for your Claude Code work:
+
+<PromptBlock
+  title="Set up your workspace"
+  prompt="Create a folder structure for my Claude Code workspace:\n\n~/Claude-Workspace/\n  ├── reports/        (for generated reports)\n  ├── data/           (for data files I want to analyze)\n  ├── output/         (for anything Claude creates)\n  └── CLAUDE.md       (my context file — we'll set this up later)\n\nCreate this structure and confirm it's ready."
+/>
+
+## Your First Real Project
+
+Let's do something with genuine business value. Pick the one that matches your situation:
+
+### Option A: Revenue Quick-Look
+
+<PromptBlock
+  title="Quick revenue analysis from a CSV"
+  prompt="I have a CSV export of our invoices at [file path]. Analyze it and create a simple HTML report showing:\n1. Total revenue by month (bar chart)\n2. Average deal size over time (line chart)\n3. Top 10 customers by total revenue (table)\n4. Month-over-month growth rate\n\nSave the report to ~/Claude-Workspace/reports/revenue-report.html and open it in my browser."
+  variables={[{ name: "file path", placeholder: "~/Documents/invoices-2025.csv" }]}
+/>
+
+### Option B: Content Audit
+
+<PromptBlock
+  title="Audit your blog or website content"
+  prompt="I have a CSV of all our blog posts at [file path] with columns for: title, URL, publish date, word count, and page views. Analyze it and tell me:\n1. Which posts get the most traffic per word (efficiency)\n2. Which topics/categories perform best\n3. Posts that are getting traffic but are more than 12 months old (update candidates)\n4. Posts with zero or near-zero traffic (archive candidates)\n5. Content gaps — topics we should cover based on what's performing\n\nCreate a prioritized action list: what to update, what to archive, what to create."
+  variables={[{ name: "file path", placeholder: "~/Documents/blog-audit.csv" }]}
+/>
+
+### Option C: File Organization
+
+<PromptBlock
+  title="Organize your documents folder"
+  prompt="Scan my ~/Documents folder. Don't go into subfolders that look like app data or system files. For the files and folders that look like my actual work:\n1. Categorize everything by topic/project\n2. Identify duplicate or near-duplicate files\n3. Find files I haven't modified in over a year\n4. Suggest a cleaner folder structure\n5. Create a plan for reorganization — but don't execute it until I approve"
+/>
+
+## Common Questions from First-Time Users
+
+### "What if I mess something up?"
+
+Claude Code asks permission before every action. If it wants to delete a file, you'll see the command and can say no. Start with read-only tasks until you're comfortable. And keep backups of important files (you should be doing this anyway).
+
+### "How much does it cost?"
+
+Claude Max plan ($100/month) includes Claude Code usage. You'll also use tokens for API calls to external tools, but for most operator workflows, the Max plan covers everything.
+
+### "Can I use it on my work computer?"
+
+Check with your IT team. Claude Code runs locally, but it processes data through Anthropic's servers. Most companies with a Claude business plan are fine with this, but verify your company's data policies first.
+
+### "What happens to my data?"
+
+Claude Code processes your requests through Anthropic's API. On business and enterprise plans, Anthropic does not train on your data. On individual plans, review Anthropic's data retention policies for your comfort level.
+
+<BeforeAfter
+  before={{
+    content: "I need to learn to code before I can use Claude Code."
+  }}
+  after={{
+    content: "I installed VS Code, ran one command, and now I have an assistant that can read my files, analyze my data, and build things I describe in plain English."
+  }}
+  annotation="The setup is the only barrier, and it's a 15-minute barrier."
+/>
+
+## What's Next
+
+Now that Claude Code is running, you're ready for the real power moves:
+
+- [Connect Your Business Tools](/claude-playbook/code-for-operators/connect-business-tools) — Hook up Stripe, your CRM, analytics, and more
+- [CLAUDE.md: Your Business OS](/claude-playbook/code-for-operators/claude-md-business-os) — Teach Claude Code about your business so every conversation starts with context
+- [Skills: Teach Reusable Workflows](/claude-playbook/code-for-operators/skills-teach-workflows) — Build repeatable workflows you can trigger with a single command

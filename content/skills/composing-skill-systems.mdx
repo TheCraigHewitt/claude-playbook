@@ -1,0 +1,307 @@
+---
+title: "Composing Skill Systems"
+description: "Skills that reference other skills, skills + commands working together, and building a complete operational system for your business."
+products: ["Code"]
+tier: "Operator"
+readTime: "15 min"
+---
+
+A single skill automates a task. A system of skills automates a business function. This is the playbook for moving from individual skills to composed systems — where skills reference each other, share context, and chain together into workflows that handle entire operations.
+
+## From Skills to Systems
+
+Most people stop at individual skills. They build a blog post drafter, an email writer, a meeting prep tool. Each works well in isolation.
+
+The leap happens when those skills start talking to each other:
+
+- A content skill that knows about your repurposing skill and offers to invoke it
+- A meeting prep skill that reads past decision journal entries before suggesting an agenda
+- A decision journal skill that cross-references outputs from a financial scenario modeler
+
+This isn't theoretical. The two case studies in this Playbook — [The Content Operations Engine](/claude-playbook/case-studies/content-operations-engine) and [The Virtual Cofounder](/claude-playbook/case-studies/virtual-cofounder) — are both composed skill systems built by non-developers.
+
+## Pattern 1: Skills That Reference Other Skills
+
+The simplest composition pattern: one skill knows about another and offers to invoke it.
+
+```markdown
+# YouTube Script Generator
+
+## After Delivering
+
+Offer to:
+- Run /repurpose on this script to generate platform-specific versions
+- Run /youtube-idea to develop the next video concept
+- Log any strategic decisions with /decision-journal log
+```
+
+The script generator doesn't need to know HOW the repurpose command works. It just needs to know it exists and when to suggest it. Each skill stays focused on its own job.
+
+### How This Works in Practice
+
+Here's a real workflow from a content operations system:
+
+```
+/youtube-idea
+  → Scores and refines a video concept
+  → "Want me to generate the full script? Run /youtube-script"
+
+/youtube-script
+  → Produces a complete video script
+  → "Ready to repurpose? Run /repurpose output/script-[slug].md"
+
+/repurpose
+  → Creates Substack post, LinkedIn post, social notes, short script
+  → "Want to compile this week's newsletter? Run /newsletter"
+
+/newsletter
+  → Pulls from all repurposed content this week
+  → Produces a weekly email
+```
+
+Four skills, zero overlap, each one feeding the next. The full pipeline takes an idea from raw concept to published content across four platforms.
+
+<RealWorldProof
+  quote="My naivete has kind of made me better at Claude Code. I have absolutely no idea what it can and can't do, so I just ask it to do everything."
+  author="Laura Roeder"
+  context="Founder who uses Claude Code for marketing, analytics, email, and ad management with zero coding background"
+/>
+
+## Pattern 2: Shared Context Files
+
+The backbone of any skill system is shared context. Instead of duplicating information across skills, create context files that multiple skills reference.
+
+### The Context Layer
+
+```
+context/
+├── 00-quick-reference.md    ← Fast lookup (loaded by most skills)
+├── 01-identity.md           ← Who we are (loaded by content skills)
+├── 02-audience.md           ← Who we serve (loaded by content + sales)
+├── 03-offers.md             ← What we sell (loaded by sales skills)
+├── 04-voice-guide.md        ← How we sound (loaded by ALL content)
+├── 05-frameworks.md         ← How we teach (loaded by teaching skills)
+├── 06-competitors.md        ← How we differ (loaded by sales + strategy)
+├── 07-content-strategy.md   ← Where we publish (loaded by content)
+└── decisions/               ← Past decisions (loaded by strategic skills)
+```
+
+Each skill specifies which context files it needs:
+
+```markdown
+## Before Starting
+
+Read these files for context:
+- context/00-quick-reference.md (always)
+- context/04-voice-guide.md (always for content)
+- context/02-audience.md (if this is audience-facing content)
+```
+
+### The Numbered File Pattern
+
+The numbered prefixes (00, 01, 02...) create a deliberate hierarchy:
+
+- **00-09:** Quick reference and core identity — loaded frequently
+- **10-19:** Detailed strategy — loaded for strategic work
+- **20+:** Deep reference — loaded rarely, for specific tasks
+
+This matters because Claude's attention is finite. Loading only the relevant context for each skill ensures maximum quality.
+
+<TipCallout type="note">
+The context layer is your system's institutional memory. Every skill draws from the same source of truth. When you update your positioning or audience definition, every skill benefits automatically.
+</TipCallout>
+
+## Pattern 3: The CLAUDE.md as System Map
+
+In a skill system, CLAUDE.md evolves from a simple briefing into a system map. It tells Claude what exists, where it lives, and when to use it.
+
+### What a System-Level CLAUDE.md Contains
+
+```markdown
+# System Name
+
+## Repository Structure
+[Where everything lives]
+
+## Commands
+| Command | Purpose |
+|---------|---------|
+| /skill-one | Does X |
+| /skill-two | Does Y |
+| /skill-three | Does Z |
+
+## Business Context
+[Identity, positioning, key facts]
+
+## Content Guidelines
+[Voice, tone, guardrails]
+
+## For Deeper Context
+- context/01-identity.md for background
+- context/04-voice-guide.md for tone
+- context/07-content-strategy.md for platform rules
+```
+
+This structure means Claude always knows:
+1. What commands are available
+2. What each one does
+3. Where to find deeper context
+4. What the overall system is for
+
+<ScenarioCard
+  scenario="You've built 8 skills in Claude Code but you're starting to forget which one does what. Claude sometimes suggests the wrong skill for a task."
+  answer="Build a command reference table in your CLAUDE.md. List every command with a one-sentence description. This serves two purposes: it helps YOU remember what's available, and it helps Claude match tasks to the right skill."
+  prompt="## Commands\n\n| Command | Purpose |\n|---------|---------|\n| /youtube-idea | Score and refine a video idea, or generate batch ideas |\n| /youtube-script | Generate a full video script from a refined idea |\n| /repurpose | Turn a script into Substack, LinkedIn, social, and short-form |\n| /newsletter | Compile this week's content into a weekly email |\n| /meeting-prep | Pre-meeting prep or post-meeting follow-up |\n| /decision-journal | Log, update, or review strategic decisions |\n| /lead-magnet | Create downloadable lead magnets |\n| /email-sequence | Build multi-email automation sequences |"
+/>
+
+## Pattern 4: Output as Input
+
+The most powerful composition pattern: one skill's output becomes another skill's input.
+
+### Explicit Chaining
+
+```markdown
+# Content Repurposer
+
+## Input
+
+**Source file:** $ARGUMENTS
+
+If no file provided, ask which script from output/ to repurpose.
+```
+
+The repurpose skill reads a file from `output/` — the same directory where the script generator writes. No manual copy-paste. The output of one skill is the input of the next.
+
+### Implicit Chaining via Shared Directories
+
+Even without explicit references, skills that share directories create implicit chains:
+
+```
+/youtube-idea    → output/youtube-idea-[slug].md
+/youtube-script  → reads output/youtube-idea-[slug].md
+                 → output/youtube-script-[slug].md
+/repurpose       → reads output/youtube-script-[slug].md
+                 → output/substack-post-[slug].md
+                 → output/linkedin-[slug].md
+                 → output/notes-[slug].md
+```
+
+The `output/` directory becomes a conveyor belt. Each skill deposits its work there, and the next skill picks it up.
+
+## Pattern 5: Decision Logging as System Memory
+
+Skills that log decisions create institutional memory that improves every other skill over time.
+
+### How Decision Journals Compound
+
+A `/decision-journal` command captures structured decisions:
+
+```markdown
+# Pricing Strategy Change
+**Date:** 2026-03-01
+**Decision:** Increase base plan from $29 to $39/month
+**Reasoning:** Market benchmarks, margin requirements, value delivered
+**Expected outcome:** 5% churn spike, 15% revenue increase net
+**Actual outcome:** [To be filled later]
+```
+
+After 10+ entries, the `/decision-journal review` mode can analyze:
+- **Decision patterns** — Do you tend toward conservative or aggressive choices?
+- **Prediction accuracy** — How often do expected outcomes match reality?
+- **Bias detection** — Are you exhibiting sunk cost fallacy or status quo bias?
+- **Recurring themes** — What topics keep coming back?
+
+Other skills reference this history:
+
+```markdown
+## Before Starting
+
+Read recent entries in context/decisions/ to understand
+what's already been decided and why.
+```
+
+Now every skill is informed by past decisions. The meeting prep skill knows about recent strategic shifts. The content skill knows about positioning changes. The system gets smarter over time.
+
+<RealWorldProof
+  quote="The gap between default Claude and configured Claude is wild. Same model, completely different results depending on what you feed it before you start."
+  author="@bpizzacalla"
+  context="Builder who shipped a full agentic sales platform with zero engineering background"
+/>
+
+## Pattern 6: Multi-Mode Commands with Shared Workflows
+
+Instead of separate skills for related tasks, build one skill with multiple modes:
+
+```markdown
+## Mode Detection
+
+Parse $ARGUMENTS to determine mode:
+- "advisory [client]"  → Advisory meeting prep workflow
+- "investor [context]" → Investor meeting prep workflow
+- "podcast [guest]"    → Podcast appearance prep workflow
+- "followup [notes]"   → Post-meeting processing workflow
+
+## Shared Context (All Modes)
+
+Read context/00-quick-reference.md for baseline context.
+
+## Mode-Specific Context
+
+Advisory: Also read context/offer-details.md, context/frameworks.md
+Investor: Also read context/financials.md, context/exit-parameters.md
+Podcast: Also read context/voice-guide.md
+Followup: Also read context/decisions/
+```
+
+This pattern eliminates skill sprawl. Related workflows share context and live in one file, reducing the number of commands to remember.
+
+## Building Your System: The Minimum Viable Setup
+
+You don't need 17 commands to start. Here's the minimum viable skill system:
+
+<StepByStep
+  steps={[
+    { title: "CLAUDE.md", description: "50-100 lines. Your identity, your audience, your voice, and a reference table of the commands you're building." },
+    { title: "One context file", description: "Your most-referenced document. Brand voice guide, audience profile, or business overview." },
+    { title: "Two commands", description: "Your highest-frequency task and its natural follow-up. Example: /draft-post and /repurpose." },
+    { title: "An output directory", description: "All generated content goes to output/. Consistent location, easy to find." },
+    { title: "A decision journal", description: "Optional but powerful. Even 5 logged decisions start revealing patterns." }
+  ]}
+/>
+
+### Growth Pattern
+
+Systems grow organically through daily use:
+
+**Week 1-2:** CLAUDE.md + 2 commands + 1 context file. Use daily. Note what's missing.
+
+**Week 3-4:** Add 2-3 more commands based on gaps. Add context files as you discover recurring reference needs.
+
+**Month 2:** Refine existing skills based on output quality. Add cross-references between skills.
+
+**Month 3+:** The system stabilizes. You rarely add new commands. Most changes are refinements to existing ones.
+
+<TipCallout type="warning">
+Resist the urge to build the whole system upfront. The best skills emerge from discovering patterns in real work, not from planning sessions. Build what you need today, add what you need tomorrow.
+</TipCallout>
+
+## The Compounding Effect
+
+Here's what makes skill systems qualitatively different from individual tools:
+
+**Week 1:** You have a content drafter. It saves you 30 minutes per piece.
+
+**Month 1:** You have a content pipeline (idea, script, repurpose, newsletter). It saves you 4 hours per week.
+
+**Month 3:** You have an operations system (content + meetings + decisions + strategy). The system has institutional memory. It references past decisions. It knows your voice so well that first drafts need minimal editing.
+
+**Month 6:** The system IS your operational infrastructure. You don't think about "using AI" — you think about running your business, and Claude is embedded in every workflow.
+
+That's the goal. Not a tool you use, but a system you work within.
+
+## What's Next
+
+To see these patterns in action at full scale, read the case studies:
+
+- [The Content Operations Engine](/claude-playbook/case-studies/content-operations-engine) — 17 commands, 34+ context files, a complete content ops system built by a non-developer
+- [The Virtual Cofounder](/claude-playbook/case-studies/virtual-cofounder) — 6 decision frameworks, live financial data, an AI strategic advisor for a SaaS CEO

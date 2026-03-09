@@ -1,0 +1,147 @@
+---
+title: "Hiring with AI"
+description: "From role definition to scorecard to interview questions to candidate comparison to offer letter. The full hiring workflow."
+products: ["Chat", "CoWork"]
+tier: "Operator"
+readTime: "12 min"
+---
+
+Hiring is the highest-stakes decision most managers make, and the process is usually a mess. Job descriptions are copied from the last time you hired. Interview questions are made up on the spot. Candidate evaluations are based on gut feel and "culture fit."
+
+Claude brings structure to every stage — not to replace your judgment, but to make sure you're actually using judgment instead of improvising.
+
+## The Hiring Workflow
+
+<StepByStep
+  steps={[
+    { title: "Define the role clearly", description: "What does success look like in 90 days, 6 months, and a year? What problems is this person solving?" },
+    { title: "Build a scorecard", description: "The specific, weighted criteria you'll evaluate every candidate against. Decide BEFORE you start interviewing." },
+    { title: "Write the job description", description: "Claude drafts it based on your scorecard, company voice, and what actually attracts good candidates (not corporate boilerplate)." },
+    { title: "Design the interview process", description: "Structured questions mapped to scorecard criteria. Different questions for different interview stages." },
+    { title: "Evaluate candidates consistently", description: "Score each candidate against the same rubric. Compare apples to apples." },
+    { title: "Make the offer", description: "Competitive, clear, and compelling. Claude helps you draft it based on market data and your company's specifics." }
+  ]}
+/>
+
+## Step 1: Role Definition
+
+Don't start with a job description. Start with the business problem.
+
+<PromptBlock
+  title="Role definition conversation"
+  prompt="I need to hire a [role title]. Before I write the job description, help me think through the role clearly.\n\nAsk me these questions one at a time (don't answer them for me):\n1. What specific problem will this person solve that isn't being solved today?\n2. What does success look like for this hire at 90 days? At 6 months? At 1 year?\n3. What will this person do in a typical week? (Top 5 activities by time spent)\n4. What's the minimum experience level where someone could realistically succeed in this role?\n5. What's the one thing that separates a great hire from a good hire in this role?\n6. What's the biggest reason this hire might fail? (What's the hardest part of the job?)\n7. Who does this person work with most closely? What do those people need from this role?\n\nAfter I answer all 7, synthesize my answers into a Role Definition document that I can use to build a scorecard and job description."
+  variables={[{ name: "role title", placeholder: "Senior Account Executive" }]}
+/>
+
+## Step 2: Hiring Scorecard
+
+The scorecard is the single most important tool in hiring. It eliminates gut-feel decisions and makes your evaluation defensible.
+
+<PromptBlock
+  title="Build a hiring scorecard"
+  prompt="Based on the role definition we just created for [role title], build a hiring scorecard with these sections:\n\n1. **Must-have criteria** (3-5 non-negotiable requirements — if they don't meet these, it's a no regardless of everything else)\n2. **Core competencies** (4-6 skills/attributes ranked by importance with weight percentages totaling 100%)\n3. **For each competency:**\n   - Definition (what it specifically means for this role)\n   - What a 1, 3, and 5 score looks like (concrete examples, not vague descriptions)\n   - Suggested interview question to evaluate it\n4. **Culture/values fit** (2-3 criteria specific to our team, not generic 'culture fit')\n5. **Red flags** (specific warning signs that suggest a candidate will struggle)\n\nFormat as a table I can print and use during interviews."
+  variables={[{ name: "role title", placeholder: "Senior Account Executive" }]}
+/>
+
+<BeforeAfter
+  before={{
+    content: "Evaluation criteria:\n- Experience: Good/OK/Bad\n- Communication: Good/OK/Bad\n- Culture fit: Good/OK/Bad\n- Overall: Hire/No Hire"
+  }}
+  after={{
+    content: "**Competency: Consultative Selling (Weight: 30%)**\n\nScore 1: Jumps to product pitch without understanding buyer's situation. Talks more than listens.\nScore 3: Asks reasonable discovery questions. Connects product features to stated needs. Standard demo flow.\nScore 5: Asks questions the buyer hadn't considered. Reframes the problem in a way that creates urgency. Customizes the conversation completely based on what they learn.\n\n**Interview question:** Tell me about a deal you won that was initially going to a competitor. What did you learn in discovery that changed the outcome?"
+  }}
+  annotation="Vague rubrics produce inconsistent hiring. Specific rubrics produce defensible decisions."
+/>
+
+## Step 3: Job Description
+
+<PromptBlock
+  title="Write a job description that attracts top candidates"
+  prompt="Write a job description for [role title] based on the role definition and scorecard we've built. Company details:\n\n**Company:** [company name] — [one-line description]\n**Stage/size:** [employees, funding stage, revenue range]\n**Location:** [remote/hybrid/onsite, any location requirements]\n**Compensation range:** [salary range, equity if applicable]\n**Team:** [who they'll work with]\n\nRules:\n- Lead with the impact they'll have, not a list of requirements\n- Write in our voice: [tone description]\n- Don't use phrases like 'fast-paced environment,' 'rockstar,' 'wear many hats,' or 'competitive salary' (just state the salary)\n- Include 'must-have' requirements (hard cutoffs) separately from 'nice-to-have' (preferences)\n- Keep must-have list to 5 items maximum — longer lists discourage great candidates from applying\n- Include what makes this role genuinely compelling (not just company perks)\n- Under 600 words total"
+  variables={[
+    { name: "role title", placeholder: "Senior Account Executive" },
+    { name: "company name", placeholder: "Acme Analytics" },
+    { name: "tone description", placeholder: "direct, professional, a little personality — like a company you'd actually want to work at" }
+  ]}
+/>
+
+<TipCallout type="tip">
+After Claude drafts the job description, ask it: "Review this JD for anything that might unintentionally discourage qualified women, people of color, or career changers from applying. Flag gendered language, unnecessary requirements, and implicit bias." Research consistently shows that women apply when they meet 100% of qualifications while men apply at 60%. Trim your requirements list to what actually matters.
+</TipCallout>
+
+## Step 4: Interview Questions
+
+<PromptBlock
+  title="Generate structured interview questions"
+  prompt="Generate structured interview questions for [role title] based on our scorecard. I need questions for [number] interview rounds:\n\n**Round 1 — [type]:** [who's interviewing, what they're evaluating]\n**Round 2 — [type]:** [who's interviewing, what they're evaluating]\n**Round 3 — [type]:** [who's interviewing, what they're evaluating]\n\nFor each round, provide:\n1. 4-5 questions mapped to specific scorecard competencies\n2. What a strong answer sounds like (so interviewers know what to listen for)\n3. One follow-up probe for each question (to dig deeper if the initial answer is surface-level)\n4. One question to avoid and why (common interview questions that don't actually predict performance)\n\nAll questions should be behavioral ('Tell me about a time...') or situational ('How would you approach...'), not hypothetical ('What's your greatest weakness?')."
+  variables={[
+    { name: "role title", placeholder: "Senior Account Executive" },
+    { name: "number", placeholder: "3" }
+  ]}
+/>
+
+## Step 5: Candidate Evaluation
+
+<PromptBlock
+  title="Score a candidate against the scorecard"
+  prompt="I just interviewed [candidate name] for [role title]. Here are my notes from the interview:\n\n[paste raw interview notes]\n\nScore this candidate against our scorecard:\n\n[paste or reference the scorecard]\n\nFor each competency:\n1. Score (1-5) with specific evidence from the interview supporting the score\n2. Confidence level — how confident am I in this score based on what we learned? (high/medium/low)\n3. If low confidence, suggest a follow-up question for the next round\n\nOverall:\n- Total weighted score\n- Top 2 strengths for this role\n- Top 2 risks\n- One thing I should probe deeper in the next round\n- Recommendation: advance / hold / pass (with reasoning)"
+  variables={[
+    { name: "candidate name", placeholder: "Maria Gonzalez" },
+    { name: "role title", placeholder: "Senior Account Executive" }
+  ]}
+/>
+
+## Candidate Comparison
+
+When you have multiple finalists:
+
+<PromptBlock
+  title="Compare final candidates"
+  prompt="I have [number] finalists for [role title]. Here are their scorecard evaluations:\n\n[paste all candidate evaluations]\n\nCompare them:\n1. Side-by-side scorecard comparison (table format)\n2. Each candidate's unique strengths — what do they bring that the others don't?\n3. Each candidate's biggest risk — what's the most likely failure mode?\n4. Team fit — given what I've told you about the team dynamics, who complements the existing team best?\n5. Your recommendation — and the one factor that should tip the decision\n\nDon't just pick the highest score. Tell me what I'd be gaining AND giving up with each choice."
+  variables={[
+    { name: "number", placeholder: "3" },
+    { name: "role title", placeholder: "Senior Account Executive" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="You have two strong finalists. One has more experience and higher technical scores. The other scored higher on learning velocity and cultural alignment. Your team needs both."
+  answer="Ask Claude to model the decision with different time horizons. The experienced candidate might deliver more in the first 90 days. The high-growth candidate might deliver more over 18 months. Also check: which candidate's weaknesses are easier to coach? That's usually the tiebreaker."
+  prompt="I'm torn between two finalists. Candidate A: [summarize strengths and scores]. Candidate B: [summarize strengths and scores]. Help me think through: (1) Who delivers more value at 3 months vs. 18 months? (2) Whose weaknesses are more coachable? (3) Given our current team composition, which hire creates a more balanced team?"
+/>
+
+## Step 6: Offer Letter
+
+<PromptBlock
+  title="Draft an offer letter"
+  prompt="Draft a compelling offer letter for [candidate name] for the [role title] position.\n\nDetails:\n- Base salary: [amount]\n- Equity: [details if applicable]\n- Start date: [proposed date]\n- Reporting to: [name and title]\n- Benefits highlights: [list key benefits]\n- Any special terms: [sign-on bonus, remote work, etc.]\n\nTone: warm, excited, professional. This should make them feel wanted — not like they're signing a legal document. Include the logistical details they need but lead with enthusiasm.\n\nAlso draft a short personal note I can send alongside the formal offer — something that references our conversations and why I'm excited about them specifically joining."
+  variables={[
+    { name: "candidate name", placeholder: "Maria Gonzalez" },
+    { name: "role title", placeholder: "Senior Account Executive" }
+  ]}
+/>
+
+## Reference Check Prep
+
+<PromptBlock
+  title="Reference check questions"
+  prompt="I'm doing reference checks for [candidate name], a finalist for [role title]. Based on their interview performance, I want to validate:\n\n1. [specific strength I want to confirm]\n2. [specific concern I want to probe]\n3. [specific claim they made that I want to verify]\n\nGenerate 6-8 reference check questions that:\n- Are specific enough to get useful signal (not 'what's it like to work with them?')\n- Include at least one question designed to surface potential issues gently\n- End with: 'On a scale of 1-10, how strongly would you recommend I hire this person?' (anything below 8 is a red flag)"
+  variables={[
+    { name: "candidate name", placeholder: "Maria Gonzalez" },
+    { name: "role title", placeholder: "Senior Account Executive" }
+  ]}
+/>
+
+<RealWorldProof
+  quote="The scorecard approach changed everything for our hiring. We stopped debating 'I liked them' vs. 'I didn't get a good feeling' and started having evidence-based conversations. Our 6-month retention went from 70% to 95%."
+  author="Head of People"
+  context="Scaled a startup from 20 to 60 employees"
+/>
+
+## Common Mistakes
+
+**Don't use Claude to screen resumes for 'fit.'** AI bias in resume screening is real and well-documented. Use Claude for process design, question generation, and structured evaluation — not for deciding who gets an interview.
+
+**Don't skip the scorecard.** The temptation is to jump straight to the job description. If you don't build the scorecard first, you'll evaluate candidates on vibes instead of criteria.
+
+**Don't let Claude decide.** Claude helps you organize your thinking and compare candidates systematically. The hiring decision is yours. You know things about your team, your culture, and this person that Claude never will.

@@ -1,0 +1,177 @@
+---
+title: "Rolling Out AI to Your Team"
+description: "A practical playbook for getting your team on Claude. Which product for which team. From individual experiments to company-wide adoption."
+products: ["Chat", "CoWork", "Code"]
+tier: "Operator"
+readTime: "14 min"
+---
+
+You've seen what Claude can do for you personally. Now you want your whole team using it. This is where most companies fail — not because the tools don't work, but because the rollout is wrong. They either mandate adoption without training, or they buy licenses and hope people figure it out.
+
+Here's the playbook that actually works.
+
+## The Adoption Framework
+
+<StepByStep
+  steps={[
+    { title: "Pick your champion team", description: "Start with 3-5 people who are curious and willing to experiment. Not the skeptics, not the entire company. A small team that will become internal case studies." },
+    { title: "Equip them properly", description: "Right Claude product, right access, right context. Not just 'here are your logins.'" },
+    { title: "Give them real problems", description: "Not hypothetical exercises. Actual work they need to do this week. The value has to be immediate." },
+    { title: "Capture and share wins", description: "When someone saves 3 hours on a report, document it. When a sales rep closes a deal they prepped for with Claude, tell the team." },
+    { title: "Expand based on evidence", description: "Roll out to the next team based on the champion team's results, not a calendar date." }
+  ]}
+/>
+
+## Which Claude Product for Which Team
+
+This is the most common question, and the answer is simpler than people think.
+
+| Team | Start With | Why | Move To |
+|------|-----------|-----|---------|
+| Sales | Chat | Immediate value for email drafting, call prep, proposal writing | CoWork for shared playbooks and objection libraries |
+| Marketing | Chat | Content creation, messaging, campaign planning | Code for analytics, automation, bulk content ops |
+| Customer Success | CoWork | Shared knowledge base, consistent responses | Code for automated health scoring and reporting |
+| Operations | Chat | Process documentation, analysis, decision support | Code for workflow automation and reporting |
+| Finance | Chat | Analysis, modeling, board prep | Code for automated reporting from Stripe/accounting tools |
+| Engineering | Code | Already their natural habitat | CoWork for shared documentation and knowledge |
+| Executive Team | Chat | Strategic thinking, writing, meeting prep | Code for dashboards and automated briefings |
+| HR/People | Chat | Job descriptions, reviews, policy drafts | CoWork for consistent processes across managers |
+
+<TipCallout type="note">
+Don't try to roll out all three products at once. Start every team on Chat. Let them get comfortable with prompting before introducing CoWork or Code. The exception is engineering — they can start on Code directly.
+</TipCallout>
+
+## The Champion Team Kickoff
+
+<PromptBlock
+  title="Team AI kickoff session plan"
+  prompt="I'm introducing Claude to a champion team of [number] people. They are [team description]. Help me plan a 60-minute kickoff session:\n\n1. **Opening (5 min):** Why we're doing this — not 'AI is the future' but specific business problems this solves\n2. **Demo (15 min):** 3 live demonstrations of Claude solving THEIR actual problems (not generic demos). Suggest 3 demos based on their roles.\n3. **Hands-on (25 min):** A structured exercise where each person solves a real problem from their current to-do list with Claude. Include the specific prompt template they should use.\n4. **Discussion (10 min):** What worked, what didn't, what they want to try next\n5. **Next steps (5 min):** The 'try this' assignment for the next week\n\nImportant: no slides. This should be live, practical, and fast."
+  variables={[
+    { name: "number", placeholder: "5" },
+    { name: "team description", placeholder: "account executives on the sales team, they spend most of their day on email, call prep, and proposals" }
+  ]}
+/>
+
+## Setting Up Team-Wide Context
+
+The biggest force multiplier is shared context. When every team member's Claude already knows your company, your products, your customers, and your processes, the output quality jumps immediately.
+
+<PromptBlock
+  title="Create team Claude context document"
+  prompt="Help me create a shared context document for my [team name] team to use with Claude. This will be loaded as project instructions so every team member's Claude starts with this knowledge.\n\nHere's our company and team info:\n\n**Company:** [company name], [what you do], [size/stage]\n**Our customers:** [who we sell to, their main problems]\n**Our product/service:** [what we offer, key differentiators]\n**Team's role:** [what this team does, their core responsibilities]\n**Tools we use:** [CRM, communication tools, project management, etc.]\n**Key processes:** [the team's main workflows]\n**Communication style:** [how we talk to customers and internally]\n**Common terms/jargon:** [industry or company-specific terminology]\n\nCreate a context document that:\n1. Is under 1000 words (concise, not a novel)\n2. Focuses on information that makes Claude's output immediately more relevant\n3. Includes 'rules' — things Claude should always or never do for this team\n4. Has a section for team-specific prompt templates"
+  variables={[
+    { name: "team name", placeholder: "Sales" },
+    { name: "company name", placeholder: "Acme Analytics" }
+  ]}
+/>
+
+<RealWorldProof
+  quote="Give every person read access to your repo and introduce them to Claude Code. Context setup and rules do 90% of the heavy lifting."
+  author="@bpizzacalla"
+  context="Built a full agentic sales platform with Claude Code, zero engineering background"
+/>
+
+## Overcoming Resistance
+
+Every team has skeptics. Here's how to handle the three most common objections:
+
+### "I don't have time to learn a new tool"
+
+<ScenarioCard
+  scenario="A senior account executive says she's too busy to experiment with AI — she needs to hit quota, not play with tools."
+  answer="Don't argue with the objection. Instead, ask her to give you one task she's doing this afternoon — a proposal, a follow-up email, call prep — and do it together with Claude in real time. When it takes 10 minutes instead of 45, the time objection disappears."
+  prompt="I have a team member who says they're too busy to learn Claude. Help me identify the 3 highest-ROI tasks for a [role] that Claude can speed up dramatically. For each task, estimate the time saved per instance and frequency per week. I need to show a concrete hours-per-week savings number."
+/>
+
+### "AI is going to replace us"
+
+This is a fear conversation, not a logic conversation. Address it directly.
+
+<PromptBlock
+  title="Address AI replacement fears"
+  prompt="Help me prepare talking points for my team about AI and job security. Context: I'm rolling out Claude to my [team type] team, and some members are worried about being replaced.\n\nI need:\n1. An honest framing that doesn't dismiss their concern or make promises I can't keep\n2. Specific examples of how AI changes their role (what it takes away, what it adds)\n3. The skills that become MORE valuable when everyone has AI (judgment, relationships, creativity, domain expertise)\n4. A clear statement about our team's approach: AI is a tool, not a replacement plan\n\nDon't give me corporate HR talking points. I want genuine, direct language I can say in a team meeting."
+  variables={[{ name: "team type", placeholder: "customer success" }]}
+/>
+
+### "I tried ChatGPT and it was useless"
+
+<PromptBlock
+  title="Re-onboard a skeptic"
+  prompt="One of my team members tried a generic AI chatbot and got bad results. They now think all AI is 'just a fancy autocomplete.' Help me create a 10-minute demonstration that changes their mind.\n\nTheir role: [role]\nWhat they tried before: [what they did with ChatGPT that disappointed them]\n\nDesign a side-by-side demo:\n1. A generic, no-context prompt (the way they probably tried before) and its predictably bad output\n2. The same task with proper context, specific instructions, and a well-structured prompt\n3. Then show what happens when you have persistent project context loaded\n\nMake the improvement so obvious they can't argue with it."
+  variables={[
+    { name: "role", placeholder: "Sales Manager" },
+    { name: "what they did with ChatGPT that disappointed them", placeholder: "Asked it to write a cold email and it was generic garbage" }
+  ]}
+/>
+
+## Measuring Adoption Success
+
+Don't just count logins. Measure whether people are actually getting value.
+
+<PromptBlock
+  title="AI adoption metrics framework"
+  prompt="I've rolled out Claude to [number] people across [teams]. Help me build a measurement framework to track whether adoption is actually working.\n\nI need:\n1. **Leading indicators** (things I can measure in week 1-2 that predict long-term adoption)\n2. **Lagging indicators** (business outcomes I should see in month 2-3)\n3. **Qualitative signals** (what to listen for in conversations that indicates real adoption vs. forced compliance)\n4. **Red flags** (signs that adoption is failing and I need to intervene)\n5. A simple survey (5 questions, under 2 minutes) I can send at week 2 and week 6\n\nKeep it simple. I don't need a dashboard — I need to know if this is working."
+  variables={[
+    { name: "number", placeholder: "15" },
+    { name: "teams", placeholder: "sales and customer success" }
+  ]}
+/>
+
+## The Rollout Phases
+
+### Phase 1: Individual Experimentation (Weeks 1-2)
+
+Give each champion team member a specific challenge:
+
+<PromptBlock
+  title="Week 1 challenge assignment"
+  prompt="I need to give each member of my champion team a specific 'Claude challenge' for their first week. The team:\n\n[list each person's name and role]\n\nFor each person, suggest:\n1. One task from their actual job to do with Claude this week\n2. The specific prompt they should use (ready to copy-paste)\n3. What 'success' looks like (how they'll know Claude helped)\n4. How long it should take (under 30 minutes for the first try)\n\nThe challenges should be different for each person, showing Claude's range. And they should be impressive enough to make the person want to try more."
+/>
+
+### Phase 2: Shared Workflows (Weeks 3-4)
+
+<PromptBlock
+  title="Build shared team workflows"
+  prompt="My champion team has been using Claude individually for 2 weeks. Now I want to create shared workflows that the whole team uses. Based on [team type], suggest:\n\n1. 3-5 repeatable workflows where a shared Claude setup (same context, same prompts) would ensure consistency and quality\n2. For each workflow: the trigger (when do you use it), the prompt template, and the expected output\n3. Which workflows should be in CoWork (team-shared) vs. individual Projects\n\nExamples of what I mean by 'shared workflows': every AE uses the same proposal template in Claude, every CSM uses the same QBR prep prompt, every marketer uses the same content brief format."
+  variables={[{ name: "team type", placeholder: "sales team" }]}
+/>
+
+### Phase 3: Company-Wide Expansion (Month 2+)
+
+<PromptBlock
+  title="Company-wide rollout plan"
+  prompt="My champion team of [number] on the [team] has been using Claude successfully for [duration]. I'm ready to expand to the rest of the company ([total headcount] people).\n\nChampion team results: [summarize wins and metrics]\n\nHelp me plan the expansion:\n1. Rollout sequence — which teams next and why\n2. Internal communication plan — how to announce this without creating fear or hype\n3. Training approach — what can the champion team teach vs. what needs formal onboarding\n4. Budget considerations — how many licenses, which tier\n5. Governance — any policies I should set (data handling, sensitive information, customer communications)\n6. Timeline — realistic phasing over the next 2 months"
+  variables={[
+    { name: "number", placeholder: "5" },
+    { name: "team", placeholder: "sales team" },
+    { name: "duration", placeholder: "4 weeks" },
+    { name: "total headcount", placeholder: "45" }
+  ]}
+/>
+
+## Building an AI-First Culture
+
+The rollout is just the beginning. The goal is to build a culture where using AI is as natural as using email.
+
+<PromptBlock
+  title="AI culture building"
+  prompt="Help me design a lightweight system to build AI-first habits across my company. I don't want bureaucracy — I want organic adoption. Ideas I'm considering:\n\n- A weekly 'AI win' Slack channel where people share what worked\n- A monthly 'AI lunch and learn' where someone demos their best workflow\n- An internal prompt library that grows over time\n- A buddy system pairing power users with newcomers\n\nFor each:\n1. How to start it without it feeling forced\n2. What makes it sustainable vs. a flash-in-the-pan initiative\n3. One potential pitfall and how to avoid it"
+/>
+
+<TipCallout type="warning">
+Set clear guidelines about what NOT to put into Claude — customer PII, source code (if not using a business plan with data retention controls), financial data before earnings, HR/legal sensitive documents. Have this conversation explicitly. Don't assume people will use good judgment with a new tool.
+</TipCallout>
+
+<RealWorldProof
+  quote="The teams that adopted fastest weren't the most technical — they were the ones where the manager used Claude visibly. When people see their boss prepping for meetings with Claude, writing with Claude, analyzing with Claude, they don't need to be convinced. They just start doing it too."
+  author="CEO"
+  context="Rolled out Claude across a 60-person company over 3 months"
+/>
+
+## Common Mistakes
+
+**Don't buy 50 licenses on day one.** Start with 5. Prove value. Expand based on evidence.
+
+**Don't make it optional without support.** "We bought Claude, go use it" guarantees 10% adoption. You need the kickoff, the challenges, the shared workflows, and visible leadership usage.
+
+**Don't measure adoption by logins.** Someone logging in and asking "tell me a joke" is not adoption. Measure whether people are using Claude for real work and getting real results.

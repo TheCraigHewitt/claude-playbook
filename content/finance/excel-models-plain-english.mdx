@@ -1,0 +1,327 @@
+---
+title: "Excel Models from Plain English"
+description: "Describe logic in English, get full workbooks with real formulas — IRR, XNPV, SUMPRODUCT, and more."
+products: ["Code"]
+tier: "Operator"
+readTime: "12 min"
+---
+
+Most people think of Claude Code as a coding tool. Finance professionals are discovering it's the best Excel modeler they've ever worked with.
+
+<RealWorldProof
+  quote="Claude Code is better at Excel than anyone I know. It writes actual formulas — =IRR, =XNPV, =SUMPRODUCT — not just values. And it structures the workbook with proper tabs, formatting, and documentation."
+  author="@fasinisterra"
+  context="Finance professional who uses Claude Code daily for financial modeling"
+/>
+
+## How It Works
+
+The workflow is simple: describe what you want in plain English, and Claude Code generates a complete Excel workbook with real formulas — not hardcoded numbers.
+
+<StepByStep
+  steps={[
+    { title: "Describe your model", description: "Tell Claude what you're trying to build — a revenue forecast, LBO model, unit economics calculator, whatever it is." },
+    { title: "Specify the inputs", description: "List your assumptions: growth rates, margins, cost structure, timing. These become the input cells." },
+    { title: "Define the outputs", description: "What do you need to see? P&L summary, cash flow waterfall, sensitivity table, charts?" },
+    { title: "Claude builds the workbook", description: "It creates a .xlsx file with proper tabs, real formulas (not values), formatting, and named ranges." },
+    { title: "Review and iterate", description: "Open the file, check the formulas, adjust assumptions. Ask Claude to modify anything that needs refinement." }
+  ]}
+/>
+
+<MiniQuiz
+  question="How does Claude Code build financial models from plain English descriptions?"
+  options={[
+    { label: "It writes Excel formulas directly into a spreadsheet file", correct: false, explanation: "Close, but not quite. Claude Code doesn't write formulas directly into Excel — it generates Python code (using openpyxl) that creates the .xlsx file with proper formulas, formatting, and structure." },
+    { label: "It translates your English description into Python code that generates a complete .xlsx workbook with real formulas", correct: true, explanation: "Claude Code writes Python (openpyxl) that creates Excel workbooks with real cell-referencing formulas like =IRR() and =SUMPRODUCT() — not hardcoded values. You get a file you can open, audit, and modify." },
+    { label: "It creates a Google Sheets document with pre-filled values", correct: false, explanation: "Claude Code generates local .xlsx files, not Google Sheets. And the key distinction is that it uses real formulas that reference cells, not pre-filled static values." },
+    { label: "It generates a CSV file with calculated numbers you can import into Excel", correct: false, explanation: "A CSV would only contain static values. The whole point is that Claude Code creates .xlsx files with live formulas — change an assumption and everything recalculates." }
+  ]}
+/>
+
+## Driver-Based Revenue Forecast
+
+Start with the most common model every operator needs: a revenue forecast built on actual business drivers.
+
+<PromptBlock
+  title="SaaS Revenue Forecast"
+  prompt={`Build me an Excel revenue forecast model (.xlsx) for a SaaS business with these specs:
+
+INPUTS TAB:
+- Starting MRR: $\${mrr}
+- Monthly new customer adds: \${newCustomers} (growing \${growthRate}% month-over-month)
+- Average contract value: $\${acv}/month
+- Monthly churn rate: \${churnRate}%
+- Expansion revenue: \${expansionRate}% of existing base per month
+- Forecast period: 24 months
+
+CALCULATIONS TAB:
+- Use real formulas, not hardcoded values
+- New MRR = new customers × ACV
+- Churned MRR = beginning MRR × churn rate
+- Expansion MRR = beginning MRR × expansion rate
+- Ending MRR = Beginning MRR + New MRR - Churned MRR + Expansion MRR
+- ARR = MRR × 12
+- Net Revenue Retention = (Ending MRR - New MRR) / Beginning MRR
+
+SUMMARY TAB:
+- Monthly and quarterly rollups
+- Key metrics: ARR, net new MRR, NRR, customer count
+- Conditional formatting: green for growth, red for contraction
+
+Format all currency cells as accounting format. Include cell comments explaining each formula.`}
+  variables={[
+    { name: "mrr", placeholder: "125000" },
+    { name: "newCustomers", placeholder: "15" },
+    { name: "growthRate", placeholder: "3" },
+    { name: "acv", placeholder: "500" },
+    { name: "churnRate", placeholder: "2.5" },
+    { name: "expansionRate", placeholder: "1.5" }
+  ]}
+/>
+
+<TipCallout type="tip">
+Always ask Claude to use formulas that reference cells, not hardcoded numbers. Say "use =B5*B3, not =125000*0.025." This makes the model actually useful — you can change assumptions and everything recalculates.
+</TipCallout>
+
+## LBO Model Skeleton
+
+Private equity analysts spend weeks building these. Claude Code builds the skeleton in minutes, with proper formula chains you can audit.
+
+<PromptBlock
+  title="LBO Model Framework"
+  prompt={`Build an LBO model in Excel (.xlsx) with these parameters:
+
+TRANSACTION TAB:
+- Enterprise Value: $\${ev}M
+- Purchase multiple: \${multiple}x EBITDA
+- LTM EBITDA: $\${ebitda}M
+- Senior debt: \${seniorDebt}x EBITDA at \${seniorRate}% interest
+- Sub debt: \${subDebt}x EBITDA at \${subRate}% interest
+- Equity check = EV - total debt
+- Transaction fees: 2% of EV
+
+OPERATING MODEL TAB (5-year projection):
+- Revenue growth: \${revenueGrowth}% Year 1, declining 1% per year
+- EBITDA margin: \${margin}% (flat)
+- Capex: 3% of revenue
+- Working capital: 5% of incremental revenue
+- Tax rate: 25%
+- Use =EBITDA-Capex-Taxes-WC change for free cash flow
+
+DEBT SCHEDULE TAB:
+- Mandatory amortization: 5% of original senior debt per year
+- Cash sweep: 50% of excess cash flow to senior debt
+- Use MIN() formulas for debt paydown (can't pay more than outstanding)
+
+RETURNS TAB:
+- Exit at same multiple as entry
+- Calculate equity value at exit for each year (Year 3-5)
+- Use =IRR() for equity returns
+- Use =XIRR() with actual dates
+- MOIC = exit equity / entry equity
+
+Include proper formula chains — every cell should trace back to inputs. No circular references.`}
+  variables={[
+    { name: "ev", placeholder: "100" },
+    { name: "multiple", placeholder: "8" },
+    { name: "ebitda", placeholder: "12.5" },
+    { name: "seniorDebt", placeholder: "4" },
+    { name: "seniorRate", placeholder: "6" },
+    { name: "subDebt", placeholder: "1.5" },
+    { name: "subRate", placeholder: "10" },
+    { name: "revenueGrowth", placeholder: "8" },
+    { name: "margin", placeholder: "25" }
+  ]}
+/>
+
+<TipCallout type="warning">
+Always audit the formula chains in any generated financial model. Claude gets the structure right, but you should verify the logic matches your deal terms. Check cell references in the debt waterfall especially — that's where errors hide.
+</TipCallout>
+
+## Operating Model with Department-Level Detail
+
+When you need more than a top-line forecast — full P&L with headcount planning and cost buildup.
+
+<PromptBlock
+  title="Department-Level Operating Model"
+  prompt={`Create a detailed operating model in Excel (.xlsx):
+
+HEADCOUNT TAB:
+- Departments: Engineering, Sales, Marketing, CS, G&A
+- For each: current headcount, planned hires by quarter, average fully-loaded cost per head
+- Use =SUMPRODUCT(headcount, cost_per_head) for total department cost
+- Include hiring ramp (new hires at 50% productivity for first quarter)
+
+REVENUE TAB:
+- Self-serve: \${selfServe} customers × $\${selfServeACV}/mo, growing \${selfServeGrowth}%/mo
+- Sales-led: \${salesLed} customers × $\${salesLedACV}/mo, new deals = reps × quota attainment
+- Quota per rep: $\${quota}/quarter, attainment: \${attainment}%
+- Churn: \${churn}% monthly for self-serve, \${enterpriseChurn}% for sales-led
+
+EXPENSE TAB:
+- Hosting/infra: \${hostingPct}% of revenue (use formula, not value)
+- Marketing spend: $\${marketingSpend}/month, growing 5% quarterly
+- All department costs pulled from headcount tab via cell references
+- Benefits load: 25% on top of base salary
+
+P&L SUMMARY TAB:
+- Revenue, COGS, Gross Profit, Gross Margin %
+- OpEx by department
+- EBITDA, EBITDA margin
+- Quarterly and annual columns
+- Use =IFERROR() wrappers on all division formulas
+
+Format: accounting format for dollars, percentage format for margins, conditional formatting for negative values.`}
+  variables={[
+    { name: "selfServe", placeholder: "500" },
+    { name: "selfServeACV", placeholder: "99" },
+    { name: "selfServeGrowth", placeholder: "4" },
+    { name: "salesLed", placeholder: "50" },
+    { name: "salesLedACV", placeholder: "2000" },
+    { name: "quota", placeholder: "150000" },
+    { name: "attainment", placeholder: "70" },
+    { name: "churn", placeholder: "3" },
+    { name: "enterpriseChurn", placeholder: "1" },
+    { name: "hostingPct", placeholder: "15" },
+    { name: "marketingSpend", placeholder: "25000" }
+  ]}
+/>
+
+## Formula Debugging
+
+You don't just build models — you fix broken ones. Claude Code excels at debugging Excel logic.
+
+<PromptBlock
+  title="Debug a Broken Formula"
+  prompt={`I have an Excel model with a circular reference I can't find. Here's the structure:
+
+Tab: Revenue
+- B5: =B4*(1+Assumptions!C3) -- MRR growth
+- B6: =B5*12 -- ARR
+
+Tab: Expenses
+- C10: =Revenue!B5*0.15 -- hosting costs
+- C15: =SUM(C10:C14) -- total COGS
+- C20: =Revenue!B5-C15 -- gross profit
+
+Tab: Assumptions
+- C3: =IF(Expenses!C20>0, 0.05, 0.02) -- growth rate depends on profitability
+
+The circular reference is: Revenue depends on Assumptions, which depends on Expenses, which depends on Revenue.
+
+How do I restructure this to eliminate the circular reference while keeping the logic that growth rate should depend on profitability?`}
+/>
+
+<BeforeAfter
+  before={{
+    content: "Circular reference: Revenue → Assumptions → Expenses → Revenue. Excel either errors out or uses iterative calculation (unreliable)."
+  }}
+  after={{
+    content: "Break the cycle: growth rate references PRIOR period profitability. C3: =IF(Expenses!B20>0, 0.05, 0.02) — uses last month's gross profit, not current month. No circular reference, logically sound."
+  }}
+  annotation="The fix is almost always the same: reference the prior period instead of the current one."
+/>
+
+## SUMPRODUCT for Complex Lookups
+
+SUMPRODUCT is the Swiss Army knife of Excel. Claude writes these formulas faster than you can explain the criteria.
+
+<PromptBlock
+  title="Multi-Criteria Revenue Calculation"
+  prompt={`Write a SUMPRODUCT formula for this scenario:
+
+I have a data table in Sheet1 with columns:
+- A: Sales Rep Name
+- B: Region (East, West, Central)
+- C: Deal Stage (Won, Lost, Pipeline)
+- D: Deal Value
+- E: Close Date
+
+I need formulas for:
+1. Total won deals for the East region
+2. Total pipeline value for rep "\${repName}" in Q1 2026
+3. Count of won deals over $\${threshold} in the West region
+4. Average deal size for won deals by region (one formula I can drag across)
+
+Use SUMPRODUCT, not SUMIFS. Show me the formulas with explanations of each component.`}
+  variables={[
+    { name: "repName", placeholder: "Sarah Chen" },
+    { name: "threshold", placeholder: "50000" }
+  ]}
+/>
+
+## XNPV and IRR for Investment Analysis
+
+When you need proper time-value-of-money calculations, not the simplified versions.
+
+<PromptBlock
+  title="Investment Return Analysis"
+  prompt={`Build an investment analysis workbook (.xlsx) for a real estate or project investment:
+
+CASH FLOWS TAB:
+- Initial investment: -$\${investment} on \${startDate}
+- Monthly cash flows for \${months} months (list provided, or generate realistic ones)
+- Exit/sale proceeds: $\${exitValue} at end of period
+- All dates in column A, cash flows in column B
+
+RETURNS TAB:
+- =IRR() on the cash flow series
+- =XIRR() using actual dates (more accurate for irregular timing)
+- =NPV() at discount rate of \${discountRate}%
+- =XNPV() using actual dates at same discount rate
+- Include a note explaining when to use IRR vs XIRR
+
+SENSITIVITY TAB:
+- Data table varying exit value (+/- 20% in 5% increments) against discount rate (8%, 10%, 12%, 15%)
+- Use Excel's Data Table feature (What-If Analysis)
+- Conditional formatting: green for positive NPV, red for negative
+
+Show the formula for each cell, not just the result.`}
+  variables={[
+    { name: "investment", placeholder: "500000" },
+    { name: "startDate", placeholder: "2026-01-15" },
+    { name: "months", placeholder: "36" },
+    { name: "exitValue", placeholder: "650000" },
+    { name: "discountRate", placeholder: "10" }
+  ]}
+/>
+
+## Multi-Turn Refinement
+
+The real power is iterative. Build the skeleton, then refine in conversation.
+
+<ScenarioCard
+  scenario="You built a revenue model but your CFO wants to see revenue recognition timing — some contracts are annual prepaid, some are monthly, and you need to show recognized vs. deferred revenue."
+  answer="Don't start over. Tell Claude to add a Revenue Recognition tab to the existing model. It'll reference the existing contract data and split it into recognized and deferred columns with proper =SUMPRODUCT formulas across the contract schedule."
+  prompt="Add a Revenue Recognition tab to this model. Some contracts are annual prepaid (recognized 1/12 per month) and some are monthly. Add a column to the Contracts tab for billing frequency (Annual/Monthly). Then build a revenue schedule that shows recognized revenue and deferred revenue balance by month. Use real formulas — =SUMPRODUCT to sum recognized revenue across all active contracts for each month."
+/>
+
+<ScenarioCard
+  scenario="Your model works but the board wants to see a bridge chart showing the components of MRR change month-over-month — new, expansion, contraction, and churned."
+  answer="Ask Claude to add a waterfall/bridge calculation. It'll pull from existing cells and create the decomposition."
+  prompt="Add an MRR Bridge tab that decomposes month-over-month MRR changes into: New MRR, Expansion MRR, Contraction MRR, and Churned MRR. Reference the existing calculation cells — don't duplicate formulas. Format as a table that could feed a waterfall chart. Include a column for each month and a row for each component, with Beginning MRR at top and Ending MRR at bottom (which should equal the next month's Beginning MRR — add a validation check row)."
+/>
+
+## Tips for Better Financial Models
+
+<TipCallout type="tip">
+Tell Claude to use named ranges for key assumptions. Instead of =B5*C3, you get =starting_mrr*growth_rate. Makes the model self-documenting and dramatically easier to audit.
+</TipCallout>
+
+<TipCallout type="note">
+Claude Code generates .xlsx files using the openpyxl Python library. It handles formulas, formatting, conditional formatting, named ranges, and multiple tabs. It does not generate macros (VBA) by default — if you need macros, ask explicitly and review the code.
+</TipCallout>
+
+<TipCallout type="warning">
+Always open the generated file and spot-check formulas before distributing. Claude gets the structure and formula logic right in the vast majority of cases, but a misplaced cell reference can cascade through the entire model. Trust but verify.
+</TipCallout>
+
+## What to Build Next
+
+Start with one model you actually need this week:
+- **If you're fundraising:** Three-statement model with projections
+- **If you're budgeting:** Department-level operating model with headcount planning
+- **If you're evaluating a deal:** LBO or DCF with sensitivity tables
+- **If you're reporting:** Monthly P&L with variance analysis (see the [Monthly Reporting](/claude-playbook/finance/monthly-reporting) playbook)
+
+Describe the logic in English. Let Claude handle the formulas.

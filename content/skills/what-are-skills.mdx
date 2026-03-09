@@ -1,0 +1,150 @@
+---
+title: "What Are Skills?"
+description: "Reusable instruction packages that turn Claude into a specialist on demand. The mental model that changes everything."
+products: ["Chat", "CoWork", "Code"]
+tier: "Builder"
+readTime: "8 min"
+---
+
+Most people start every Claude conversation from scratch. They re-explain their brand voice, their audience, their formatting preferences — every single time. Skills eliminate that.
+
+A skill is a reusable instruction package that tells Claude how to do a specific type of work. Think of it as an onboarding document for a new hire who's about to handle one particular job.
+
+## The Mental Model: Onboarding a New Hire
+
+Imagine you're hiring a freelance writer. On their first day, you wouldn't say "write me a blog post" and walk away. You'd give them:
+
+- Your brand voice guide
+- Examples of posts you've published
+- Your audience description
+- The format and structure you expect
+- Common mistakes to avoid
+
+A skill is exactly that — except it loads instantly, works every time, and never forgets.
+
+<RealWorldProof
+  quote="Treat CLAUDE.md like an onboarding doc for a new hire — you write it completely differently when you think of it that way."
+  author="@bpizzacalla"
+  context="Builder who shipped a full agentic sales platform with zero engineering background"
+/>
+
+## What a Skill Contains
+
+At its core, a skill is a markdown file with instructions. Those instructions can include:
+
+- **Role definition** — What Claude should act as (a copywriter, a data analyst, a meeting facilitator)
+- **Process steps** — The workflow to follow, in order
+- **Context references** — Other files to read before starting
+- **Output format** — Exactly what the result should look like
+- **Guardrails** — What to avoid, what to ask before assuming
+- **Examples** — What good output looks like
+
+<TipCallout type="note">
+Skills are not prompts. A prompt is a single instruction. A skill is a complete workflow with context, process, and quality standards. The difference is like giving someone directions to the store versus training them to be a delivery driver.
+</TipCallout>
+
+## Three Levels of Skill Loading
+
+Skills work differently depending on which Claude product you're using. Understanding these three levels helps you pick the right approach.
+
+### Level 1: Paste Into Conversation (Chat)
+
+The simplest approach. Copy your skill instructions and paste them into a conversation or save them as Project instructions.
+
+**Best for:** Individual tasks in Claude Chat. Quick to set up, no technical knowledge required.
+
+**Limitation:** You have to paste or set up the Project each time. No automation, no file system access.
+
+<PromptBlock
+  title="Pasting a skill into Chat"
+  prompt="You are a meeting notes processor. When I paste meeting notes, do the following:\n\n1. Extract all action items with owners and deadlines\n2. Summarize key decisions (one sentence each)\n3. Flag any unresolved questions\n4. Draft a follow-up email to attendees\n\nFormat action items as a table. Keep the summary under 200 words. The follow-up email should be professional but warm."
+/>
+
+### Level 2: Upload as Knowledge (CoWork)
+
+In Claude CoWork, you can upload skill files to a shared workspace. These become persistent knowledge that any team member can access.
+
+**Best for:** Teams that need consistent output. Sales teams, support teams, content teams.
+
+**How:** Upload a zip file containing your skill markdown files in Settings. Claude references them automatically when relevant.
+
+### Level 3: Filesystem Skills (Code)
+
+The most powerful approach. Skill files live on your filesystem and Claude Code discovers them automatically.
+
+**Best for:** Automated workflows, complex multi-step processes, anything that needs to read or write files.
+
+**How:** Place markdown files in specific directories (`.claude/commands/` for slash commands, or reference them from CLAUDE.md). Claude Code loads them when you invoke a command or when they're relevant to your task.
+
+<StepByStep
+  steps={[
+    { title: "Level 1: Paste into conversation", description: "Copy instructions into Claude Chat. Quick and easy, but manual every time." },
+    { title: "Level 2: Upload to CoWork", description: "Upload skill files as knowledge. Persistent, shared with your team." },
+    { title: "Level 3: Filesystem skills in Code", description: "Skills live as files on your machine. Claude discovers and uses them automatically." }
+  ]}
+/>
+
+## Why Skills Beat Prompts
+
+A well-crafted prompt can get you 70% of the way. A skill gets you to 95%.
+
+Here's why:
+
+### 1. Consistency
+
+Without a skill, you'll phrase your instructions slightly differently each time. Those small differences compound into inconsistent output. A skill ensures the same process runs the same way every time.
+
+### 2. Context Loading
+
+Skills can reference other files. Instead of cramming everything into one prompt, a skill says "read my voice guide, then read my audience profile, then start the task." Claude gets deep context without you re-typing it.
+
+### 3. Multi-Step Workflows
+
+A prompt handles one step. A skill chains multiple steps together — read context, ask clarifying questions, execute, format output, save to a specific location.
+
+### 4. Guardrails
+
+Skills can include anti-patterns: "Don't use jargon. Don't assume — ask first. Don't generate more than 500 words." These constraints prevent the most common failure modes.
+
+### 5. Iteration
+
+When output isn't right, you improve the skill once and every future use benefits. With one-off prompts, you fix the same problem over and over.
+
+<ScenarioCard
+  scenario="You write LinkedIn posts twice a week. Each time, you spend 5 minutes explaining your tone, audience, and format preferences to Claude before you can start."
+  answer="Build a LinkedIn post skill. Include your tone guide, audience description, format rules, and 2-3 examples. Now you invoke the skill and go straight to writing — zero setup time."
+  prompt="You are my LinkedIn content creator. Before writing, read these guidelines:\n\n- Audience: B2B operators and founders\n- Tone: Direct, practical, no fluff\n- Format: Short paragraphs, heavy line breaks, under 300 words\n- Always end with either a question or a clear takeaway\n- Never use hashtag spam (0-2 max)\n- Never use 'crushing it', 'game-changer', or other LinkedIn cliches\n\nWhen I give you a topic, generate the post. Include a hook line that stops the scroll."
+/>
+
+## Where Skills Work Best
+
+Skills shine in specific scenarios. Here's how to identify a good candidate:
+
+**High-frequency tasks.** If you do something more than twice a week, it's a skill candidate. Email drafting, content creation, meeting prep, data analysis.
+
+**Tasks with clear quality standards.** If you can describe what "good" looks like — specific format, tone, structure, length — a skill can enforce those standards consistently.
+
+**Multi-step workflows.** If a task involves reading context, then processing, then outputting in a specific format — that's a skill, not a prompt.
+
+**Team-wide processes.** If multiple people do the same type of work and consistency matters — sales proposals, customer responses, content production — skills standardize the output.
+
+<TipCallout type="warning">
+Skills are NOT the right tool for one-off tasks, open-ended exploration, or brainstorming. If you're asking Claude to "help me think through" something, a conversation is better than a structured skill.
+</TipCallout>
+
+## The Skill Spectrum
+
+Not every skill needs to be elaborate. Here's the range:
+
+| Complexity | Lines | Example | When to Use |
+|------------|-------|---------|-------------|
+| Simple | 10-20 | Tone guide | Consistent formatting |
+| Standard | 30-80 | Content template | Repeatable workflows |
+| Complex | 80-200 | Multi-mode command | Business processes |
+| System | 200+ | Full pipeline | Operational systems |
+
+Start simple. A 15-line skill that nails your email tone is more valuable than a 200-line system you never finish building.
+
+## What's Next
+
+Now that you understand what skills are, the next playbook walks you through [building your first one](/claude-playbook/skills/building-your-first-skill) — step by step, with a real example you can adapt.

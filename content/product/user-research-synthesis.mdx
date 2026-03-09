@@ -1,0 +1,286 @@
+---
+title: "User Research Synthesis"
+description: "Interview transcripts to themed analysis, insight reports, and feature priorities. Batch processing at scale."
+products: ["Chat"]
+tier: "Operator"
+readTime: "10 min"
+---
+
+You did the hard part — you ran 15 user interviews. Now they're sitting in a folder, each one 30-60 minutes of transcript, and you need to turn them into a coherent set of insights that inform product decisions.
+
+This is where Claude genuinely saves days of work. Upload transcripts, get themed analysis, pattern extraction, and prioritized recommendations.
+
+## Single Interview Analysis
+
+Start with one transcript to establish the analysis pattern.
+
+<PromptBlock
+  title="Interview Transcript Analysis"
+  prompt={`I'm uploading a user interview transcript. The interviewee is \${interviewee}.
+
+Context:
+- Product: \${product}
+- Interview goal: \${goal}
+- Interviewee profile: \${profile}
+
+Analyze the transcript and produce:
+
+1. **KEY QUOTES** (verbatim, with timestamps if available)
+Top 5-8 quotes that capture important insights, pain points, or emotional responses. Pick quotes that are specific and revealing, not generic agreement.
+
+2. **PAIN POINTS IDENTIFIED**
+| Pain Point | Severity (1-5) | Frequency of Mention | Verbatim Quote |
+Severity: 1 = minor annoyance, 5 = blocking/dealbreaker
+
+3. **CURRENT WORKFLOW**
+Describe how the user currently solves the problem, step by step. Note any workarounds, manual steps, or tools they cobbled together.
+
+4. **UNMET NEEDS**
+Things the user wants but doesn't have — stated explicitly or implied by their frustrations. Separate "explicitly stated" from "implied."
+
+5. **FEATURE REACTIONS** (if we showed them anything)
+For each feature or concept discussed:
+| Feature/Concept | Reaction | Interest Level | Quote |
+Interest: 🔥 Strong interest, 👍 Moderate, 😐 Neutral, 👎 Negative
+
+6. **WILLINGNESS TO PAY SIGNALS**
+Any mentions of budget, current spending on alternatives, or price sensitivity. Direct quotes.
+
+7. **FOLLOW-UP QUESTIONS**
+What should we ask in the next interview with a similar persona? What did we miss?
+
+8. **ONE-LINE INSIGHT**
+The single most important takeaway from this interview, in one sentence.`}
+  variables={[
+    { name: "interviewee", placeholder: "Sarah, VP of Marketing at a 200-person e-commerce company" },
+    { name: "product", placeholder: "our analytics dashboard" },
+    { name: "goal", placeholder: "understand how marketing teams track campaign performance and where current tools fall short" },
+    { name: "profile", placeholder: "Mid-market marketing leader, currently uses Google Analytics + Looker + spreadsheets" }
+  ]}
+/>
+
+<TipCallout type="tip">
+Upload the raw transcript, not a summary. Claude catches nuances in word choice and emotional tone that summaries strip out. "That part is honestly really frustrating" is a different signal than "it could be better."
+</TipCallout>
+
+## Batch Processing Multiple Interviews
+
+This is where the real value is — synthesizing across 10, 15, 20 interviews to find patterns.
+
+<PromptBlock
+  title="Cross-Interview Synthesis"
+  prompt={`I'm uploading \${interviewCount} interview transcripts. All were conducted for the same research goal: \${goal}
+
+Synthesize across all interviews:
+
+1. **THEME ANALYSIS**
+Identify the top themes that emerged across multiple interviews:
+| Theme | # of Interviews Mentioning | Strength of Signal | Key Quotes (1 per interview) |
+
+Rank by frequency × strength. A theme mentioned by 12/15 users with moderate intensity ranks higher than one mentioned by 3/15 with high intensity.
+
+2. **PAIN POINT MATRIX**
+| Pain Point | Users Who Mentioned | Severity (avg) | Current Workaround | Opportunity |
+
+Only include pain points mentioned by 3+ users. For each, describe the opportunity: what would solving this enable?
+
+3. **USER SEGMENTATION**
+Did natural segments emerge? Group interviewees by:
+- How they currently solve the problem
+- What they care most about
+- Their sophistication level
+
+For each segment:
+- Name it (descriptive, not generic)
+- Size: how many interviewees fell in this segment
+- Primary pain point
+- What they'd value most
+
+4. **CONTRADICTIONS & SURPRISES**
+Where did interviewees disagree with each other? What did you hear that contradicts our assumptions?
+
+5. **FEATURE PRIORITY MATRIX**
+Based on all interviews:
+| Feature/Capability | Demand (users who want it) | Impact (how much it matters) | Confidence (how sure are we) |
+
+Sort by Demand × Impact.
+
+6. **INSIGHTS REPORT** (executive summary, 1 page)
+- Top 3 insights in plain English
+- Recommended next steps
+- What we're confident about vs what needs more research
+
+7. **JOBS TO BE DONE**
+Frame the top 3 findings as JTBD statements:
+"When [situation], I want to [motivation], so I can [outcome]."
+
+Each JTBD should be supported by at least 3 interview quotes.`}
+  variables={[
+    { name: "interviewCount", placeholder: "12" },
+    { name: "goal", placeholder: "understand how marketing teams measure campaign ROI and where their current tools break down" }
+  ]}
+/>
+
+<BeforeAfter
+  before={{
+    content: "12 interview transcripts in a Google Drive folder. 8 hours of audio. Researcher spends 3 days coding themes in a spreadsheet. Delivers a 40-page report nobody reads past page 5."
+  }}
+  after={{
+    content: "Upload all 12 transcripts to Claude. Get a themed synthesis with pain point matrix, user segments, and feature priorities in 30 minutes. The output is 3 pages and directly actionable."
+  }}
+  annotation="The synthesis is where research becomes useful. Without it, interviews are just anecdotes."
+/>
+
+## Progressive Interview Analysis
+
+The best approach: analyze each interview as you go, then synthesize at the end.
+
+<StepByStep
+  steps={[
+    { title: "After each interview", description: "Upload the transcript and get the single-interview analysis. Save it. This takes 5 minutes and keeps insights fresh." },
+    { title: "After every 5 interviews", description: "Upload the individual analyses and ask Claude: 'What patterns are emerging? What questions should I add to the remaining interviews?' This lets you adjust your guide mid-study." },
+    { title: "After all interviews", description: "Upload everything — all transcripts or all individual analyses — and ask for the full cross-interview synthesis." },
+    { title: "Validate with stakeholders", description: "Share the synthesis and ask: 'Does this match your intuition? What surprises you?' Disagreements are signals." }
+  ]}
+/>
+
+<PromptBlock
+  title="Mid-Study Pattern Check"
+  prompt={`I've completed \${completed} of \${total} planned interviews. Here are the individual analyses from each interview so far.
+
+Based on what we're seeing:
+1. What patterns are strong enough to be confident about already?
+2. What's emerging but needs more data?
+3. What questions should I add to the remaining \${remaining} interviews to fill gaps?
+4. Are there any persona types I should prioritize recruiting for the remaining interviews? (e.g., "You have 8 SMB users and only 2 enterprise — try to get more enterprise perspectives")
+5. Is there a theme we should probe deeper on that users are mentioning but we didn't ask about directly?`}
+  variables={[
+    { name: "completed", placeholder: "7" },
+    { name: "total", placeholder: "15" },
+    { name: "remaining", placeholder: "8" }
+  ]}
+/>
+
+## Affinity Mapping
+
+Turn raw quotes into organized groups — the digital version of Post-it notes on a wall.
+
+<PromptBlock
+  title="Affinity Mapping"
+  prompt={`I'm uploading all quotes and observations from \${interviewCount} interviews. Organize them into an affinity map:
+
+1. **EXTRACT ALL INSIGHTS**
+Pull every notable quote, observation, or data point from the transcripts. Tag each with the interviewee identifier.
+
+2. **GROUP INTO CLUSTERS**
+Organize the insights into natural groups. Don't use pre-defined categories — let the data suggest the groupings. Name each cluster descriptively.
+
+3. **HIERARCHY**
+Group the clusters into higher-level themes (3-5 max). The structure should be:
+- Theme (high level)
+  - Cluster (mid level)
+    - Individual insights/quotes (detail level)
+
+4. **HEAT MAP**
+Which themes have the most data points? This tells you where user energy is concentrated:
+| Theme | # of Data Points | # of Users | Emotional Intensity (avg) |
+
+5. **GAPS**
+Are there themes with only 1-2 data points? These might be important but under-explored, or they might be outliers. Flag them for follow-up research.
+
+Format the output so I can paste it into Miro, FigJam, or a similar tool — clean hierarchical text with clear groupings.`}
+  variables={[
+    { name: "interviewCount", placeholder: "12" }
+  ]}
+/>
+
+## Turning Insights into Feature Specs
+
+The bridge between research and product: turning validated insights into actionable requirements.
+
+<PromptBlock
+  title="Insights to Feature Requirements"
+  prompt={`Based on our research synthesis, help me translate the top insights into feature requirements.
+
+Top insights:
+\${insights}
+
+For each insight:
+
+1. **PROBLEM STATEMENT**
+One sentence describing the validated user problem.
+
+2. **EVIDENCE**
+How many users mentioned this? What's the strongest quote?
+
+3. **PROPOSED SOLUTION** (directional, not detailed)
+What would we build to address this? Keep it high-level — we'll write the detailed PRD later.
+
+4. **EXPECTED IMPACT**
+- Which user segment does this serve?
+- What metric would improve? (retention, activation, NPS, expansion?)
+- How many of our current users are affected?
+
+5. **EFFORT ESTIMATE**
+Small / Medium / Large / XL (just directional)
+
+6. **PRIORITY SCORE**
+= Evidence strength × Expected impact × (1 / Effort)
+Rank all features by this score.
+
+7. **RECOMMENDED ROADMAP**
+Group into: Now (next sprint), Soon (next quarter), Later (future)
+With reasoning for each placement.`}
+  variables={[
+    { name: "insights", placeholder: "1. Users can't track ROI by campaign — they see total numbers but can't attribute revenue to specific campaigns\n2. Report building takes too long — users spend 4+ hours/week building reports manually\n3. Real-time data matters — users check metrics multiple times per day but data is always 24hrs stale\n4. Sharing insights with executives is painful — no easy way to create executive summaries from detailed data" }
+  ]}
+/>
+
+## Survey Data Analysis
+
+Claude also handles structured survey data — not just qualitative interviews.
+
+<PromptBlock
+  title="Survey Results Analysis"
+  prompt={`I'm uploading our user survey results (\${responseCount} responses). Analyze:
+
+1. **QUANTITATIVE SUMMARY**
+For each question:
+- Distribution of responses (percentages for multiple choice, mean/median for scales)
+- Any statistically notable skews
+
+2. **OPEN-ENDED RESPONSE CODING**
+For each open-ended question:
+- Code responses into themes (like a qualitative researcher would)
+- Show: Theme | # of Responses | Example Quotes | Sentiment
+
+3. **CROSS-TABULATION**
+Are there meaningful differences by:
+- Company size
+- Role/title
+- How long they've been a customer
+- Plan type
+
+Flag any segment where answers differ significantly from the overall average.
+
+4. **NPS / SATISFACTION ANALYSIS** (if applicable)
+- Overall score
+- Breakdown by segment
+- What do promoters say vs detractors? (analyze open-ended responses by NPS category)
+
+5. **TOP 5 ACTIONABLE INSIGHTS**
+Not just what the data says, but what we should do about it. Each insight should be: Finding → Implication → Recommended Action.`}
+  variables={[
+    { name: "responseCount", placeholder: "347" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="You ran a survey with 500 responses and 12 interviews. The survey says Feature A is the #1 priority. The interviews suggest Feature B matters more. How do you reconcile this?"
+  answer="Upload both data sets and ask Claude to compare. Usually, the survey captures stated preferences (what people say they want) while interviews capture revealed needs (what they actually struggle with). Feature A might be more visible/familiar while Feature B is a deeper, less articulated pain."
+  prompt="I have conflicting signals between our survey (500 responses) and our interviews (12 users). The survey ranks Feature A as the #1 priority. But in interviews, Feature B consistently generated the strongest emotional response and the most workaround behavior. Help me reconcile these by analyzing: (1) How was Feature A framed in the survey? Could the framing have biased responses? (2) What evidence do interviews provide about Feature B that the survey couldn't capture? (3) If we could only build one, which has more evidence of actual behavior change vs stated preference? (4) How should we weight each data source?"
+/>
+
+<TipCallout type="note">
+Research synthesis is one of Claude's strongest use cases because it involves processing large amounts of text, finding patterns, and organizing them — exactly what it's good at. But the quality of the synthesis depends entirely on the quality of the interviews. No amount of AI analysis can fix poorly designed research questions or leading interview techniques.
+</TipCallout>

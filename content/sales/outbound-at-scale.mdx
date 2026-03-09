@@ -1,0 +1,172 @@
+---
+title: "Outbound at Scale"
+description: "AI BDR pipelines that outperform human reps from day one."
+products: ["Code"]
+tier: "Power User"
+readTime: "15 min"
+---
+
+Here's a real result: an AI BDR pipeline built with Claude Code booked more qualified meetings in its first week than a human BDR did in eight weeks. Not because the AI was smarter about selling — because it was faster at research, personalization, and follow-up at a volume no human can match.
+
+This playbook shows you how to build that pipeline. You don't need to be a developer. You need Claude Code, access to a few data sources, and the willingness to let AI handle the grunt work while you handle the conversations.
+
+## The AI BDR Pipeline Architecture
+
+<StepByStep
+  title="How the pipeline works"
+  steps={[
+    { title: "Lead sourcing", description: "Pull prospects from LinkedIn Sales Navigator, Apollo, or your ICP criteria. Export as CSV." },
+    { title: "Research & enrichment", description: "Claude Code researches each company and contact — finding the specific angles that make outreach relevant." },
+    { title: "Personalized messaging", description: "Claude generates unique outreach for each prospect based on the research. Not mail merge — real personalization." },
+    { title: "Sequence orchestration", description: "Messages are loaded into your outreach tool (Instantly, Smartlead, Apollo) with timing and follow-up cadence." },
+    { title: "Response handling", description: "Claude triages responses: interested, objection, not now, unsubscribe. Drafts appropriate replies for each." },
+    { title: "Curated landing pages (optional)", description: "For high-value prospects, Claude Code generates a personalized landing page that makes the prospect feel like you built it for them." }
+  ]}
+/>
+
+## Step 1: Define Your Target List
+
+Before Claude touches anything, you need a clean target list. Garbage in, garbage out.
+
+<PromptBlock
+  title="Build your ICP filter criteria"
+  prompt="Help me define specific, filterable criteria for building my outbound prospect list.\n\nOur product: [what you sell]\nOur ICP: [who buys from you]\nAverage deal size: [typical contract value]\nBest customers (describe 3): [your best customers and why they're great]\n\nBased on this, create filterable criteria I can use in LinkedIn Sales Navigator or Apollo:\n1. Company size (employees and/or revenue range)\n2. Industry / vertical\n3. Job titles to target (primary and secondary)\n4. Geography\n5. Technology signals (tools they use that indicate fit)\n6. Trigger events (hiring, funding, expansion — signals they need us now)\n7. Negative filters (who to exclude)\n\nThen create a scoring rubric: for each criterion, assign a weight. A prospect that matches all criteria is a 100. What's the minimum score worth reaching out to?"
+  variables={[
+    { name: "what you sell", placeholder: "AI-powered revenue analytics platform" },
+    { name: "who buys from you", placeholder: "VP Sales and Rev Ops leaders at B2B SaaS companies" },
+    { name: "typical contract value", placeholder: "$24K-$60K/year" },
+    { name: "your best customers and why they're great", placeholder: "1) $15M SaaS, 30-person sales team, closed in 3 weeks. 2) $8M SaaS, needed Salesforce integration. 3) $25M SaaS, came from Clari competitor." }
+  ]}
+/>
+
+## Step 2: Research & Enrichment with Claude Code
+
+This is where AI earns its keep. Instead of a BDR spending 10 minutes researching each prospect, Claude Code processes your entire list and finds the angles.
+
+<PromptBlock
+  title="Prospect research and enrichment"
+  prompt="I have a CSV of prospects I need to research and enrich for outbound outreach. The CSV is at [file path].\n\nFor each prospect, I need you to:\n\n1. Read the company name, contact name, and title from the CSV\n2. Research the company using any context available (I'll provide company descriptions or you can work from the company name and industry)\n3. Generate these enrichment fields:\n   - company_summary: 2-sentence description of what they do\n   - likely_pain_points: top 2 pain points based on their industry, size, and role\n   - personalization_angle: one specific thing about this company or person that makes our outreach relevant\n   - trigger_event: any recent event (hiring, funding, product launch) that creates urgency\n   - competitor_likely: what they're probably using today for [your product category]\n   - priority_score: 1-10 based on ICP fit\n\n4. Save the enriched data back to a new CSV at [output path]\n5. Flag any prospects that score below 5 — I'll review whether to include them\n\nOur product: [what you sell]\nOur ICP: [who you sell to]\nOur key differentiator: [what makes you different]"
+  variables={[
+    { name: "file path", placeholder: "~/Desktop/prospect-list.csv" },
+    { name: "output path", placeholder: "~/Desktop/prospect-list-enriched.csv" },
+    { name: "what you sell", placeholder: "Revenue analytics platform" },
+    { name: "who you sell to", placeholder: "VP Sales at B2B SaaS companies, $5M-$50M" },
+    { name: "your product category", placeholder: "revenue intelligence / sales analytics" },
+    { name: "what makes you different", placeholder: "We're the only platform that predicts deal outcomes 45 days out with 90% accuracy" }
+  ]}
+/>
+
+<TipCallout type="tip">
+For the richest research, paste company descriptions or About page text directly into supplementary files that Claude Code can reference. The more real data Claude has, the better the personalization angles. You can create a folder of company profiles and point Claude at it.
+</TipCallout>
+
+## Step 3: Generate Personalized Outreach
+
+This is where most AI outreach fails. People use Claude as a mail merge tool — same template, swap the name. Real personalization means each email references something specific about the prospect's company, role, or situation.
+
+<PromptBlock
+  title="Generate personalized outreach sequences"
+  prompt="Using the enriched prospect data at [file path], generate a 3-email outreach sequence for each prospect.\n\nOUTREACH FRAMEWORK:\n\nEmail 1 (Day 1) — The Relevant Observation\n- Subject line: specific to their situation, not clickbait\n- Opening: reference something specific about their company or role (use the personalization_angle field)\n- Bridge: connect their situation to a problem we solve\n- Value: one specific result a similar company achieved\n- CTA: simple question, not a calendar link. 'Worth a 15-minute conversation?'\n- Length: under 100 words\n\nEmail 2 (Day 3) — The Proof Point\n- Subject line: re: [original subject]\n- Opening: don't reference the first email ('Just following up' is banned)\n- Body: share a specific case study or data point relevant to their industry\n- CTA: same ask, different angle\n- Length: under 80 words\n\nEmail 3 (Day 7) — The Breakup\n- Subject line: short, direct\n- Body: acknowledge their busy schedule, offer one final piece of value (a relevant resource), and make it easy to say 'not now' vs. ghost\n- Length: under 60 words\n\nRULES:\n- No 'I hope this finds you well'\n- No 'I'd love to'\n- No 'game-changer' or 'revolutionary'\n- No fake urgency\n- Write like a human who knows their stuff, not a sales robot\n- Each email must be genuinely different — not the same pitch reworded\n\nSave the output as a CSV with columns: prospect_name, prospect_email, email_number, subject, body, send_date\n\nOur product: [what you sell]\nOur voice: [how you sound — direct, casual, formal, etc.]"
+  variables={[
+    { name: "file path", placeholder: "~/Desktop/prospect-list-enriched.csv" },
+    { name: "what you sell", placeholder: "Revenue analytics for B2B SaaS" },
+    { name: "how you sound — direct, casual, formal, etc.", placeholder: "Direct and peer-level. No fluff, no corporate speak. Like a smart friend who happens to sell analytics." }
+  ]}
+/>
+
+<BeforeAfter
+  before={{ label: "Generic AI outreach", content: "Hi Sarah,\n\nI hope this email finds you well! I'm reaching out because I believe our platform could be a game-changer for TechFlow's revenue operations.\n\nWe help companies like yours improve their sales forecasting and pipeline visibility. I'd love to schedule 15 minutes to show you how.\n\nWould you be open to a quick call this week?\n\nBest,\nMike" }}
+  after={{ label: "Personalized AI outreach", content: "Sarah — noticed TechFlow just opened 3 AE roles in Austin. Growing the team that fast usually means pipeline visibility gets harder before it gets easier.\n\nWe helped a similar-sized SaaS company (Airtable competitor, 40-person sales team) cut their forecast variance from 35% to 8% in one quarter. They were running into the same scaling problem.\n\nWorth a 15-minute conversation about what they did?" }}
+  annotation="Same AI generated both. The difference is the input: the second email had enriched prospect data with a specific trigger event (hiring signal) and a relevant case study match."
+/>
+
+## Step 4: Load Into Your Outreach Tool
+
+Claude Code can format your sequences for direct import into whatever tool you use.
+
+<PromptBlock
+  title="Format sequences for outreach tool import"
+  prompt="Take the outreach sequences CSV at [file path] and format it for import into [outreach tool].\n\nThe tool needs:\n- [List the specific format requirements for your tool]\n\nAlso:\n1. Stagger send times so no two emails from our domain go out within 3 minutes of each other\n2. Set send windows to [time range] in the prospect's timezone\n3. Add a [delay] between each step in the sequence\n4. Tag each prospect with their priority score for easy filtering\n\nSave the formatted file to [output path]."
+  variables={[
+    { name: "file path", placeholder: "~/Desktop/outreach-sequences.csv" },
+    { name: "outreach tool", placeholder: "Instantly.ai" },
+    { name: "List the specific format requirements for your tool", placeholder: "Columns: email, first_name, last_name, company, custom1 (subject), custom2 (body), sequence_step, delay_days" },
+    { name: "time range", placeholder: "8am-10am" },
+    { name: "delay", placeholder: "2-day" },
+    { name: "output path", placeholder: "~/Desktop/instantly-import.csv" }
+  ]}
+/>
+
+## Step 5: Response Triage
+
+When replies start coming in, Claude handles the sorting so you can focus on the conversations that matter.
+
+<PromptBlock
+  title="Triage outreach responses"
+  prompt="Here are the responses from our outbound campaign. Categorize each one and draft an appropriate reply.\n\n[Paste responses here, or point to a file/export]\n\nCategories:\n1. INTERESTED — they want to learn more. Draft: enthusiastic but not pushy reply with a specific time suggestion\n2. QUESTION — they have a question before committing. Draft: direct answer + pivot to a conversation\n3. OBJECTION — they raised a concern. Draft: acknowledge + reframe using our objection playbook\n4. NOT NOW — timing isn't right. Draft: respectful reply, offer to follow up in [timeframe], add to nurture\n5. WRONG PERSON — they're not the right contact. Draft: thank them and ask for a referral to the right person\n6. UNSUBSCRIBE — they want off the list. Draft: immediate confirmation, mark for removal\n7. OUT OF OFFICE — auto-reply. Note: adjust sequence timing for their return date\n\nFor each response:\n- Category\n- Draft reply (under 75 words for all categories)\n- Priority: respond now, respond today, can wait\n- CRM note: one sentence to log"
+/>
+
+<RealWorldProof
+  quote="Week 1 of the AI BDR pipeline: 847 personalized emails sent, 23 positive replies, 8 meetings booked. Our human BDR sent 200 emails in their first 8 weeks and booked 6 meetings. The AI wasn't better at selling — it was better at everything that happens before the selling starts."
+  author="Founder, B2B SaaS Startup"
+  context="Solo founder who couldn't afford a full-time BDR, built the pipeline in a weekend with Claude Code"
+/>
+
+## Advanced: Personalized Landing Pages
+
+For your highest-priority prospects (top 10%), create personalized landing pages that make them feel like your entire company exists to solve their specific problem.
+
+<PromptBlock
+  title="Generate a personalized prospect landing page"
+  prompt="Create a personalized landing page for [prospect name] at [company]. This page will be linked in our outreach email.\n\nPROSPECT CONTEXT:\n- Company: [what they do]\n- Their likely pain: [primary pain point]\n- Their industry: [industry]\n- Relevant case study: [which customer story to feature]\n\nThe page should include:\n1. Headline: speak directly to their pain point (use their company name)\n2. A 3-sentence description of how we solve this for companies like theirs\n3. One relevant case study with specific numbers\n4. A short video embed placeholder (I'll add the URL later)\n5. Three bullet points: what makes us different for [their industry]\n6. A single CTA button: 'See How [Company] Can [Outcome]' → links to my calendar\n\nGenerate this as a clean HTML file I can host. Use a minimal, professional design — dark background, clean typography. No heavy frameworks.\n\nSave to [output path]."
+  variables={[
+    { name: "prospect name", placeholder: "Sarah Chen" },
+    { name: "company", placeholder: "TechFlow" },
+    { name: "what they do", placeholder: "Project management SaaS for agencies" },
+    { name: "primary pain point", placeholder: "Sales forecasting is inaccurate as they scale the team" },
+    { name: "industry", placeholder: "B2B SaaS" },
+    { name: "which customer story to feature", placeholder: "Our case study with Basecamp competitor who improved forecast accuracy by 40%" },
+    { name: "output path", placeholder: "~/outreach-pages/techflow.html" }
+  ]}
+/>
+
+<TipCallout type="warning">
+Personalized landing pages have crazy conversion rates (5-10x vs. generic pages), but they only make sense for high-value prospects. If your average deal is under $10K/year, stick to personalized emails. If you're selling $50K+ contracts, the extra effort on landing pages pays for itself many times over.
+</TipCallout>
+
+## The Full Workflow in Claude Code
+
+Here's what the actual Claude Code session looks like end-to-end. You're having a conversation, not writing code.
+
+<PromptBlock
+  title="End-to-end outbound pipeline"
+  prompt="I want to build an outbound pipeline for the next 2 weeks. Here's my plan:\n\n1. Start with the prospect list at ~/Desktop/raw-prospects.csv (exported from LinkedIn Sales Navigator)\n2. Research and enrich each prospect — add company summary, pain points, personalization angle, and priority score\n3. Generate a 3-email sequence for each prospect using our outreach framework (I'll paste the framework)\n4. Format the sequences for import into Instantly.ai\n5. For the top 10 prospects (highest priority score), generate personalized landing pages\n6. Create a tracking spreadsheet so I can monitor responses\n\nLet's start with step 1. Read the CSV and show me a summary of what we're working with — total prospects, distribution by industry, and any data quality issues."
+/>
+
+<TipCallout type="note">
+You don't need to run all of this in one session. Most people build the pipeline over 2-3 sessions: Day 1 is sourcing and enrichment, Day 2 is sequence generation, Day 3 is loading and launching. Claude Code remembers your project context between sessions.
+</TipCallout>
+
+## Measuring What Works
+
+After your first campaign runs, bring the results back to Claude for analysis.
+
+<PromptBlock
+  title="Campaign performance analysis"
+  prompt="Here are the results from our first outbound campaign. Analyze performance and recommend optimizations.\n\n[Paste or point to your campaign metrics — open rates, reply rates, meeting rates by sequence step, by industry, by title, etc.]\n\nI want to know:\n1. Which personalization angles got the best response rates?\n2. Which email in the sequence (1, 2, or 3) drove the most meetings?\n3. Are there patterns by industry, company size, or title?\n4. Which subject lines outperformed and why?\n5. Where is the funnel leaking — opens but no replies? Replies but no meetings?\n6. Based on this data, rewrite the three weakest-performing emails\n7. Recommend changes to our targeting criteria based on who actually responded"
+/>
+
+## Decision Framework: Build vs. Buy
+
+Not sure if you should build this with Claude Code or use an existing AI BDR tool (like Artisan, 11x, or Regie)?
+
+| Factor | Build with Claude Code | Use an AI BDR Platform |
+|--------|----------------------|----------------------|
+| **Control** | Full control over every message, angle, and workflow | Platform decides messaging approach |
+| **Cost** | Claude subscription + outreach tool ($50-200/mo) | $1,000-5,000/mo for AI BDR platforms |
+| **Setup time** | 1-2 days to build the pipeline | Hours to onboard, weeks to optimize |
+| **Customization** | Unlimited — you define every step | Limited to platform's capabilities |
+| **Best for** | Founders and small teams who want control | Larger teams who want hands-off automation |
+| **Risk** | More manual oversight needed | Platform may send messages you wouldn't approve |
+
+For most small-to-mid teams, building with Claude Code gives you better results at a fraction of the cost. You trade convenience for control — and in outbound, control over messaging is everything.

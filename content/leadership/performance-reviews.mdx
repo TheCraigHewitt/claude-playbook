@@ -1,0 +1,168 @@
+---
+title: "Performance Reviews That Actually Help People"
+description: "Turn scattered notes into structured, fair, specific reviews. Templates for annual, quarterly, and 360 formats."
+products: ["Chat", "CoWork"]
+tier: "Operator"
+readTime: "12 min"
+---
+
+Performance reviews are one of the highest-leverage activities a leader does — and one of the most dreaded. Not because the conversation is hard, but because the preparation is a slog. You're digging through Slack messages, project notes, and your own memory trying to reconstruct six months of someone's work.
+
+Claude turns this from a weekend project into a 30-minute workflow.
+
+## The Performance Review Workflow
+
+Here's the process that works:
+
+<StepByStep
+  steps={[
+    { title: "Dump your raw notes", description: "Paste in everything — Slack highlights, project outcomes, 1:1 notes, peer feedback, metrics. Don't organize it. Just dump it." },
+    { title: "Ask Claude to identify themes", description: "Claude will find patterns across your notes — recurring strengths, areas that come up multiple times, growth trajectory." },
+    { title: "Generate a structured draft", description: "Use the right template for your review format (annual, quarterly, 360). Claude fills in the structure with specifics from your notes." },
+    { title: "Refine the language", description: "Ask Claude to check for vagueness, bias, and balance. Then edit for your voice." },
+    { title: "Prepare for the conversation", description: "Generate talking points and anticipated questions so you walk in ready." }
+  ]}
+/>
+
+<MiniQuiz
+  question="What's the primary advantage of using AI to assist with performance reviews?"
+  options={[
+    { label: "It's faster — you can write reviews in minutes instead of hours", correct: false, explanation: "Speed is a benefit, but rushing reviews defeats the purpose. The real value is in the quality of the output, not just the time savings." },
+    { label: "It produces more consistent, specific, and evidence-backed reviews by finding patterns in your raw notes", correct: true, explanation: "Claude excels at turning messy notes into structured, specific feedback backed by real examples. It finds themes you might miss, catches bias, and ensures every statement has evidence — producing fairer, more actionable reviews." },
+    { label: "It removes the need for manager judgment in evaluating performance", correct: false, explanation: "Claude writes the first draft, but you bring the judgment, relationship context, and nuance. AI assists the process — it doesn't replace the manager's role in evaluation." },
+    { label: "It generates standardized reviews so every employee gets the same format", correct: false, explanation: "Consistent format is nice, but the value is in the content being specific to each person. A standardized template with generic praise is worse than a custom format with real evidence." }
+  ]}
+/>
+
+## Step 1: The Raw Notes Dump
+
+Don't spend time organizing your notes first. Claude is better at finding patterns in messy data than you are. Just paste everything.
+
+<PromptBlock
+  title="Process raw performance notes"
+  prompt="I need to write a performance review for [employee name], [their role]. Here are my raw notes, observations, and data from the past [time period]. Please:\n\n1. Identify the top 3-5 themes that appear across these notes (both strengths and growth areas)\n2. Pull out specific examples for each theme — with dates or project names where possible\n3. Flag any contradictions in my notes (e.g., 'great communicator' in one note but 'needs to improve stakeholder updates' in another)\n4. Note any gaps — important areas of their role where I have no notes at all\n\nRaw notes:\n[paste everything here]"
+  variables={[
+    { name: "employee name", placeholder: "Sarah Chen" },
+    { name: "their role", placeholder: "Senior Product Manager" },
+    { name: "time period", placeholder: "6 months (July-December)" }
+  ]}
+/>
+
+<TipCallout type="tip">
+Include quantitative data when you have it — revenue influenced, projects shipped, tickets resolved, customer satisfaction scores. Claude will weave these into the review naturally, which makes your feedback more credible and less subjective.
+</TipCallout>
+
+## Step 2: Generate the Structured Review
+
+Once you have themes, ask Claude to write the actual review in your company's format.
+
+### Annual Review Template
+
+<PromptBlock
+  title="Annual performance review"
+  prompt="Write a formal annual performance review for [employee name], [role], based on the themes and examples we just identified. Use this structure:\n\n1. **Summary** (2-3 sentences — overall assessment)\n2. **Key Accomplishments** (3-5 bullet points with specific examples and impact)\n3. **Strengths** (2-3 strengths with evidence)\n4. **Areas for Development** (2-3 areas with specific, actionable suggestions — not vague 'improve communication')\n5. **Goals for Next Period** (3-4 goals that are specific and measurable)\n6. **Overall Rating** (suggest a rating on [your scale] with justification)\n\nTone: direct, fair, and specific. Avoid generic praise ('great team player') — every statement should be backed by an example. Avoid recency bias — weight examples from across the full review period."
+  variables={[
+    { name: "employee name", placeholder: "Sarah Chen" },
+    { name: "role", placeholder: "Senior Product Manager" },
+    { name: "your scale", placeholder: "1-5 scale where 3 is meeting expectations" }
+  ]}
+/>
+
+### Quarterly Check-In Template
+
+<PromptBlock
+  title="Quarterly review (lighter format)"
+  prompt="Write a quarterly performance check-in for [employee name], [role]. This should be lighter than a formal annual review — think 'focused conversation guide' not 'HR document.' Structure:\n\n1. **What's going well** (2-3 specific wins from this quarter)\n2. **What to adjust** (1-2 areas to focus on next quarter, with concrete suggestions)\n3. **Career development** (one observation about their growth trajectory and a question to discuss)\n4. **One thing I want them to know** (a direct, honest statement — positive or constructive)\n\nKeep it under 300 words total. This should feel like a thoughtful conversation, not a form."
+  variables={[
+    { name: "employee name", placeholder: "Marcus Johnson" },
+    { name: "role", placeholder: "Account Executive" }
+  ]}
+/>
+
+### 360 Review Summary
+
+<PromptBlock
+  title="Synthesize 360 feedback"
+  prompt="I've collected 360-degree feedback for [employee name] from [number] people — including peers, direct reports, and cross-functional partners. Here is all the raw feedback:\n\n[paste all feedback]\n\nPlease:\n1. Synthesize into 3-4 key themes with supporting quotes (anonymized)\n2. Identify where feedback is consistent (everyone says the same thing) vs. divergent (some say strength, others say weakness)\n3. Separate perception issues from performance issues\n4. Draft a summary I can share with [employee name] that is honest and constructive\n5. Suggest 2-3 discussion questions I should ask in the review conversation\n\nImportant: maintain anonymity — do not attribute specific feedback to identifiable people."
+  variables={[
+    { name: "employee name", placeholder: "Alex Rivera" },
+    { name: "number", placeholder: "6" }
+  ]}
+/>
+
+## Checking for Bias and Fairness
+
+This is where Claude earns its keep. We all have blind spots.
+
+<PromptBlock
+  title="Bias check on a review draft"
+  prompt="Review this performance evaluation draft for potential bias:\n\n[paste your draft]\n\nCheck for:\n1. **Recency bias** — Are most examples from the last 4-6 weeks? Flag if so.\n2. **Halo/horn effect** — Does one strong positive or negative dominate and color everything else?\n3. **Vague language** — Flag any statement that isn't backed by a specific example ('great communicator' without evidence)\n4. **Comparison to others** — Am I comparing this person to a teammate instead of evaluating against their role expectations?\n5. **Attribution bias** — Am I crediting their effort for successes but blaming external factors for struggles (or vice versa)?\n6. **Language patterns** — Flag any adjectives that research shows are applied differently across gender, race, or personality type (e.g., 'aggressive' vs. 'assertive,' 'emotional' vs. 'passionate')\n\nFor each issue found, suggest a specific rewrite."
+/>
+
+<BeforeAfter
+  before={{
+    content: "Sarah is a great team player who always has a positive attitude. She sometimes struggles with the technical details but makes up for it with her people skills."
+  }}
+  after={{
+    content: "Sarah led the cross-functional launch of Project Atlas, coordinating 4 teams across 3 time zones and delivering 2 weeks ahead of schedule. Her stakeholder communication — particularly the weekly status emails — was cited by both the VP of Engineering and the client as a key factor in the project's success. For her next growth area, I'd recommend she take the lead on a technically complex scoping exercise (like the Q2 platform migration) to build deeper technical fluency alongside her strong program management skills."
+  }}
+  annotation="Generic praise vs. evidence-backed assessment. The second version is fairer, more useful, and harder to argue with."
+/>
+
+## Preparing for the Conversation
+
+The written review is only half the job. The conversation is where the impact happens.
+
+<PromptBlock
+  title="Review conversation prep"
+  prompt="I'm about to deliver this performance review to [employee name]:\n\n[paste review]\n\nHelp me prepare for the conversation:\n1. What questions might they push back on? How should I respond?\n2. What might they be feeling when they read this? (Especially the development areas)\n3. Suggest 3 open-ended questions I should ask to make this a two-way conversation, not a lecture\n4. If they get emotional or defensive, what's my best approach?\n5. Draft a strong opening sentence that sets the right tone — honest, supportive, not sugar-coated"
+  variables={[{ name: "employee name", placeholder: "Sarah Chen" }]}
+/>
+
+<ScenarioCard
+  scenario="You have a team member who's been performing well technically but is terrible at collaboration. Multiple people have complained privately but nobody wants to be named. You need to address it without revealing sources."
+  answer="Frame the feedback around observable impact, not attributed complaints. 'I've noticed that the last three cross-functional projects had coordination issues' is better than 'People have told me you're hard to work with.' Ask Claude to help you find specific, observable examples from your own experience that illustrate the pattern."
+  prompt="Help me write feedback about collaboration issues without attributing the feedback to specific people. The pattern: [describe the behavior pattern]. My own observations: [what you've seen firsthand]. Frame this as observable impact on outcomes, not personality criticism. Give me 2-3 ways to phrase this that are direct but don't reveal my sources."
+/>
+
+## Self-Review Support
+
+Many companies ask employees to write their own self-reviews. Claude is great for this too.
+
+<PromptBlock
+  title="Write your own self-review"
+  prompt="Help me write my self-review for [time period]. I'm a [role] at [company]. Here's what I did this period:\n\n[paste your accomplishments, projects, metrics, challenges]\n\nWrite a self-review that:\n- Leads with impact, not activity (what changed because of my work, not just what I did)\n- Is confident without being arrogant\n- Honestly addresses 1-2 areas where I struggled or am still developing\n- Ties my work to team/company goals where possible\n- Is under 500 words\n\nDon't embellish or exaggerate. Use the specific data and examples I provided."
+  variables={[
+    { name: "time period", placeholder: "H2 2025" },
+    { name: "role", placeholder: "Head of Marketing" },
+    { name: "company", placeholder: "a 50-person B2B SaaS company" }
+  ]}
+/>
+
+## The Review Cycle System
+
+If you manage a team of 5+, set up a Project in Claude with:
+
+1. Your company's review template and rating scale
+2. The role descriptions and leveling criteria for each person
+3. A running document where you paste notes about each person throughout the quarter
+
+When review time comes, you start the conversation with: "It's review time. Generate reviews for everyone on my team based on the notes I've been collecting."
+
+<TipCallout type="note">
+Use CoWork if your team shares a workspace. You can build a shared review system where managers across the org use the same criteria, the same bias checks, and the same quality bar. This is especially useful if you're the CEO reviewing reviews — Claude can flag inconsistencies across managers.
+</TipCallout>
+
+<RealWorldProof
+  quote="I used to spend an entire weekend writing six performance reviews. Now I spend 30 minutes dumping notes and an hour reviewing and personalizing what Claude generates. The reviews are better than what I used to write — more specific, more balanced, more fair."
+  author="Head of Engineering"
+  context="Manager of a 12-person engineering team at a Series B startup"
+/>
+
+## Common Mistakes
+
+**Don't let Claude write the review without your notes.** If you just say "write a review for a senior product manager," you'll get a generic review that could apply to anyone. The value is in Claude structuring YOUR observations, not generating fictional ones.
+
+**Don't skip the bias check.** We all think we're fair. We're all wrong. The two minutes it takes to run your draft through a bias check is the highest-ROI step in the process.
+
+**Don't copy-paste without editing.** Claude writes the first draft. You bring the judgment, the relationship context, and the nuance. Always read every word and adjust for things only you know.

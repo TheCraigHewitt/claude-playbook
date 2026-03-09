@@ -1,0 +1,183 @@
+---
+title: "Proposals & SOWs in Minutes"
+description: "Structured input to polished proposal with pricing and terms."
+products: ["Chat", "CoWork"]
+tier: "Operator"
+readTime: "10 min"
+---
+
+Writing proposals is one of the highest-leverage activities in sales — and one of the most time-consuming. A good proposal closes the deal. A slow proposal loses momentum. Claude turns a 3-hour proposal into a 20-minute exercise.
+
+The key insight: **structure your inputs and Claude will structure your outputs.** Most people ask Claude to "write a proposal" and get generic fluff. The prompts below force you to provide the specific details that make proposals win.
+
+## The Proposal System
+
+<StepByStep
+  steps={[
+    { title: "Load your templates into a Project", description: "Create a Claude Project with your standard pricing, terms, case studies, and proposal template. This is your proposal factory." },
+    { title: "Capture deal context during calls", description: "Use the post-call debrief prompt to extract proposal-relevant details: pain points, requirements, budget signals, timeline, decision criteria." },
+    { title: "Generate the first draft", description: "Feed the deal context into your proposal prompt. Claude maps their needs to your solution and generates a complete draft." },
+    { title: "Review and customize", description: "Spend 10 minutes on the parts that matter: pricing structure, case study selection, and the executive summary." },
+    { title: "Polish and send", description: "Use Claude to proof the final version and generate the cover email." }
+  ]}
+/>
+
+## Setting Up Your Proposal System
+
+Before you write a single proposal, set up persistent context that holds your company's proposal building blocks.
+
+<ProductPicker products={["Chat", "CoWork"]}>
+  {{
+    Chat: <div>
+      <p><strong>Create a "Proposals" Project</strong> in Claude Chat. Load your pricing, standard terms, case studies, and winning proposal examples. Each deal gets its own conversation within the Project — Claude remembers your templates and pricing every time.</p>
+      <p>Best for: individual sellers or founders writing their own proposals.</p>
+    </div>,
+    CoWork: <div>
+      <p><strong>Create a shared Proposals space</strong> in CoWork. Your entire sales team gets access to the same pricing, templates, case studies, and objection responses. Any AE can generate a proposal that matches your company's standards.</p>
+      <p>Best for: sales teams where multiple people write proposals. Ensures consistency in pricing, terms, and quality across the team.</p>
+    </div>
+  }}
+</ProductPicker>
+
+## Setting Up Your Proposal Project
+
+Before you write a single proposal, set up a Claude Project that holds your company's proposal building blocks.
+
+<PromptBlock
+  title="Proposal Project setup instructions"
+  prompt="I'm setting up a Claude Project for generating sales proposals. Here's my company's proposal context. Please confirm you understand each section and flag anything that's missing.\n\nCOMPANY OVERVIEW:\n[2-3 paragraphs about what your company does, key differentiators, and market position]\n\nPRICING TIERS:\n[Your pricing structure — tiers, per-seat costs, implementation fees, etc.]\n\nSTANDARD TERMS:\n- Payment terms: [e.g., Net 30]\n- Contract length: [e.g., 12 months]\n- Implementation timeline: [e.g., 4-6 weeks]\n- Support included: [e.g., dedicated CSM for Enterprise]\n- SLA: [e.g., 99.9% uptime]\n\nCASE STUDIES (summarize 3-5):\n[For each: Company name, industry, challenge, solution, results with specific numbers]\n\nCOMMON OBJECTIONS AND RESPONSES:\n[Top 5 objections you hear and how you handle them]\n\nPROPOSAL TEMPLATE STRUCTURE:\n1. Executive Summary\n2. Understanding of Needs\n3. Proposed Solution\n4. Implementation Plan\n5. Investment & Terms\n6. Case Studies\n7. Next Steps"
+  variables={[
+    { name: "2-3 paragraphs about what your company does, key differentiators, and market position", placeholder: "We're a revenue analytics platform that helps B2B SaaS companies..." },
+    { name: "Your pricing structure — tiers, per-seat costs, implementation fees, etc.", placeholder: "Starter: $500/mo (up to 10 users), Growth: $1,500/mo (up to 50 users), Enterprise: Custom" }
+  ]}
+/>
+
+<TipCallout type="tip">
+Upload your best 2-3 winning proposals as PDF attachments in the Project. Tell Claude: "These are examples of proposals that closed. Match this quality level and structure." Claude will pick up on your formatting, tone, and level of detail.
+</TipCallout>
+
+## The Core Proposal Prompt
+
+This is the prompt you'll use for most proposals. It takes structured deal context and produces a complete first draft.
+
+<PromptBlock
+  title="Generate a complete proposal"
+  prompt="Generate a proposal for this deal using our standard template and pricing.\n\nPROSPECT:\n- Company: [company name]\n- Contact: [name, title]\n- Industry: [industry]\n- Company size: [employees, revenue if known]\n\nDEAL CONTEXT:\n- Their pain points: [what they told us they're struggling with]\n- Requirements: [specific features or capabilities they need]\n- Current solution: [what they use today and why they're looking to switch]\n- Budget signals: [anything they've said about budget or pricing expectations]\n- Timeline: [when they want to implement]\n- Decision process: [who else is involved, what approvals are needed]\n- Competition: [other vendors they're evaluating, if known]\n\nOUR RECOMMENDED SOLUTION:\n- Tier/package: [which pricing tier fits]\n- Add-ons: [any additional services needed]\n- Custom elements: [anything non-standard for this deal]\n\nSPECIAL INSTRUCTIONS:\n- [Any deal-specific requirements, e.g., 'They emphasized ROI metrics — include an ROI section' or 'The CFO will read this — lead with financial impact']\n\nGenerate a complete proposal following our template. Make the executive summary compelling and specific to their situation. Use concrete numbers where possible. Match the case studies to their industry."
+  variables={[
+    { name: "company name", placeholder: "TechFlow Inc" },
+    { name: "name, title", placeholder: "Sarah Chen, VP Operations" },
+    { name: "industry", placeholder: "B2B SaaS, project management" },
+    { name: "employees, revenue if known", placeholder: "120 employees, ~$15M ARR" },
+    { name: "what they told us they're struggling with", placeholder: "Manual reporting, no visibility into pipeline health, reps sandbagging forecasts" },
+    { name: "specific features or capabilities they need", placeholder: "Real-time dashboards, Salesforce integration, forecast accuracy tracking" },
+    { name: "what they use today and why they're looking to switch", placeholder: "Spreadsheets and Salesforce reports — too slow and unreliable" },
+    { name: "anything they've said about budget or pricing expectations", placeholder: "Said they have budget for 'the right tool' but CFO will scrutinize ROI" },
+    { name: "when they want to implement", placeholder: "Before Q3 planning in June" },
+    { name: "who else is involved, what approvals are needed", placeholder: "VP Sales and CFO both need to sign off" },
+    { name: "other vendors they're evaluating, if known", placeholder: "Clari and InsightSquared" },
+    { name: "which pricing tier fits", placeholder: "Growth tier, 50 seats" },
+    { name: "any additional services needed", placeholder: "Salesforce integration setup, 2 training sessions" },
+    { name: "anything non-standard for this deal", placeholder: "Quarterly business reviews included" }
+  ]}
+/>
+
+## Call Recording to Proposal
+
+The fastest path from call to proposal: paste the transcript and let Claude extract everything it needs.
+
+<PromptBlock
+  title="Call transcript to proposal draft"
+  prompt="Here's the transcript from our sales call with [company]. Extract everything relevant to writing a proposal, then generate a complete first draft.\n\nTRANSCRIPT:\n[Paste the full call transcript here]\n\nAfter reading the transcript:\n1. First, list the key proposal inputs you extracted: pain points, requirements, budget signals, timeline, decision makers, competitors mentioned\n2. Flag anything that's unclear or that I should clarify before sending the proposal\n3. Then generate the full proposal using our standard template\n4. Include a recommended pricing tier based on what you heard about their needs and budget\n5. Draft the cover email I should send with the proposal attached"
+  variables={[
+    { name: "company", placeholder: "TechFlow Inc" }
+  ]}
+/>
+
+<RealWorldProof
+  quote="We went from 3 days average turnaround on proposals to same-day. Two deals we closed last quarter specifically mentioned that our speed in sending the proposal showed we understood their urgency."
+  author="Sales Director, Professional Services Firm"
+  context="Team of 8 AEs, average deal size $75K"
+/>
+
+## SOW Generator
+
+Statements of Work need more precision than proposals. They define scope, deliverables, and timelines that become contractually binding.
+
+<PromptBlock
+  title="Generate a Statement of Work"
+  prompt="Generate a detailed Statement of Work based on this deal.\n\nCLIENT: [company name]\nCONTACT: [name, title]\nPROJECT: [project name or description]\n\nSCOPE:\n- What we're delivering: [list deliverables]\n- What's explicitly out of scope: [list exclusions]\n\nPHASES AND TIMELINE:\n[Describe each phase, even roughly — Claude will structure it]\n\nTEAM:\n- Our side: [who's involved and their roles]\n- Their side: [what we need from them — access, approvals, SMEs]\n\nPRICING:\n- Total project value: [amount]\n- Payment structure: [milestone-based, monthly, upfront, etc.]\n- Expense policy: [any pass-through costs]\n\nASSUMPTIONS:\n[List any assumptions you're making — number of revisions, response times, access to systems, etc.]\n\nGenerate a professional SOW with these sections:\n1. Project Overview\n2. Scope of Work (with explicit inclusions and exclusions)\n3. Deliverables (with acceptance criteria for each)\n4. Timeline & Milestones\n5. Team & Responsibilities (RACI-style)\n6. Investment & Payment Schedule\n7. Assumptions & Dependencies\n8. Change Order Process\n9. Term & Termination\n\nMake the deliverables specific and measurable. Include acceptance criteria so there's no ambiguity about what 'done' looks like."
+  variables={[
+    { name: "company name", placeholder: "GrowthMetrics" },
+    { name: "name, title", placeholder: "David Kim, CEO" },
+    { name: "project name or description", placeholder: "Revenue Operations Assessment & Implementation" },
+    { name: "list deliverables", placeholder: "Current state audit, process maps, tool recommendations, implementation of 3 automations, training for team of 5" },
+    { name: "list exclusions", placeholder: "Custom software development, data migration from legacy systems, ongoing maintenance" }
+  ]}
+/>
+
+<TipCallout type="warning">
+Always have a human review SOWs before sending. Claude generates solid structures and language, but scope definitions and pricing terms are where deals get messy. Spend your review time on the Scope, Deliverables, and Assumptions sections — those are where misalignment happens.
+</TipCallout>
+
+## Proposal Variations
+
+### Pricing Options Comparison
+
+Sometimes you want to present multiple options (the classic Good / Better / Best).
+
+<PromptBlock
+  title="Generate tiered pricing options"
+  prompt="I need to present 3 pricing options for [company]. Create a Good / Better / Best comparison that makes the middle option the obvious choice.\n\nTheir needs: [summary of what they need]\nOur pricing: [your pricing tiers]\nDeal context: [budget signals, who's approving, what matters most]\n\nFor each option:\n1. Give it a name that describes the outcome, not the tier (e.g., 'Foundation' not 'Basic')\n2. List what's included\n3. Price and payment terms\n4. Best for: who should pick this option\n5. Trade-offs: what they give up compared to the next tier up\n\nMake the middle option the clear winner by loading it with the features they specifically asked about. The top tier should include things they'd want but haven't asked for yet — plant the expansion seed."
+  variables={[
+    { name: "company", placeholder: "TechFlow Inc" },
+    { name: "summary of what they need", placeholder: "Real-time dashboards, Salesforce integration, forecast accuracy" },
+    { name: "your pricing tiers", placeholder: "Starter $500/mo, Growth $1,500/mo, Enterprise $3,000/mo" },
+    { name: "budget signals, who's approving, what matters most", placeholder: "CFO needs to approve, they care most about ROI and time-to-value" }
+  ]}
+/>
+
+### Competitive Displacement Proposal
+
+When you're replacing an existing vendor, the proposal needs to address switching costs and migration directly.
+
+<PromptBlock
+  title="Competitive displacement proposal"
+  prompt="The prospect is currently using [competitor] and considering switching to us. Generate a proposal that addresses the switch directly.\n\nCurrent vendor: [competitor name and what they use it for]\nWhy they're looking to switch: [their stated reasons]\nSwitching concerns: [what they're worried about — migration, training, downtime, etc.]\n\nIn addition to our standard proposal sections, include:\n1. A 'Why Switch Now' section that validates their decision to evaluate alternatives\n2. A migration plan section with specific steps and timeline\n3. A risk mitigation section addressing their switching concerns\n4. A total cost of ownership comparison (don't trash the competitor — focus on value gaps)\n5. A 'First 30 Days' section showing exactly what happens after they sign\n\nTone: confident but not arrogant. We're here to solve their problem, not bash the competition."
+  variables={[
+    { name: "competitor name and what they use it for", placeholder: "HubSpot — using it for CRM and basic reporting" },
+    { name: "their stated reasons", placeholder: "Can't customize reports, poor API, outgrew the tool" },
+    { name: "what they're worried about — migration, training, downtime, etc.", placeholder: "2 years of data in HubSpot, team of 30 trained on it, worried about productivity dip" }
+  ]}
+/>
+
+## The Proposal Quality Checklist
+
+After Claude generates your draft, run this checklist to catch the gaps that lose deals.
+
+<PromptBlock
+  title="Proposal quality review"
+  prompt="Review this proposal draft and evaluate it against these criteria. Be critical — I'd rather fix issues now than lose the deal.\n\n[Paste your proposal draft here]\n\nEvaluate:\n1. SPECIFICITY: Does it reference their specific situation, or could this proposal be sent to anyone? Flag every generic sentence.\n2. VALUE FRAMING: Does each section connect features to business outcomes? Or are we just listing capabilities?\n3. RISK REDUCTION: Have we addressed their likely concerns about switching, implementation, and ROI?\n4. EXECUTIVE READABILITY: Could a busy executive scan this in 3 minutes and understand the value? Is the executive summary actually compelling?\n5. COMPETITIVE POSITIONING: If they're comparing us to alternatives, does this proposal make the comparison easy to win?\n6. NEXT STEPS: Is there a clear, low-friction next step? Or does it just end?\n7. PRICING PRESENTATION: Is the pricing easy to understand? Are there any surprise costs that could create friction?\n\nFor each issue you find, suggest a specific fix with replacement language."
+/>
+
+<BeforeAfter
+  before={{ content: "Our platform provides robust analytics capabilities with customizable dashboards, real-time data processing, and seamless integrations with leading CRM platforms. Our enterprise-grade infrastructure ensures 99.9% uptime with SOC 2 compliance." }}
+  after={{ content: "Your team currently spends 2 days per month building pipeline reports in spreadsheets. Our platform pulls directly from your Salesforce instance and generates the three reports Sarah mentioned — pipeline velocity, forecast accuracy, and rep activity — automatically every Monday at 7am. Your first dashboard will be live within 5 business days of kickoff." }}
+  annotation="The 'before' could describe any analytics vendor. The 'after' references their specific pain (manual reporting), their specific tool (Salesforce), their specific person (Sarah), and a specific timeline. That's what closes deals."
+/>
+
+## Cover Email Generator
+
+The email that delivers the proposal matters as much as the proposal itself. Most people send "Please find attached our proposal" and wonder why it takes a week to get a response.
+
+<PromptBlock
+  title="Proposal delivery email"
+  prompt="Draft a cover email to deliver this proposal to [name] at [company].\n\nContext:\n- What we discussed on our last call: [key points]\n- The main thing they care about: [their primary driver]\n- The next step we agreed on: [what should happen after they review]\n- Anyone else who needs to see this: [other stakeholders]\n\nThe email should:\n1. Be under 150 words\n2. Open with a reference to our conversation (not 'As discussed' — something specific)\n3. Frame the proposal around the outcome they want, not the document itself\n4. Include one specific number or result from a relevant case study\n5. End with a concrete next step and a specific suggested time\n6. If other stakeholders need to review, make it easy for [name] to forward — include a one-line summary they can paste"
+  variables={[
+    { name: "name", placeholder: "Sarah Chen" },
+    { name: "company", placeholder: "TechFlow Inc" },
+    { name: "key points", placeholder: "They need pipeline visibility before Q3 planning" },
+    { name: "their primary driver", placeholder: "CFO wants forecast accuracy above 85%" },
+    { name: "what should happen after they review", placeholder: "30-minute call to walk through pricing options" },
+    { name: "other stakeholders", placeholder: "VP Sales (Mike) needs to review scope section" }
+  ]}
+/>

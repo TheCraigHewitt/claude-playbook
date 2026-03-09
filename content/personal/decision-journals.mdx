@@ -1,0 +1,144 @@
+---
+title: "Decision Journals and Structured Thinking"
+description: "Make better decisions with pre-mortem analysis, devil's advocate prompting, and weekly reflection."
+products: ["Chat"]
+tier: "Operator"
+readTime: "11 min"
+---
+
+The quality of your life and your business is the sum of the quality of your decisions. Most leaders make decisions on instinct, never review them, and repeat the same mistakes for years without noticing the pattern.
+
+A decision journal changes that. And Claude makes keeping one effortless.
+
+## Why Decision Journals Work
+
+The value isn't in the recording — it's in three things:
+
+1. **Forced clarity before the decision.** Writing down your reasoning exposes fuzzy thinking.
+2. **Pattern recognition over time.** After 6 months, you can see your decision-making blind spots.
+3. **Honest accountability.** You can't retroactively claim you "knew all along" when your reasoning is documented.
+
+<MiniQuiz
+  question="What is the primary value of keeping a decision journal?"
+  options={[
+    { label: "Tracking all your decisions so you can be held accountable", correct: false, explanation: "Accountability is a side effect, not the goal. And you shouldn't journal every decision — only the significant ones. The value is in learning, not tracking." },
+    { label: "Separating decision quality from outcome quality so you can improve your decision-making process over time", correct: true, explanation: "Good decisions can have bad outcomes, and bad decisions can get lucky. By documenting your reasoning before you know the result, you can evaluate whether your process was sound — and spot patterns in how you think, not just what happened." },
+    { label: "Creating a to-do list of things to follow up on after each decision", correct: false, explanation: "Follow-ups are a minor benefit, but the journal isn't a task manager. Its power is in forcing clarity before a decision and enabling pattern recognition after." },
+    { label: "Building a record to justify your decisions to your board or investors", correct: false, explanation: "A decision journal is a personal learning tool, not a defense document. If you're writing entries to justify yourself to others, you'll unconsciously sanitize your reasoning and lose the honesty that makes journals valuable." }
+  ]}
+/>
+
+## The Decision Journal Prompt
+
+Use this for any significant decision — hiring, pricing changes, strategic bets, partnership agreements, product decisions.
+
+<PromptBlock
+  title="Record a decision"
+  prompt="I'm about to make a decision and I want to document it properly. Walk me through these questions:\n\n1. **The decision:** What specifically am I deciding? (Force me to be precise — not 'should we grow?' but 'should we hire 2 SDRs in Q2 at $65K base each?')\n2. **Context:** What's the situation that's forcing this decision? What happens if I do nothing?\n3. **Options considered:** What alternatives did I evaluate? (List at least 3)\n4. **Decision:** Which option am I choosing and why?\n5. **Expected outcomes:** What do I expect to happen if this goes well? Be specific with numbers and timelines.\n6. **Key assumptions:** What am I assuming is true that, if wrong, would change this decision?\n7. **Risks:** What could go wrong? What's the worst realistic downside?\n8. **Reversibility:** How easily can I undo this if it's wrong? (1-10 scale, 10 being fully reversible)\n9. **Decision quality vs. outcome quality:** Am I making this decision with good information, or am I gambling?\n10. **Review date:** When should I look back at this decision to see how it played out?\n\nFormat this as a clean journal entry I can save and reference later."
+/>
+
+<TipCallout type="note">
+Not every decision needs a journal entry. Use this for decisions that are hard to reverse, involve significant resources, or where you feel uncertain. The $50 software subscription doesn't need a journal entry. The $200K hire does.
+</TipCallout>
+
+## Pre-Mortem Analysis
+
+A pre-mortem is the single most valuable decision-making tool most leaders never use. Instead of asking "what could go wrong?" you ask "it's 6 months later and this failed — why?"
+
+<PromptBlock
+  title="Pre-mortem analysis"
+  prompt="I'm about to [describe the decision]. Before I commit, run a pre-mortem:\n\nImagine it's [time period] from now. This decision was a clear failure. Walk me through:\n\n1. **The most likely failure mode** — What's the single most probable reason this didn't work?\n2. **The second-order failure** — What cascade effect could this decision trigger that I'm not thinking about?\n3. **The 'we should have known' failure** — What warning sign exists TODAY that I'm ignoring or rationalizing?\n4. **The external failure** — What factor outside my control could kill this regardless of execution?\n5. **The people failure** — Where does this depend on someone's judgment, motivation, or skills that I haven't validated?\n\nFor each failure mode:\n- How likely is it? (percentage)\n- How would I detect it early? (what's the leading indicator?)\n- What would I do if I saw it happening? (contingency plan)\n\nBe brutal. I'd rather kill a bad decision now than invest months in it."
+  variables={[
+    { name: "describe the decision", placeholder: "launch a $25K/month consulting offer targeting mid-market SaaS companies" },
+    { name: "time period", placeholder: "6 months" }
+  ]}
+/>
+
+<BeforeAfter
+  before={{
+    content: "I think we should launch the new product line. The market is big, our team is excited, and a few customers have asked for it. Let's go."
+  }}
+  after={{
+    content: "Decision: Launch the new product line targeting [specific segment].\n\nExpected outcome: $200K ARR within 12 months from 15-20 customers at $12K ACV.\n\nKey assumptions: (1) Our existing customers represent broader market demand, (2) our team can deliver without degrading the core product, (3) the market will pay $12K for this.\n\nPre-mortem: Most likely failure is assumption #2 — our engineering team is already at 90% capacity. If quality on the core product drops, we lose more revenue than we gain.\n\nMitigation: Hire one contractor before launch. Set a 'kill metric' — if core product NPS drops below 45, we pause the new line.\n\nReview date: July 1, 2026."
+  }}
+  annotation="The first version is enthusiasm. The second version is a decision. Only one of them will help you learn from the outcome."
+/>
+
+## Devil's Advocate Prompting
+
+When you've already made up your mind — and you probably have — use Claude to argue against your decision.
+
+<PromptBlock
+  title="Devil's advocate challenge"
+  prompt="I've decided to [your decision]. I'm fairly confident this is the right call. Your job is to argue against it as aggressively as possible.\n\nMy reasoning: [explain why you're doing this]\n\nRules for the devil's advocate:\n1. Don't give me the easy objections — give me the ones that are hard to answer\n2. Attack my assumptions, not just the conclusion\n3. Find the strongest version of the opposing argument — steelman it\n4. Identify what I'm emotionally invested in that might be clouding my judgment\n5. If there's a better alternative I'm not considering, present it\n\nAfter your argument, I'll respond. Then you push back again. Three rounds.\n\nAt the end, give me an honest assessment: did your arguments change the decision, or am I right to proceed? Scale of 1-10, how confident should I be?"
+  variables={[{ name: "your decision", placeholder: "hire an expensive VP of Sales instead of promoting our best AE to manage the team" }]}
+/>
+
+## The Decision Matrix
+
+For decisions with multiple options and multiple criteria:
+
+<PromptBlock
+  title="Weighted decision matrix"
+  prompt="I need to make a decision between [number] options:\n\n[list the options]\n\nHelp me build a weighted decision matrix:\n\n1. First, ask me what criteria matter for this decision (prompt me — don't guess)\n2. Then ask me to weight each criterion by importance (must total 100%)\n3. For each option, ask me to score it against each criterion (1-10)\n4. Calculate the weighted scores and present a summary table\n5. Show me which option 'wins' on math alone\n6. Then tell me: does the math match your gut? If not, why might your gut be right (or wrong)?\n\nDon't let me skip the weighting step. Unweighted matrices are useless — they imply all criteria matter equally, which is never true."
+  variables={[{ name: "number", placeholder: "3" }]}
+/>
+
+## Weekly Decision Review
+
+The journal only becomes powerful when you review it regularly.
+
+<PromptBlock
+  title="Weekly decision reflection"
+  prompt="Here are the decisions I made this week:\n\n[paste your decision entries from the week]\n\nWeekly reflection:\n1. **Quality check** — For each decision, was it a well-reasoned decision or a reactive one? (It's okay to make fast decisions — the question is whether they were thoughtful)\n2. **Pattern watch** — Am I seeing any patterns in how I make decisions? (e.g., always choosing the safe option, always deciding quickly, avoiding certain types of decisions)\n3. **Assumption tracker** — Any assumptions from recent decisions that have been validated or invalidated this week?\n4. **Revisit queue** — Any past decisions that are approaching their review date?\n5. **One insight** — What's the single most important thing I should learn from this week's decisions?"
+/>
+
+## Monthly Decision Review
+
+<PromptBlock
+  title="Monthly decision pattern analysis"
+  prompt="Review my decision journal entries from the past month:\n\n[paste all entries]\n\nDeep analysis:\n1. **Decision quality score** — Rate my overall decision-making this month (1-10) with justification\n2. **Blind spots** — What types of decisions am I consistently weak on? What risks do I under-weight?\n3. **Speed patterns** — Am I deciding too fast (reactive) or too slow (analysis paralysis) on different types of decisions?\n4. **Hit rate** — Of decisions from 3+ months ago that have reached their review date, what's my success rate? What do the wins and losses have in common?\n5. **Emotional patterns** — When I make decisions while stressed, excited, or pressured, are the outcomes different than when I'm calm?\n6. **Recommendations** — Based on my patterns, what's one specific thing I should change about how I make decisions next month?"
+/>
+
+<ScenarioCard
+  scenario="You're deciding whether to acquire a small competitor. The numbers look good on paper, but something feels off and you can't articulate what."
+  answer="When your gut disagrees with your analysis, that's the most important time to journal. Write down exactly what 'feels off.' Then ask Claude to help you investigate each concern. Often, the gut feeling is detecting a risk your spreadsheet doesn't capture — team culture mismatch, customer overlap, or integration complexity."
+  prompt="I'm considering acquiring [company]. The financial analysis says yes. My gut says something is off. Help me investigate my instinct:\n\n1. What risks might a spreadsheet miss in an acquisition? Walk me through each one.\n2. For each risk, ask me a specific question to check whether that's the source of my unease.\n3. After I've answered, tell me: is my gut detecting a real risk, or am I just scared of a big decision?"
+/>
+
+## The Reversibility Framework
+
+Not all decisions need the same rigor. Use this quick framework to calibrate how much time to spend.
+
+<PromptBlock
+  title="Decision calibration"
+  prompt="I need to decide [the decision]. Before I spend time analyzing it, help me calibrate how much rigor this deserves:\n\n1. **Reversibility** — If this is wrong, how hard is it to undo? (1-10)\n2. **Magnitude** — How much money, time, or reputation is at stake?\n3. **Urgency** — What's the cost of waiting another week to decide?\n4. **Information quality** — Do I have enough information to make a good decision right now? What would I learn by waiting?\n\nBased on these factors, tell me:\n- Is this a 'decide in 5 minutes' decision or a 'journal and analyze' decision?\n- If it needs analysis, what specific information would most reduce my uncertainty?\n- If it's a quick decision, just help me make it."
+  variables={[{ name: "the decision", placeholder: "whether to sponsor a podcast at $5K/episode for 4 episodes" }]}
+/>
+
+<RealWorldProof
+  quote="The decision journal is the single highest-ROI habit I've built as a CEO. Six months in, I noticed I consistently underweight execution risk and overweight market risk. That one insight has saved me from at least two bad hires and one bad product bet."
+  author="CEO and Founder"
+  context="Running a $4M ARR company, started decision journaling with Claude"
+/>
+
+## Setting Up Your Decision Journal
+
+<PromptBlock
+  title="Initialize a decision journal system"
+  prompt="Help me set up a decision journal system. I want it to be lightweight enough that I'll actually use it.\n\nPreferences:\n- I make roughly [number] significant decisions per week\n- I prefer [format]\n- I want to review [frequency]\n- My biggest decision-making weakness is probably [weakness]\n\nCreate:\n1. A template for recording decisions (under 200 words per entry)\n2. A weekly review template (5 minutes max)\n3. A monthly review template (20 minutes max)\n4. Tags/categories for my decisions so I can spot patterns by type\n5. Instructions I can paste into a Claude Project so it automatically formats my entries correctly"
+  variables={[
+    { name: "number", placeholder: "3-5" },
+    { name: "format", placeholder: "quick entries, not long essays" },
+    { name: "frequency", placeholder: "weekly quick review, monthly deep review" },
+    { name: "weakness", placeholder: "moving too fast and not considering second-order effects" }
+  ]}
+/>
+
+## Common Mistakes
+
+**Don't journal every decision.** Decision fatigue is real. Reserve the journal for decisions where the stakes are high or your confidence is low. If you're journaling what to have for lunch, you've gone too far.
+
+**Don't skip the review dates.** The review is where all the value lives. Setting a review date and then ignoring it means you're documenting decisions without learning from them.
+
+**Don't use the journal to avoid deciding.** The journal is a tool for making better decisions, not for postponing them. If you catch yourself saying "I need to journal this more before deciding," you're probably procrastinating. Set a deadline and decide.

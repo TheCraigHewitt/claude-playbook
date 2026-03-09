@@ -1,0 +1,292 @@
+---
+title: "Sensitivity and Scenario Modeling"
+description: "Monte Carlo analysis, scenario tables, bull/base/bear mapping, and guard clauses for broken formulas."
+products: ["Chat", "Code"]
+tier: "Operator"
+readTime: "12 min"
+---
+
+A financial model with one set of assumptions is a guess. A model with sensitivity analysis is a decision framework. Claude builds the framework.
+
+## Sensitivity Tables
+
+The classic two-variable sensitivity table: pick two key assumptions, vary them across a range, and see how the output changes.
+
+<PromptBlock
+  title="Two-Variable Sensitivity Table"
+  prompt={`Build a sensitivity table in Excel (.xlsx) for our business model.
+
+BASE CASE ASSUMPTIONS:
+- Monthly revenue growth: \${growthRate}%
+- Monthly churn: \${churnRate}%
+- Starting MRR: $\${mrr}
+- Gross margin: \${grossMargin}%
+- Monthly opex: $\${opex}
+
+OUTPUT METRIC: \${outputMetric}
+
+SENSITIVITY AXES:
+- Rows: Revenue growth rate from \${growthLow}% to \${growthHigh}% in \${growthStep}% increments
+- Columns: Churn rate from \${churnLow}% to \${churnHigh}% in \${churnStep}% increments
+
+REQUIREMENTS:
+- Base case highlighted (bold + blue background)
+- Conditional formatting: green for values above base case, red for below
+- All cells should contain formulas that reference the model — not hardcoded values
+- Include a separate "Assumptions" area where I can change inputs and the entire table recalculates
+- Show the output metric at both 12-month and 24-month horizons (two tables)
+
+Below the table, add a row showing: "If growth drops to X% with churn at Y%, we hit breakeven in Z months" — calculate the breakeven point for each cell.`}
+  variables={[
+    { name: "growthRate", placeholder: "5" },
+    { name: "churnRate", placeholder: "3" },
+    { name: "mrr", placeholder: "100000" },
+    { name: "grossMargin", placeholder: "75" },
+    { name: "opex", placeholder: "120000" },
+    { name: "outputMetric", placeholder: "EBITDA at month 24" },
+    { name: "growthLow", placeholder: "2" },
+    { name: "growthHigh", placeholder: "8" },
+    { name: "growthStep", placeholder: "1" },
+    { name: "churnLow", placeholder: "1" },
+    { name: "churnHigh", placeholder: "5" },
+    { name: "churnStep", placeholder: "0.5" }
+  ]}
+/>
+
+## Bull / Base / Bear Scenarios
+
+Every investor and board member thinks in scenarios. Build them systematically.
+
+<PromptBlock
+  title="Three-Scenario Model"
+  prompt={`Build a three-scenario financial model for the next \${years} years:
+
+**BULL CASE** (things go right)
+\${bullAssumptions}
+
+**BASE CASE** (plan)
+\${baseAssumptions}
+
+**BEAR CASE** (things go wrong)
+\${bearAssumptions}
+
+For each scenario, project monthly and show:
+- Revenue
+- Gross Profit
+- EBITDA
+- Cash Balance
+- Runway (months)
+- Headcount
+
+OUTPUT FORMAT:
+1. **Side-by-side annual summary table**
+| Metric | Bull Y1 | Base Y1 | Bear Y1 | Bull Y2 | Base Y2 | Bear Y2 |
+
+2. **Scenario comparison charts** (describe for chart creation)
+- Revenue trajectory: 3 lines on one chart
+- Cash balance trajectory: 3 lines, with a red "zero line" so I can see when cash runs out in the bear case
+
+3. **Key decision points**
+"In the bear case, we run out of cash in Month X. To extend runway to Month Y, we would need to cut $Z in monthly opex by Month W."
+"In the bull case, we become cash-flow positive in Month X — \${months} months earlier than base."
+
+4. **Probability weighting**
+Expected value = (25% × Bull) + (50% × Base) + (25% × Bear) for each annual metric.
+
+Make every assumption a named cell so I can adjust scenarios without hunting through formulas.`}
+  variables={[
+    { name: "years", placeholder: "2" },
+    { name: "bullAssumptions", placeholder: "15% monthly growth, 1.5% churn, 80% gross margin, close 2 enterprise deals at $50K ARR each in Q2" },
+    { name: "baseAssumptions", placeholder: "8% monthly growth, 2.5% churn, 75% gross margin, close 1 enterprise deal at $40K ARR in Q3" },
+    { name: "bearAssumptions", placeholder: "3% monthly growth, 4% churn, 70% gross margin (higher hosting costs), no enterprise deals" }
+  ]}
+/>
+
+<TipCallout type="tip">
+The bear case should be plausible, not catastrophic. A bear case of "revenue goes to zero" isn't useful. A bear case of "growth slows to 3% and churn increases to 4% because we lose a key integration partner" drives actual decision-making.
+</TipCallout>
+
+## Monte Carlo Simulation
+
+When you want to go beyond three scenarios and understand the full probability distribution of outcomes.
+
+<PromptBlock
+  title="Monte Carlo Revenue Simulation"
+  prompt={`Build a Monte Carlo simulation in Python that models our revenue over \${months} months.
+
+INPUT ASSUMPTIONS (with distributions):
+- Monthly growth rate: Normal distribution, mean=\${meanGrowth}%, std=\${stdGrowth}%
+- Monthly churn rate: Normal distribution, mean=\${meanChurn}%, std=\${stdChurn}%, min=0 (can't have negative churn)
+- Starting MRR: $\${mrr} (fixed)
+- New deal probability per month: \${dealProb}%, deal size if won: Uniform $\${dealMin}-$\${dealMax}
+
+SIMULATION:
+- Run \${simulations} simulations
+- Each simulation: for each month, sample growth rate, churn rate, and deal probability independently
+- Calculate ending MRR for each month in each simulation
+
+OUTPUT:
+1. **Distribution chart** of MRR at Month \${months}
+   - Histogram with 50 bins
+   - Mark the 10th percentile, median, and 90th percentile
+
+2. **Fan chart** showing the spread of outcomes over time
+   - 10th-90th percentile band (light shading)
+   - 25th-75th percentile band (medium shading)
+   - Median line (dark)
+
+3. **Probability table**
+   - P(MRR > $X at Month \${months}) for X = \${targets}
+
+4. **Cash runway analysis**
+   - Given monthly opex of $\${opex}, what's the probability we run out of cash before Month \${months}?
+   - Show the distribution of "months until cash-flow positive"
+
+5. **Key insights**
+   - "There's a \${pct}% chance MRR exceeds $X by Month \${months}"
+   - "The median outcome is $Y, but there's a 10% chance we're below $Z"
+   - "Cash runway risk: \${riskPct}% probability of running out of cash"
+
+Save all charts as PNGs and generate an HTML report with the charts embedded.`}
+  variables={[
+    { name: "months", placeholder: "24" },
+    { name: "meanGrowth", placeholder: "5" },
+    { name: "stdGrowth", placeholder: "2" },
+    { name: "meanChurn", placeholder: "2.5" },
+    { name: "stdChurn", placeholder: "1" },
+    { name: "mrr", placeholder: "100000" },
+    { name: "dealProb", placeholder: "30" },
+    { name: "dealMin", placeholder: "20000" },
+    { name: "dealMax", placeholder: "60000" },
+    { name: "simulations", placeholder: "10000" },
+    { name: "targets", placeholder: "200000, 300000, 500000, 750000" },
+    { name: "opex", placeholder: "130000" }
+  ]}
+/>
+
+<BeforeAfter
+  before={{
+    content: "Base case says we'll hit $500K MRR in 18 months. The board asks: 'How confident are you?' You say: 'Pretty confident.' Not helpful."
+  }}
+  after={{
+    content: "Monte Carlo simulation shows: 42% probability of exceeding $500K MRR by month 18. Median outcome is $420K. 90% confidence interval: $280K-$680K. The primary driver of variance is churn rate, not growth rate — reducing churn by 0.5 points has more impact than increasing growth by 1 point."
+  }}
+  annotation="Monte Carlo replaces gut-feel confidence with actual probability distributions. Boards love this."
+/>
+
+## Guard Clauses for Financial Models
+
+Financial models break silently. A formula divides by zero, returns a negative number where it shouldn't, or references a deleted cell. Claude builds guard clauses that catch these.
+
+<PromptBlock
+  title="Add Guard Clauses to a Model"
+  prompt={`I have an existing financial model (uploading the file). Add guard clauses to prevent common formula errors:
+
+1. **DIVISION BY ZERO**
+Wrap all division formulas in =IFERROR(formula, "N/A") or =IF(denominator=0, 0, formula) — whichever is more appropriate for the context.
+
+2. **NEGATIVE VALUES WHERE IMPOSSIBLE**
+- Cash balance: =MAX(0, cash_formula) — or flag it red if cash goes negative (this is a real warning, not an error)
+- Customer count: =MAX(0, count_formula)
+- Churn rate: =MAX(0, MIN(1, churn_formula)) — can't churn more than 100%
+
+3. **CIRCULAR REFERENCE DETECTION**
+Check for any circular references in the model. If found, list them and suggest how to break the cycle.
+
+4. **VALIDATION CHECKS TAB**
+Add a new tab called "Checks" with these validation rows:
+| Check | Formula | Result | Status |
+- Balance sheet balances (A = L + E, within $1)
+- Cash flow reconciliation (beginning + cash flows = ending)
+- Revenue = sum of all revenue line items
+- Total headcount = sum of department headcounts
+- No negative customer counts
+- Churn rate between 0% and 20% (flag if outside range)
+
+Use conditional formatting: green "PASS" or red "FAIL" for each check.
+
+5. **ERROR HIGHLIGHTING**
+Add conditional formatting to the entire model: any cell containing #REF!, #DIV/0!, #N/A, or #VALUE! should be highlighted bright red with bold text.`}
+/>
+
+<TipCallout type="warning">
+Don't use =IFERROR() blindly on every formula. Sometimes a #DIV/0! error is the correct behavior — it means your data is missing and you should investigate. Use guard clauses where the error handling is meaningful, not as a way to hide problems.
+</TipCallout>
+
+## Scenario-Based Decision Frameworks
+
+The most powerful use: tying scenarios to decisions.
+
+<PromptBlock
+  title="Decision-Linked Scenarios"
+  prompt={`I'm facing a decision: \${decision}
+
+Build a scenario model that evaluates this decision across three outcomes:
+
+**OPTION A: \${optionA}**
+Assumptions: \${optionAAssumptions}
+
+**OPTION B: \${optionB}**
+Assumptions: \${optionBAssumptions}
+
+**OPTION C: \${optionC} (status quo)**
+Assumptions: \${optionCAssumptions}
+
+For each option, model:
+- 12-month P&L impact
+- Cash impact (upfront cost + ongoing)
+- Revenue impact (if applicable)
+- Break-even point (when does the investment pay for itself?)
+
+Then build a DECISION MATRIX:
+| Criteria | Weight | Option A | Option B | Option C |
+- Financial return (NPV or ROI)
+- Cash outlay required
+- Time to value
+- Risk level
+- Reversibility (can we undo this if it doesn't work?)
+
+Weighted score at the bottom.
+
+Finally: "Based on the financial analysis, Option X is recommended because..." (2-3 sentences). But flag any non-financial considerations that might override the financial answer.`}
+  variables={[
+    { name: "decision", placeholder: "Should we hire 3 SDRs or invest in product-led growth?" },
+    { name: "optionA", placeholder: "Hire 3 SDRs" },
+    { name: "optionAAssumptions", placeholder: "$180K/year total cost, 3-month ramp, each SDR generates 10 qualified leads/month at full ramp, 20% lead-to-close rate, $2K ACV" },
+    { name: "optionB", placeholder: "Invest in PLG" },
+    { name: "optionBAssumptions", placeholder: "$150K one-time dev cost, 4 months to build, reduces CAC by 40% for self-serve, adds 50 organic signups/month, 5% conversion to paid" },
+    { name: "optionC", placeholder: "Do nothing" },
+    { name: "optionCAssumptions", placeholder: "Current trajectory continues, 5% monthly growth, current CAC of $800" }
+  ]}
+/>
+
+## Fundraising Scenarios
+
+Model how different fundraising outcomes affect the business trajectory.
+
+<ScenarioCard
+  scenario="You're deciding between raising a $5M Series A now at a lower valuation versus waiting 6 months to raise $8M at a higher valuation. You need the analysis to make the call."
+  answer="Model both paths: the cash runway under each scenario, the dilution, and the probability of hitting the metrics needed for the higher valuation round."
+  prompt="Model two fundraising scenarios over 24 months:
+
+Scenario A: Raise $5M now at $20M pre-money valuation. 20% dilution. Cash in bank by Month 2.
+Scenario B: Wait 6 months, raise $8M at $35M pre-money. 18.6% dilution. Cash in bank by Month 8.
+
+For each: project cash balance monthly, assuming current burn rate of $130K/month growing 5%/month. When does cash hit zero if the raise doesn't happen? What MRR do we need to reach by Month 6 to justify the $35M valuation (assume 15x ARR multiple)? What's the probability we hit that MRR (reference the Monte Carlo analysis if available)?
+
+Show the dilution comparison: founder ownership after each scenario, after a hypothetical Series B at $100M pre-money."
+/>
+
+<TipCallout type="note">
+Sensitivity analysis is most valuable when it changes a decision, not just confirms one. If the answer is the same across all reasonable scenarios, you don't need more analysis — you need to execute. If the answer flips depending on churn rate or growth rate, you've found the variable that matters most.
+</TipCallout>
+
+## Combining the Tools
+
+The finance playbooks work together:
+- Build your model with [Excel Models from Plain English](/claude-playbook/finance/excel-models-plain-english)
+- Add sensitivity tables and scenarios (this playbook)
+- Track actuals against your scenarios with [Budget vs Actual](/claude-playbook/finance/budget-vs-actual)
+- Present the results with [Board Deck Narrative](/claude-playbook/finance/board-deck-narrative)
+
+Start with the model. Then stress-test it. Then track it. Then narrate it. Claude handles each step — you make the decisions.

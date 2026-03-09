@@ -1,0 +1,150 @@
+---
+title: "Personal Knowledge Management"
+description: "Let Claude organize your files, notes, and knowledge. Build a second brain that actually works."
+products: ["Chat", "Code"]
+tier: "Operator"
+readTime: "10 min"
+---
+
+Everyone has a system for organizing knowledge. For most people, that system is "dump everything into a folder called Misc and pray you can find it later." Notes scattered across Apple Notes, Google Docs, Slack messages, bookmarks, and screenshots. The knowledge exists — it's just inaccessible when you need it.
+
+Claude can be the organizer you've never been able to be yourself.
+
+<RealWorldProof
+  quote="I have no idea how Claude organized the files... it works."
+  author="Laura Roeder"
+  context="Founder who used Claude Code to organize her entire business knowledge base"
+/>
+
+## The Knowledge Organization Workflow
+
+<StepByStep
+  steps={[
+    { title: "Dump everything into one place", description: "Export your notes, download your bookmarks, gather your scattered documents. Don't organize them — just collect them." },
+    { title: "Let Claude categorize", description: "Claude reads everything and suggests a folder structure based on your actual content, not some theoretical taxonomy." },
+    { title: "Build the index", description: "Claude creates a searchable index of everything — what each document is about, key topics, connections between documents." },
+    { title: "Maintain it with habits", description: "Quick daily prompts to process new information. Weekly review to connect new knowledge to existing." }
+  ]}
+/>
+
+## Starting from Scratch: The Big Sort
+
+If you have years of accumulated notes and files:
+
+<PromptBlock
+  title="Organize existing knowledge base"
+  prompt="I have a mess of notes, documents, and saved content that I need to organize. I'm going to upload them in batches. For each batch:\n\n1. Read each document and identify: topic, type (note, article, template, reference, etc.), and when it's most useful\n2. Suggest a folder structure based on what you see — organize by theme, not by format\n3. For each document, suggest a clear filename: [Topic] - [Brief Description]\n4. Flag duplicates or near-duplicates\n5. Flag anything outdated that I should review or delete\n\nMy work context: I'm a [your role] and I primarily need quick access to [what you use knowledge for].\n\nDon't impose a structure from a book or system. Build the structure around MY actual content and needs.\n\nHere's the first batch:\n[paste or upload documents]"
+  variables={[
+    { name: "your role", placeholder: "CEO running a SaaS company and building a media brand" },
+    { name: "what you use knowledge for", placeholder: "content creation, strategy decisions, meeting prep, and team communication" }
+  ]}
+/>
+
+## Claude Code: Automated File Organization
+
+If your knowledge lives in files on your computer, Claude Code can reorganize them directly.
+
+<PromptBlock
+  title="Organize files with Claude Code"
+  prompt="I have a folder at [path] with [number] files that need to be organized. Please:\n\n1. Read every file and categorize it by topic and type\n2. Create a folder structure that makes sense based on the content\n3. Move files into the appropriate folders with clear, consistent naming\n4. Create an INDEX.md file at the root with a table of contents — every file with a one-line description\n5. Flag any files that seem like duplicates\n6. Flag any files that appear outdated (more than [time] old) — move them to an 'Archive' folder\n\nBefore moving anything, show me the proposed structure and get my approval."
+  variables={[
+    { name: "path", placeholder: "~/Documents/Business-Notes" },
+    { name: "number", placeholder: "200+" },
+    { name: "time", placeholder: "2 years" }
+  ]}
+/>
+
+<TipCallout type="tip">
+Always ask Claude Code to show you the proposed structure BEFORE it moves files. You can't undo a mass reorganization easily. Review the plan, adjust, then let it execute.
+</TipCallout>
+
+## Daily Knowledge Capture
+
+The organization system only works if you keep it current. Here's the daily habit:
+
+<PromptBlock
+  title="Daily knowledge processing"
+  prompt="Here's what I learned/saved/noted today:\n\n[paste your daily notes — meeting takeaways, articles you read, ideas you had, things you want to remember]\n\nFor each item:\n1. **Summarize** in 1-2 sentences (strip the fluff, keep the insight)\n2. **Tag** with relevant topics (use my existing categories: [list your categories])\n3. **Connect** — Does this relate to anything I've previously saved? If so, note the connection.\n4. **Action** — Is there something I should DO based on this? If so, call it out.\n5. **File** — Where should this live in my knowledge system?"
+  variables={[
+    { name: "list your categories", placeholder: "AI/Tech, Leadership, Content Strategy, Business Operations, Industry Trends" }
+  ]}
+/>
+
+## Meeting Notes Processing
+
+Meetings generate more knowledge than any other activity — and most of it evaporates within 48 hours.
+
+<PromptBlock
+  title="Process meeting notes into knowledge base"
+  prompt="Here are my raw notes from [meeting type] with [who]:\n\n[paste notes]\n\nProcess these into my knowledge system:\n1. **Key decisions** — What was decided? (These go into my Decisions log)\n2. **Action items** — Who committed to what? (These go to my task manager)\n3. **Insights** — What did I learn that I didn't know before? (These go to my knowledge base)\n4. **People notes** — Anything about the people I met with that I should remember for next time (interests, communication style, what they care about)\n5. **Questions raised** — What came up that needs more research or a follow-up conversation?\n6. **Follow-up** — Draft a follow-up email or Slack message if needed"
+  variables={[
+    { name: "meeting type", placeholder: "strategy review" },
+    { name: "who", placeholder: "my leadership team" }
+  ]}
+/>
+
+## Building a Searchable Knowledge Index
+
+Over time, your knowledge base grows. The index makes it useful.
+
+<PromptBlock
+  title="Build or update knowledge index"
+  prompt="Here are all the documents in my knowledge base:\n\n[paste file list or upload folder contents]\n\nCreate/update my knowledge index:\n\n1. **Master index** — Every document, organized by topic, with a one-line description\n2. **Topic map** — A list of all topics covered, with the 3 most important documents for each topic\n3. **Recency index** — What's been updated in the last 30 days? What hasn't been touched in 6+ months?\n4. **Gap analysis** — Based on my role as [your role], what topics SHOULD be in my knowledge base but aren't?\n5. **Connection map** — Which documents reference or build on each other?"
+  variables={[{ name: "your role", placeholder: "CEO of a SaaS company building a media brand" }]}
+/>
+
+## Weekly Knowledge Review
+
+<PromptBlock
+  title="Weekly knowledge synthesis"
+  prompt="Here's everything I've added to my knowledge base this week:\n\n[paste or reference this week's additions]\n\nWeekly synthesis:\n1. **Theme** — What's the throughline? What was I mostly learning about this week?\n2. **Top 3 insights** — The three most valuable things I learned, ranked by importance\n3. **Evolving thinking** — Has anything I learned this week changed or challenged something I previously believed?\n4. **Connections to existing knowledge** — How does this week's learning connect to what I already knew?\n5. **Application prompt** — Based on everything I've been learning, what's one specific thing I should try or change this coming week?"
+/>
+
+<ScenarioCard
+  scenario="You're preparing for a board meeting and you know you've read an article about your competitor's latest funding round, a market analysis from Gartner, and your own internal metrics from Q3 — but you can't remember where any of them are."
+  answer="If your knowledge base is indexed, ask Claude: 'I need everything related to competitive landscape, market sizing, and our Q3 performance. Pull the relevant documents from my knowledge base.' In 30 seconds, you have everything you need in one place."
+  prompt="I need to prep for a board meeting next week. From my knowledge base, pull together everything related to: competitive landscape, market sizing, and our Q3 performance metrics. For each document, give me the key data point or insight I should reference. Flag any information that's outdated and needs a refresh."
+/>
+
+## The Personal CRM
+
+Your knowledge about people is some of the most valuable information you have.
+
+<PromptBlock
+  title="Build a personal CRM"
+  prompt="I want to track my key professional relationships. Help me set up a personal CRM system.\n\nCreate a template for each contact:\n- **Name and role**\n- **How we know each other**\n- **What they care about** (professionally and personally)\n- **Last interaction** (date and topic)\n- **Next touchpoint** (when and what)\n- **Notes** (things to reference in future conversations — their kids' names, a project they mentioned, a book they recommended)\n\nHere are my key contacts to start:\n[list 10-15 important professional relationships]\n\nFor each, prompt me for the information I should capture. Don't make things up — just ask."
+/>
+
+<BeforeAfter
+  before={{
+    content: "Run into a contact at a conference. Struggle to remember anything about them. Have a generic conversation. Forget to follow up."
+  }}
+  after={{
+    content: "Before a conference, ask Claude: 'I'm attending [event]. Pull up notes on anyone from my CRM who might be there.' Walk in with context on everyone. Have specific, personal conversations. Follow up referencing something they actually said."
+  }}
+  annotation="Relationships compound. A personal CRM gives you an unfair advantage in every professional interaction."
+/>
+
+## Bookmarks and Read-Later Processing
+
+If you're someone who saves 50 articles and reads 3:
+
+<PromptBlock
+  title="Process read-later backlog"
+  prompt="Here are [number] articles/links I've saved to read later:\n\n[paste list with titles and URLs or upload the articles]\n\nFor each one:\n1. Is this still relevant? (Some saved articles are outdated by the time you get to them)\n2. One-sentence summary of the key insight\n3. Priority: read now / skim / archive\n4. If 'read now' — tell me which section is the most valuable so I can skip the rest\n\nGroup by topic. Be ruthless about what's worth my time. I'd rather read 5 great articles deeply than skim 50."
+  variables={[{ name: "number", placeholder: "30" }]}
+/>
+
+<RealWorldProof
+  quote="I've tried Notion, Obsidian, Roam, and Evernote. The system that finally worked was the simplest: a folder of text files that Claude organizes and indexes. No tags, no bidirectional links, no plugins — just clear files with an AI that can find anything in 3 seconds."
+  author="Founder"
+  context="After years of trying knowledge management systems that never stuck"
+/>
+
+## Common Mistakes
+
+**Don't build a perfect system before using it.** Start by dumping notes into Claude and letting it suggest a structure. You can refine later. The enemy is never starting, not starting imperfectly.
+
+**Don't treat your knowledge base as write-only.** If you're adding notes but never reviewing them, you're just organizing for the sake of organizing. The weekly review and the "pull everything on X topic" prompts are what make the system valuable.
+
+**Don't over-categorize.** Five to seven top-level categories is plenty. Deep folder hierarchies are where knowledge goes to die. Let Claude's search capabilities do the work that complex filing systems used to do.

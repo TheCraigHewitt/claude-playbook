@@ -1,0 +1,161 @@
+---
+title: "Security & Privacy: What You Need to Know"
+description: "What Claude can see, data retention, and when NOT to use AI."
+products: ["Chat", "CoWork", "Code"]
+tier: "Starter"
+readTime: "7 min"
+---
+
+AI is powerful. It's also new territory for most companies' security policies. Here's what you need to know to use Claude responsibly — without the paranoia that keeps some operators from using it at all.
+
+## What Claude Can (and Can't) See
+
+**Claude can see:** Everything you put into the conversation — text you type, files you upload, images you share, and any Project instructions you've set up.
+
+**Claude cannot:** Access your email, browse your files, connect to your accounts, or do anything outside the conversation unless you explicitly set up those connections (in Code) or integrations (in CoWork).
+
+This is a common misconception. Claude doesn't have access to your computer, your cloud storage, or your company data unless you specifically provide it. Each conversation is a closed environment.
+
+<TipCallout type="warning">
+If you paste sensitive information into a conversation, Claude processes it. Be intentional about what you share — especially with customer data, financial details, and credentials.
+</TipCallout>
+
+### The Exception: Claude Code
+
+Claude Code is different from Chat and CoWork in one important way: **it can read and write files on your computer.** That's the whole point — it's an automation tool. But it means you need to be more thoughtful about what's in the directories you're working in.
+
+Claude Code asks for permission before executing commands and making changes. Pay attention to those permission requests, especially early on.
+
+<RealWorldProof
+  quote="Claude just made a random 'Google Drive' folder and started moving files there instead of my actual Google Drive!"
+  author="Laura Roeder"
+  context="A reminder that Claude Code operates on your file system — always check what it's doing"
+/>
+
+## Data Retention: The Short Version
+
+This is the question everyone asks: "Is Anthropic training on my data?"
+
+Here's the clear answer by plan type:
+
+| Plan | Training Data? | Retention |
+|------|---------------|-----------|
+| **Free** | May be used for improvement (opt out available) | Conversations stored per privacy policy |
+| **Pro** | NOT used for training by default | You control your conversation history |
+| **Team** | NOT used for training, data isolation | Admin controls, compliance features |
+| **Enterprise** | NOT used for training, strict isolation | Full compliance controls, SSO, audit logs |
+| **API** | Never used for training | 30-day retention, then deleted |
+
+**For most business use, a Pro or Team plan means your data stays private.** If you're handling regulated data (healthcare, financial services), look at Enterprise for the additional compliance controls.
+
+## When NOT to Use AI
+
+There are tasks where AI should assist, not replace, human judgment. This isn't about Claude's capability — it's about responsibility and risk management.
+
+### Always Have a Human Review
+
+1. **Legal decisions** — Use Claude to draft contracts, research precedents, and organize arguments. But have a lawyer review anything legally binding before you send it.
+
+2. **Final financial figures** — Claude can analyze trends, build models, and draft reports. But verify all numbers before sharing with investors, board members, or customers. Claude occasionally miscalculates, especially with complex multi-step math.
+
+3. **Highly sensitive communications** — Terminations, legal disputes, crisis communications, and anything that could end up in court. Claude can help you draft and think through the framing, but a human should make the final call on every word.
+
+4. **Medical or health decisions** — Claude is not a doctor. Period.
+
+### Never Put These Into Claude Chat
+
+5. **Passwords and API keys** — Never paste credentials into Claude Chat. In Claude Code, use environment variables instead of hardcoding secrets. This is non-negotiable.
+
+6. **Social Security numbers, credit card numbers, or other PII** — If you need to analyze customer data, anonymize it first. Remove names, emails, phone numbers, and account numbers before pasting.
+
+<ScenarioCard
+  scenario="You need Claude to analyze customer churn patterns from your CRM export. The export includes customer names, emails, revenue figures, and usage data."
+  answer="Anonymize the data before pasting it into Claude. Replace names with 'Customer 1, Customer 2...' and remove email addresses. Keep the revenue and usage data — that's what Claude needs for analysis. You get the same quality insights without exposing personal information."
+  prompt="Here's our anonymized churn data for Q3. Customer names replaced with IDs, emails removed. Columns: Customer ID, Monthly Revenue, Product Tier, Usage (sessions/month), Months as Customer, Churned (Y/N).\n\n[paste anonymized data]\n\nIdentify the top 3 predictors of churn and suggest specific retention interventions for each."
+/>
+
+## The "Check Claude's Work" Habit
+
+This is the most important security and quality practice combined: **always verify Claude's output before acting on it.**
+
+Claude is remarkably capable, but it can:
+- **Confidently state incorrect facts** — It sounds certain even when it's wrong
+- **Miscalculate numbers** — Especially in multi-step math or complex financial models
+- **Misunderstand context in subtle ways** — Getting 95% right but missing a key nuance
+- **Generate plausible-sounding but wrong analysis** — The logic sounds good but the conclusion doesn't follow
+
+This isn't a flaw unique to Claude — it's true of all AI models. The solution isn't to distrust Claude entirely, but to build a quick verification habit.
+
+**What to check:**
+- Key facts and figures (especially if Claude didn't source them from your uploaded data)
+- Calculations and financial projections
+- Legal or regulatory claims
+- Anything you're sending externally
+
+**What you probably don't need to check:**
+- Writing style and tone (you can judge this instantly)
+- Structural organization
+- Brainstorming output (it's exploratory by nature)
+- Internal drafts that will be reviewed anyway
+
+<TipCallout type="tip">
+A good rule of thumb: the higher the stakes, the more carefully you verify. An internal brainstorm needs minimal checking. A board presentation or customer-facing document needs a thorough review.
+</TipCallout>
+
+## Practical Security Rules for Operators
+
+Here are the rules to follow. They're simple and non-negotiable:
+
+<StepByStep
+  steps={[
+    { title: "Use a paid plan for business work", description: "Pro at minimum. Team or Enterprise if you're handling customer data or working in a regulated industry." },
+    { title: "Never paste credentials", description: "No passwords, API keys, tokens, or secrets in Claude Chat. In Code, use environment variables." },
+    { title: "Anonymize customer data", description: "Remove names, emails, phone numbers, and identifiers before pasting customer data for analysis." },
+    { title: "Review before sending", description: "Always review Claude's output before sharing it externally. Quick scan for facts, numbers, and tone." },
+    { title: "Check file operations in Code", description: "When Claude Code wants to create, move, or delete files, read the permission request before approving." },
+    { title: "Don't share trade secrets without understanding your plan's data policy", description: "Proprietary algorithms, secret formulas, unreleased product specs — know your plan's retention policy first." }
+  ]}
+  title="The operator's security checklist"
+/>
+
+## For Teams: Rolling Out Claude Responsibly
+
+If you're introducing Claude to your team, set clear guardrails upfront:
+
+### Create a Simple AI Policy
+
+You don't need a 20-page document. A one-page guide covering four questions:
+
+1. **What can we share with Claude?** (General business content, anonymized data, public information)
+2. **What should we NOT share?** (Credentials, raw customer PII, proprietary source code, legal communications)
+3. **What needs human review before sending?** (External communications, financial figures, legal documents)
+4. **Which plan are we using?** (And what that means for data retention)
+
+### Train on the "Verify" Habit
+
+The biggest risk with AI isn't data leakage — it's overconfidence. Teams that use Claude's output without verification will eventually send something wrong to a customer or make a decision based on a hallucinated fact.
+
+Build the verification habit from day one:
+- **Flag outputs that go external** — any Claude-assisted content going to customers, investors, or the public gets a human review
+- **Spot-check internal work** — randomly verify facts and numbers from Claude-generated analysis
+- **Celebrate catches** — when someone catches an error, share it with the team so everyone learns what to watch for
+
+## The Bottom Line
+
+Claude is safe to use for business when you follow four principles:
+
+1. **Use a paid plan** — Pro, Team, or Enterprise for data privacy
+2. **Don't paste secrets or raw PII** — Anonymize data, use environment variables for credentials
+3. **Verify before acting** — Check facts, numbers, and claims before sending externally
+4. **Treat it like a new contractor** — Capable and trustworthy, but you review the work
+
+That's it. Don't let security concerns stop you from using AI — just be intentional about what you share and verify what you get back. The operators who follow these four principles use Claude confidently every day.
+
+<MiniQuiz
+  question="Your sales team wants to use Claude to analyze why deals are being lost. They have a CRM export with company names, contact emails, deal sizes, and loss reasons. What should they do?"
+  options={[
+    { label: "Don't use Claude for this — the data is too sensitive", correct: false, explanation: "This is exactly the kind of analysis Claude excels at. You just need to handle the data properly." },
+    { label: "Paste the raw export into Claude — a paid plan keeps it private", correct: false, explanation: "While a paid plan does protect your data, it's still best practice to anonymize PII. Remove contact emails and replace company names with anonymized identifiers." },
+    { label: "Anonymize the export first (remove emails, replace company names with IDs), then paste and analyze", correct: true, explanation: "Correct. Keep the data Claude needs for analysis (deal size, loss reason, deal stage) while removing personal identifiers. You get the same insights without exposing customer data." }
+  ]}
+/>

@@ -1,0 +1,146 @@
+---
+title: "The AI-Powered One-on-One System"
+description: "Generate agendas, process meeting notes, track action items, and build continuity with CoWork."
+products: ["Chat", "CoWork"]
+tier: "Operator"
+readTime: "10 min"
+---
+
+Most one-on-ones are wasted time. Not because the format is wrong, but because nobody prepares, nobody tracks what was discussed, and the same issues surface week after week without resolution.
+
+Claude fixes the preparation and follow-through problem completely. The conversation itself is still yours — but everything around it gets automated.
+
+## The One-on-One Workflow
+
+<StepByStep
+  steps={[
+    { title: "Before the meeting: Generate agenda", description: "Claude pulls from your running notes, last meeting's action items, and any signals (missed deadlines, big wins, upcoming reviews) to draft an agenda." },
+    { title: "During the meeting: Take raw notes", description: "Just jot down what was said. Don't worry about structure. Bullet points, fragments, whatever captures the conversation." },
+    { title: "After the meeting: Process notes", description: "Paste your raw notes into Claude. It extracts action items, decisions, topics to revisit, and any coaching observations." },
+    { title: "Between meetings: Track and prep", description: "Claude maintains the running context. When the next one-on-one approaches, it generates a fresh agenda based on everything accumulated." }
+  ]}
+/>
+
+## Setting Up Your One-on-One Project
+
+Create a Project (Chat) or use CoWork with persistent context for each direct report. Include:
+
+<PromptBlock
+  title="One-on-one Project setup"
+  prompt="I'm setting up a system to manage my one-on-ones with [employee name]. Here's the context to keep persistent:\n\n**Person:** [name], [role], reports to me ([your role])\n**Meeting cadence:** [frequency] on [day/time]\n**Their goals this quarter:** [list their current goals/OKRs]\n**Their growth areas:** [what they're working on developing]\n**My coaching priorities for them:** [what I'm watching for]\n**Current projects:** [what they're working on]\n\nWhen I paste meeting notes, always:\n1. Extract action items (who owns what, by when)\n2. Flag any recurring themes across meetings\n3. Note anything I should follow up on next time\n4. Track their progress on quarterly goals\n\nWhen I ask for an agenda, reference the last 2-3 meetings' notes and any open action items."
+  variables={[
+    { name: "employee name", placeholder: "Jordan Kim" },
+    { name: "role", placeholder: "Marketing Manager" },
+    { name: "your role", placeholder: "VP of Marketing" },
+    { name: "frequency", placeholder: "Weekly" },
+    { name: "day/time", placeholder: "Tuesdays at 10am" }
+  ]}
+/>
+
+## Pre-Meeting: Agenda Generation
+
+<PromptBlock
+  title="Generate one-on-one agenda"
+  prompt="Generate an agenda for my one-on-one with [employee name] this [day]. Based on our running context:\n\n1. **Follow-ups from last time** — List any open action items or unresolved topics\n2. **Their updates** — What should I ask about? (active projects, deadlines this week, blockers)\n3. **My topics** — Things I need to raise (paste any notes you've accumulated)\n4. **Development check** — One question about their growth area\n5. **Time check** — Flag if we have too many items for [meeting length]\n\nAdditional context for this week:\n[paste any relevant updates — Slack messages, project changes, things you noticed]"
+  variables={[
+    { name: "employee name", placeholder: "Jordan Kim" },
+    { name: "day", placeholder: "Tuesday" },
+    { name: "meeting length", placeholder: "30 minutes" }
+  ]}
+/>
+
+<TipCallout type="tip">
+Drop in signals throughout the week as you notice them. Saw a great Slack message from your report? Paste it in with a note: "Jordan — great response to the client escalation on Thursday, want to acknowledge." Noticed a missed deadline? Add it. This takes 10 seconds and makes your one-on-ones dramatically better.
+</TipCallout>
+
+## Post-Meeting: Processing Notes
+
+This is where most managers drop the ball. You had a great conversation, but two days later you can't remember what was agreed. Claude solves this.
+
+<PromptBlock
+  title="Process one-on-one notes"
+  prompt="Here are my raw notes from today's one-on-one with [employee name]:\n\n[paste your notes — messy is fine]\n\nPlease:\n1. **Action items** — Extract every commitment made, with owner and deadline if mentioned\n2. **Decisions** — List anything we explicitly decided\n3. **Topics to revisit** — Anything that was raised but not resolved\n4. **Key updates** — What did I learn about their work, team dynamics, or morale?\n5. **Coaching notes** (for my eyes only) — Any observations about their development, engagement, or things I should watch\n6. **Goal progress** — How does today's conversation map to their quarterly goals?\n\nFormat this as a clean meeting summary I can reference next week."
+  variables={[{ name: "employee name", placeholder: "Jordan Kim" }]}
+/>
+
+<BeforeAfter
+  before={{
+    content: "Jordan - talked about Q1 campaign, said it's going ok but creative is slow. Mentioned feeling stressed about the rebrand timeline. I told her to push back on the deadline if needed. Also talked about the new hire - she wants someone more senior than we budgeted for. Need to think about it."
+  }}
+  after={{
+    content: "**One-on-One Summary: Jordan Kim — Jan 14, 2026**\n\n**Action Items:**\n- Jordan: Assess realistic rebrand timeline and propose adjusted deadline by Friday 1/17\n- Craig: Review budget for Marketing Manager role — Jordan's case for a senior hire (will respond by 1/16)\n\n**Decisions:**\n- Jordan has autonomy to push back on the rebrand deadline if workload analysis supports it\n\n**Topics to Revisit:**\n- Creative team velocity on Q1 campaign — revisit next week with data\n- Senior vs. mid-level hire decision (pending Craig's budget review)\n\n**Coaching Notes:**\n- Jordan is showing signs of being stretched thin — stressed about rebrand timeline. Watch for burnout signals. This is the second meeting in a row where workload came up.\n- Positive: She's advocating for what her team needs (senior hire) — good leadership growth."
+  }}
+  annotation="Raw notes become a structured record that makes your next one-on-one better."
+/>
+
+## Building Meeting Continuity
+
+The real power comes after 4-6 weeks of using this system. Claude accumulates context about each person and starts identifying patterns you'd miss.
+
+<PromptBlock
+  title="Pattern analysis across meetings"
+  prompt="Review my one-on-one notes with [employee name] from the past [number] meetings. Identify:\n\n1. **Recurring themes** — What keeps coming up? (especially things raised 3+ times without resolution)\n2. **Trajectory** — Are they trending up, plateauing, or struggling? Based on what evidence?\n3. **Action item follow-through** — What's their completion rate on commitments? Am I dropping the ball on mine?\n4. **Unaddressed issues** — Is there something between the lines I should raise directly?\n5. **Energy/engagement signals** — Has their tone or engagement shifted over time?\n\nBe direct. I'd rather hear an uncomfortable insight than a comfortable summary."
+  variables={[
+    { name: "employee name", placeholder: "Jordan Kim" },
+    { name: "number", placeholder: "8" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="You're managing 6 direct reports. Every Monday you need to prep for 6 one-on-ones spread across the week. Right now it takes you 2+ hours and you still feel underprepared."
+  answer="Set up a Project per person. Throughout the week, drop in observations as you notice them (30 seconds each). Monday morning, ask Claude to generate all 6 agendas at once. After each meeting, paste in your raw notes. Claude tracks everything. Your prep time drops from 2 hours to 20 minutes, and the quality goes up because Claude catches things you'd forget."
+  prompt="I have one-on-ones with 6 direct reports this week. Based on each person's running notes and open action items, generate a focused agenda for each meeting. Prioritize: overdue action items first, then this week's priorities, then development topics. Flag any person who seems to need extra time this week and why."
+/>
+
+## The Skip-Level One-on-One
+
+Skip-levels require different preparation — you're getting signal about your managers, not just the individual.
+
+<PromptBlock
+  title="Skip-level one-on-one prep"
+  prompt="I have a skip-level one-on-one with [employee name], who reports to [manager name] on my team. Help me prepare:\n\n1. Draft 5 questions that get honest signal about:\n   - How well they feel supported by their manager\n   - Whether they understand the team's priorities\n   - If there are any issues that aren't surfacing to me\n   - Their career development\n2. Questions should feel conversational, not interrogative\n3. Give me 2 questions to avoid (things that would put them in an awkward position or undermine their manager)\n\nContext about this person: [anything you know]"
+  variables={[
+    { name: "employee name", placeholder: "Priya Patel" },
+    { name: "manager name", placeholder: "Jordan Kim" },
+    { name: "anything you know", placeholder: "Priya has been on the team for 8 months, joined as a mid-level marketer. Seems engaged but quiet in team meetings." }
+  ]}
+/>
+
+## CoWork: The Team-Wide System
+
+If you're running a leadership team and want consistency across all managers, CoWork is the right tool.
+
+Set up a shared workspace with:
+- Your company's one-on-one template and expectations
+- The action item tracking format
+- Common coaching frameworks your managers should use
+- A shared vocabulary for development conversations
+
+Every manager uses the same system. You can review the quality of one-on-ones across your org by asking CoWork to summarize themes, flag stalled action items, or identify team members who might need attention.
+
+<TipCallout type="note">
+Some managers will resist this, worried about "AI in their private conversations." Be clear: the purpose is better preparation and follow-through, not surveillance. Coaching notes stay with the manager. What flows up is patterns and themes, not transcripts.
+</TipCallout>
+
+## Weekly Review Prompt
+
+End each week by reviewing what happened across all your one-on-ones.
+
+<PromptBlock
+  title="Weekly one-on-one review"
+  prompt="Here are my one-on-one notes from this week across all direct reports:\n\n[paste all notes]\n\nGive me:\n1. **My open action items** — What did I commit to this week that I need to follow through on?\n2. **Cross-team themes** — Are multiple people raising the same concern? (this is always a signal)\n3. **Who needs extra attention next week?** — Based on what was said (or not said)\n4. **One insight** — What's the most important thing I learned about my team this week?"
+/>
+
+<RealWorldProof
+  quote="The one-on-one system paid for my entire Claude subscription in the first week. I went from dreading prep to actually looking forward to my meetings because I was walking in prepared, and my team noticed immediately."
+  author="VP of Operations"
+  context="Managing 8 direct reports at a 120-person company"
+/>
+
+## Common Mistakes
+
+**Don't over-automate the conversation itself.** Claude prepares the agenda and processes the notes. The human connection in the middle is yours. Don't read from a script.
+
+**Don't skip the coaching notes.** The "for my eyes only" observations are the most valuable part. They compound over time and make you a significantly better manager.
+
+**Don't share raw Claude output with your reports.** The agenda Claude generates is for you. Translate it into your own words and meeting style. Nobody wants to feel like they're in a one-on-one with an AI.

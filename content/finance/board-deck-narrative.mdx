@@ -1,0 +1,248 @@
+---
+title: "Board Deck Financial Narrative"
+description: "Turn financial data into investor-ready commentary that tells the story behind the numbers."
+products: ["Chat"]
+tier: "Operator"
+readTime: "10 min"
+---
+
+Every board meeting, the same thing happens. You have the numbers. The numbers are fine. But you stare at a blank slide trying to figure out how to narrate what happened this quarter in a way that's concise, honest, and doesn't bury the lead.
+
+Claude is remarkably good at this — turning raw financial data into the kind of narrative a seasoned CFO would write.
+
+## The Board Narrative Formula
+
+Great board financial narratives follow a predictable structure. Claude executes this structure reliably when you give it the data and context.
+
+<StepByStep
+  steps={[
+    { title: "Lead with the headline", description: "One sentence that captures the quarter. 'Q4 revenue grew 18% YoY driven by enterprise expansion, while we reduced burn rate by 22%.' The board chair reads this first — sometimes only this." },
+    { title: "Show the scorecard", description: "5-7 key metrics with plan vs actual. Revenue, gross margin, EBITDA, cash, customer count, NRR. Traffic light indicators." },
+    { title: "Explain the variances", description: "For each metric that's materially off plan, a 2-3 sentence explanation. What happened, why, and whether it's a trend or an anomaly." },
+    { title: "Forward-looking commentary", description: "What you expect next quarter. Any changes to the full-year forecast. Pipeline or booking visibility." },
+    { title: "Close with asks or decisions needed", description: "If you need board input — budget reallocation, hiring approval, strategic pivot — state it clearly at the end." }
+  ]}
+/>
+
+## Quarterly Financial Narrative
+
+<PromptBlock
+  title="Quarterly Board Narrative"
+  prompt={`I'm uploading our Q\${quarter} financial data. Write a board-ready financial narrative covering:
+
+**HEADLINE** (1 sentence)
+Capture the quarter in one sentence a board member would text to their co-investors. Lead with the most important thing.
+
+**SCORECARD** (table format)
+| Metric | Q\${quarter} Actual | Q\${quarter} Plan | Variance | Status |
+Show: Revenue, Gross Margin %, OpEx, EBITDA, Cash Balance, Monthly Burn, Runway, Customer Count, NRR
+
+Status: ✅ on/ahead of plan, ⚠️ within 5%, ❌ off plan
+
+**REVENUE DEEP DIVE** (2-3 paragraphs)
+- Total revenue and growth rate (QoQ and YoY)
+- Revenue by segment if applicable
+- New business vs expansion vs churn breakdown
+- Pipeline and bookings momentum going into next quarter
+
+**EXPENSE COMMENTARY** (1-2 paragraphs)
+- Total opex vs plan
+- Headcount actual vs plan
+- Material variances only — don't explain immaterial items
+- Run-rate implications
+
+**CASH & RUNWAY** (1 paragraph)
+- Ending cash position
+- Monthly burn rate (and trend — increasing, stable, decreasing)
+- Runway in months at current burn
+- Any changes to the fundraising timeline
+
+**OUTLOOK** (1 paragraph)
+- Expectations for next quarter
+- Any forecast revisions
+- Key risks or opportunities
+
+**BOARD DISCUSSION ITEMS** (bullet list)
+- Decisions or approvals needed
+- Topics you want board input on
+
+Tone: CFO presenting to a board. Concise, specific, no filler. Use actual numbers. Be candid about misses — boards respect transparency more than spin.`}
+  variables={[
+    { name: "quarter", placeholder: "4" }
+  ]}
+/>
+
+<TipCallout type="tip">
+Upload your actual data file — P&L, KPI dashboard export, whatever you have. Claude does significantly better with real numbers than with you describing them in the prompt. Even a messy CSV is better than "revenue was around $1.2M."
+</TipCallout>
+
+## Monthly Board Update Email
+
+Not every company does formal board meetings every month. Many send a monthly email update. The format is different — shorter, less formal, more frequent.
+
+<PromptBlock
+  title="Monthly Board Update Email"
+  prompt={`Write a monthly board update email for \${month}. Data is attached.
+
+FORMAT:
+Subject: \${companyName} — \${month} Update
+
+Open with: One paragraph, 3-4 sentences. The headline, the most important metric, and the vibe (momentum, steady, headwinds).
+
+Then use this structure:
+📊 **Key Metrics**
+- MRR: $X (+Y% MoM)
+- Cash: $X (Z months runway)
+- Customers: X (+Y net new)
+- NRR: X%
+- Headcount: X
+
+🎯 **Wins**
+- 3-5 bullet points of what went well
+
+⚠️ **Challenges**
+- 2-3 bullet points of what's not working or needs attention (be honest)
+
+👀 **Next Month Focus**
+- 2-3 priorities for the coming month
+
+🙏 **Asks**
+- Anything you need from the board (intros, advice, approvals)
+
+Keep the whole email under 400 words. Board members skim — make every word count.`}
+  variables={[
+    { name: "month", placeholder: "February 2026" },
+    { name: "companyName", placeholder: "Acme Corp" }
+  ]}
+/>
+
+## Investor-Ready Data Room Narratives
+
+When you're fundraising, you need narratives that go alongside the raw data in your data room.
+
+<PromptBlock
+  title="Data Room Financial Summary"
+  prompt={`Write a financial summary document for our data room. This sits alongside our detailed financials and gives investors the narrative context.
+
+DATA: [uploading our last 12 months of monthly P&L and KPIs]
+
+SECTIONS:
+
+1. **Business Overview** (1 paragraph)
+Brief description of the business model, revenue streams, and unit economics.
+
+2. **Revenue Trajectory** (2 paragraphs)
+- LTM revenue: $X, growth rate
+- Revenue composition and trends
+- Key growth drivers
+- Seasonality if applicable
+
+3. **Unit Economics** (1 paragraph)
+- CAC, LTV, LTV:CAC ratio, payback period
+- How these have trended over the last 4 quarters
+
+4. **Margin Profile** (1 paragraph)
+- Gross margin and trend
+- Contribution margin if applicable
+- Path to operating leverage
+
+5. **Cash Efficiency** (1 paragraph)
+- Burn rate and trend
+- Burn multiple (net burn / net new ARR)
+- Cash position and runway
+
+6. **Financial Projections Context** (1 paragraph)
+- Key assumptions behind the forward model
+- Historical accuracy of prior forecasts (if we've hit our numbers)
+
+Tone: confident but not promotional. Let the numbers speak. Investors see through spin — just be clear and specific.`}
+/>
+
+<BeforeAfter
+  before={{
+    content: "We've experienced tremendous growth and are excited about the future. Our revenue has been increasing and we believe we're well-positioned to capture a significant market opportunity."
+  }}
+  after={{
+    content: "LTM revenue of $4.2M, growing 42% YoY with improving unit economics — LTV:CAC improved from 2.8x to 4.1x over the last four quarters as we shifted acquisition spend from paid to organic channels. Gross margin stable at 78%. Monthly burn of $95K with 18 months runway at current rate."
+  }}
+  annotation="Investors want specific numbers and trends, not adjectives. Claude generates the specific version when you give it the data."
+/>
+
+## Segment-Level Commentary
+
+For companies with multiple products, segments, or geographies, the narrative needs to break down by segment.
+
+<PromptBlock
+  title="Segment Breakdown"
+  prompt={`Write segment-level financial commentary for the board. We have \${segmentCount} segments:
+
+\${segmentDetails}
+
+For each segment, write:
+1. Revenue and growth (actual vs plan)
+2. Gross margin
+3. Key driver of performance this quarter
+4. Outlook for next quarter
+
+Then write a CONSOLIDATED view:
+- Total company performance
+- Segment mix shifts (is one segment growing faster and becoming a larger share?)
+- Cross-segment themes
+- Portfolio-level strategy implications
+
+Keep each segment to 3-4 sentences. The consolidated view should be 2 paragraphs.`}
+  variables={[
+    { name: "segmentCount", placeholder: "3" },
+    { name: "segmentDetails", placeholder: "1. Self-Serve (SMB, <$500/mo ACV)\n2. Mid-Market ($500-$5K/mo ACV, sales-assisted)\n3. Enterprise ($5K+/mo ACV, dedicated AE)" }
+  ]}
+/>
+
+## Handling Bad Quarters
+
+The hardest narrative to write is when the numbers are bad. Claude helps you be transparent without being alarmist.
+
+<ScenarioCard
+  scenario="Revenue missed plan by 15%. Two enterprise deals slipped from Q4 to Q1. Churn spiked because of a product quality issue in October. The board is going to have questions."
+  answer="Lead with the miss, explain the drivers separately (deal slippage vs churn), show what you're doing about each, and provide visibility into whether Q1 is on track."
+  prompt="Write a board narrative for a tough quarter. Revenue: $980K actual vs $1.15M plan (15% miss). Two drivers: (1) Two enterprise deals totaling $95K ARR slipped to Q1 — both are signed LOIs, expected to close in January. (2) Logo churn spiked to 4.2% from 2.1% baseline due to a platform stability issue in October. The issue is resolved (shipped fix November 8), and December churn returned to 2.0%. Frame this honestly — don't minimize the miss, but provide the context that makes it not a trend. The board should leave this meeting concerned but not panicking."
+/>
+
+<TipCallout type="warning">
+Never let Claude spin bad numbers. If revenue missed, say revenue missed. Boards and investors lose trust when they feel management is being evasive. Claude's default is to be balanced and transparent — don't override that instinct by asking it to "put a positive spin" on a bad quarter.
+</TipCallout>
+
+## Recurring Commentary Templates
+
+Set up a Claude Project with your company context so you don't re-explain the business every month.
+
+<PromptBlock
+  title="Project Instructions for Monthly Board Narratives"
+  prompt={`Save this as project instructions so you have it every month:
+
+COMPANY: \${companyName}
+BUSINESS MODEL: \${model}
+KEY METRICS TO TRACK: \${metrics}
+BOARD COMPOSITION: \${boardMembers}
+
+NARRATIVE PREFERENCES:
+- Lead with the headline, always
+- Use specific numbers, not adjectives
+- Be candid about misses — our board respects transparency
+- Keep total narrative under 800 words
+- Format for Google Slides (short paragraphs, bolded key figures)
+- Always include a "Decisions Needed" section even if the answer is "None this month"
+
+PRIOR QUARTER CONTEXT: [I'll update this each quarter]
+
+When I upload monthly/quarterly data, generate the board narrative following the structure in the Financial Narrative Playbook. Ask me for context on any material variances before writing the explanation — don't guess.`}
+  variables={[
+    { name: "companyName", placeholder: "Acme Corp" },
+    { name: "model", placeholder: "B2B SaaS, $2K ACV, sales-assisted" },
+    { name: "metrics", placeholder: "MRR, ARR, NRR, Gross Margin, EBITDA, Cash, Runway, Customer Count" },
+    { name: "boardMembers", placeholder: "3 independents (2 investors, 1 operator), CEO, CFO" }
+  ]}
+/>
+
+<TipCallout type="note">
+The best board narratives are written by someone who knows the business deeply and uses Claude to structure and polish the output. Don't outsource the thinking — outsource the formatting. You provide the "why," Claude structures the "what."
+</TipCallout>

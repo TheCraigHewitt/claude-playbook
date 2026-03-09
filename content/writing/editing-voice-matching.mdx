@@ -1,0 +1,133 @@
+---
+title: "Editing and Voice Matching"
+description: "Edit writing while keeping your authentic voice. Build a style guide Claude uses consistently."
+products: ["Chat", "Projects"]
+tier: "Starter"
+readTime: "11 min"
+---
+
+The fastest way to spot AI-generated content: it sounds like nobody. Generic, smooth, perfectly competent, and completely forgettable. The fix isn't better prompts — it's teaching Claude how YOU write, then using it as an editor rather than a ghostwriter.
+
+## Why Voice Matching Matters
+
+Your writing voice is a competitive advantage. Readers build trust with a specific person, not a style. When your content suddenly shifts from "sounds like a real human with opinions" to "sounds like a helpful assistant," your audience notices — even if they can't articulate why.
+
+The goal: Claude should amplify your voice, not replace it.
+
+## Building Your Voice Profile
+
+Before Claude can match your voice, it needs to analyze it. This is a one-time investment that pays off on every piece of content you produce.
+
+<PromptBlock
+  title="Analyze your writing style"
+  prompt="Analyze my writing style based on these samples. I'm pasting [X] pieces I've written that represent how I want to sound.\n\nFor each dimension, describe my tendencies specifically (not generically):\n\n1. **Sentence structure** — Average length, variation patterns, fragments?\n2. **Vocabulary** — Formal/casual, industry jargon, distinctive words or phrases\n3. **Paragraph length** — Short/long, rhythm and pacing\n4. **Tone** — Where do I fall on: formal↔casual, serious↔playful, assertive↔tentative?\n5. **Opening patterns** — How do I typically start pieces?\n6. **Transitional patterns** — How do I move between ideas?\n7. **Distinctive habits** — Anything unique: rhetorical questions, em dashes, specific metaphors, humor style?\n8. **What I avoid** — Patterns or phrases notably absent from my writing\n\nBe specific. 'Conversational tone' isn't useful. 'Uses sentence fragments for emphasis, averages 12-word sentences, opens with anecdotes rather than thesis statements' is useful.\n\n[Paste 5-10 writing samples]"
+  variables={[
+    { name: "X", placeholder: "8" }
+  ]}
+/>
+
+<TipCallout type="tip">
+Pick your BEST writing for the voice analysis, not your average output. You're training Claude on the version of your voice you want to amplify, not your tired-Thursday-afternoon voice.
+</TipCallout>
+
+## Saving Your Voice Profile
+
+Once Claude generates your voice analysis, save it as Project instructions. This makes every conversation in that Project write in your voice by default.
+
+<StepByStep
+  steps={[
+    { title: "Run the voice analysis", description: "Paste 5-10 of your best writing samples and ask Claude to analyze your style using the prompt above." },
+    { title: "Review and refine", description: "Read Claude's analysis. Does it capture how you actually sound? Tell it to adjust anything that's off: 'I'm more direct than that' or 'I actually use humor more than your analysis suggests.'" },
+    { title: "Save as Project instructions", description: "Create a Project (e.g., 'My Content') and paste the finalized voice profile into the Project instructions. Add a line: 'All content in this Project should match this voice profile unless I specify otherwise.'" },
+    { title: "Test it", description: "Ask Claude to write a short paragraph about a topic you know well. Compare it to something you'd actually write. Iterate on the voice profile until it feels right." }
+  ]}
+/>
+
+## Using Claude as an Editor
+
+Writing and editing are different skills. Most people use Claude to write from scratch when they'd get better results writing a rough draft themselves and using Claude to edit it.
+
+### The Structural Edit
+
+<PromptBlock
+  title="Structural edit"
+  prompt="Edit this piece for structure and flow. Don't change my voice or word choices — focus on:\n\n1. Is the opening strong enough? Does it hook immediately?\n2. Does the argument build logically? Flag any jumps in logic.\n3. Are there sections that should be reordered?\n4. Where does it drag? What can be cut without losing substance?\n5. Does the ending land? Is there a clear takeaway?\n\nGive me your structural feedback as a numbered list, then provide the revised version with your changes applied.\n\n[Paste draft]"
+  variables={[]}
+/>
+
+### The Line Edit
+
+<PromptBlock
+  title="Line-level edit"
+  prompt="Do a line edit on this piece. My voice profile: [paste voice profile or reference Project instructions].\n\nRules:\n- Tighten sentences. Cut words that don't earn their place.\n- Fix awkward phrasing but keep my natural rhythm.\n- Eliminate cliches and replace with specific language.\n- Flag any sentence that sounds like AI wrote it — rewrite to sound like me.\n- Preserve my personality, opinions, and specific examples.\n- Don't add new ideas. Only improve how existing ideas are expressed.\n\nShow changes as tracked edits (mark what you changed and why).\n\n[Paste draft]"
+  variables={[]}
+/>
+
+### The Clarity Edit
+
+<PromptBlock
+  title="Clarity pass"
+  prompt="Review this piece specifically for clarity. For every sentence, ask: 'Would a smart person who knows nothing about this topic understand this on first read?'\n\nFlag:\n- Jargon that isn't defined\n- Assumptions about reader knowledge\n- Sentences that require re-reading\n- Paragraphs that try to make too many points at once\n- Vague claims that need specific examples\n\nRewrite flagged sections for clarity while keeping my voice.\n\n[Paste draft]"
+  variables={[]}
+/>
+
+<BeforeAfter
+  before="We need to leverage our synergistic capabilities to drive cross-functional alignment and optimize the customer journey touchpoints across the full lifecycle."
+  after="Our sales and support teams need to talk to each other. Right now, a customer can have a great sales experience and then hit a wall in onboarding because nobody passed the context along."
+  explanation="The 'before' says nothing in 25 words. The 'after' identifies the actual problem in plain language. Claude can strip corporate jargon if you tell it to — but you have to ask explicitly."
+/>
+
+## Editing for Different Audiences
+
+The same idea needs different treatment depending on who's reading. Use Claude to adapt without losing substance.
+
+<PromptBlock
+  title="Adapt content for different audiences"
+  prompt="I have a piece written for [original audience]. I need to adapt it for [new audience] without dumbing it down or losing the core insight.\n\nChanges needed:\n- Adjust technical depth: [more/less technical]\n- Shift examples to be relevant to [new audience's context]\n- Adjust tone from [original tone] to [new tone]\n- Change the CTA from [original CTA] to [new CTA]\n\nKeep the same structure and core argument. Just re-skin it for the new reader.\n\n[Paste original piece]"
+  variables={[
+    { name: "original audience", placeholder: "technical founders" },
+    { name: "new audience", placeholder: "non-technical CEOs" },
+    { name: "original tone", placeholder: "casual and nerdy" },
+    { name: "new tone", placeholder: "direct and business-focused" },
+    { name: "original CTA", placeholder: "try this API" },
+    { name: "new CTA", placeholder: "talk to your CTO about this" }
+  ]}
+/>
+
+## The Kill Your Darlings Pass
+
+Every writer has blind spots. Use Claude to find yours.
+
+<PromptBlock
+  title="Ruthless cut"
+  prompt="Read this piece and tell me:\n\n1. Which paragraphs could be deleted without the reader noticing?\n2. Which sentences are clever but don't actually advance the argument?\n3. Where am I repeating myself in different words?\n4. What's the real word count this piece needs to be? (Not what I wrote — what it SHOULD be.)\n\nBe honest. I'd rather cut good writing than keep mediocre padding. Then show me the piece with your recommended cuts applied.\n\n[Paste draft]"
+  variables={[]}
+/>
+
+<ScenarioCard
+  scenario="You wrote a 3,000-word blog post and it's... fine. Not bad, not great. Something feels off but you can't pinpoint it. You've been staring at it too long."
+  answer="When you're too close to a piece, Claude's most valuable role is diagnostic. Don't ask it to rewrite — ask it to tell you what's wrong. Paste the draft and ask: 'What's the weakest part of this piece and why? Where does it lose energy? What's the piece really about — and am I burying the lead?' Then use its diagnosis to rewrite the weak sections yourself."
+  prompt="I've been editing this piece for too long and I've lost perspective. Read it fresh and give me a brutally honest diagnostic:\n\n1. In one sentence: what is this piece actually about?\n2. Where does it lose energy or get boring?\n3. What's the strongest section and why?\n4. What's the weakest section and why?\n5. If you had to cut 40% of this piece, which sections go?\n6. What's the one revision that would improve this piece the most?\n\nDon't rewrite it. Just diagnose it. I'll do the surgery.\n\n[Paste draft]"
+/>
+
+## Voice Consistency Across a Team
+
+If multiple people create content for your brand, Claude can be the consistency layer.
+
+<PromptBlock
+  title="Brand voice review"
+  prompt="Review this piece against our brand voice guidelines:\n\n[Paste or reference voice guidelines]\n\nFor each section, rate voice consistency (1-5) and flag specific deviations:\n- Tone mismatches (too formal, too casual, wrong energy)\n- Vocabulary that doesn't match our brand\n- Structural patterns that diverge from our standard format\n- Any phrases that sound like a different brand\n\nThen rewrite the flagged sections to match our voice while preserving the author's core points."
+  variables={[]}
+/>
+
+<TipCallout type="tip">
+The fastest voice-matching shortcut: before asking Claude to write anything, paste one paragraph that represents exactly how you want the output to sound and say "Match this voice and energy." It's crude, but it works better than a 500-word style description.
+</TipCallout>
+
+## Common Editing Mistakes
+
+**Over-editing kills voice.** If you ask Claude to "make this more professional," it will sand off every interesting edge. Be specific: "Fix the grammar in paragraph 3 but don't touch the tone."
+
+**Editing in one pass.** Structure, line edits, and clarity are different tasks. Run them separately. Trying to do everything at once produces mediocre results on all fronts.
+
+**Not reading the output aloud.** After Claude edits your work, read it out loud. If any sentence makes you stumble or sounds unlike something you'd say, rewrite it manually. Your ear is the final arbiter, not Claude.

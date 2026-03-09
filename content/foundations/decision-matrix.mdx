@@ -1,0 +1,192 @@
+---
+title: "Chat vs. CoWork vs. Code: Which One Do You Need?"
+description: "The decision matrix for which Claude product you actually need."
+products: ["Chat", "CoWork", "Code"]
+tier: "Starter"
+readTime: "10 min"
+---
+
+Claude comes in three products, and most people either don't know the difference or use the wrong one. Here's the clear decision framework.
+
+## The One-Sentence Guide
+
+- **Claude Chat** — Your personal AI assistant. Conversations, writing, analysis.
+- **Claude CoWork** — Your team AI with integrations. Shared knowledge, connected tools.
+- **Claude Code** — Your automation AI. Reads files, connects APIs, builds systems.
+
+<TipCallout type="note">
+You don't need all three. Most people should start with one and expand when they hit a real limitation — not when they feel like they "should" be using more.
+</TipCallout>
+
+## The Decision Matrix
+
+Ask yourself one question: **What are you trying to accomplish?**
+
+<ScenarioCard
+  scenario="You need to draft a proposal for a client call that happened yesterday. You have notes from the call and your standard pricing document."
+  answer="Use Claude Chat. Create a Project with your pricing template and company context. Paste in your call notes and ask Claude to draft the proposal. This is a one-person, one-time task — perfect for Chat."
+  prompt="Based on these call notes, draft a proposal using our standard pricing structure. Call notes: [paste]. Pricing doc: [paste]. Include: executive summary, proposed solution, timeline, investment, and next steps."
+/>
+
+<ScenarioCard
+  scenario="Your sales team of 8 people needs consistent access to your objection responses, competitive positioning, and proposal templates — and you want Claude to help update these when new objections surface."
+  answer="Use Claude CoWork. Set up a shared workspace with your sales collateral. CoWork maintains persistent knowledge that the whole team can access, and it can be updated as your team encounters new situations."
+/>
+
+<ScenarioCard
+  scenario="You want to automatically pull your weekly revenue data from Stripe, combine it with Google Analytics traffic data, and generate a formatted HTML report every Monday morning."
+  answer="Use Claude Code. This is automation — connecting APIs, reading data, generating output files, and doing it repeatably. Claude Code can connect to Stripe and Analytics APIs, process the data, and output your report."
+/>
+
+## When to Use Each Product
+
+### Claude Chat: The Starting Point
+
+**Best for:**
+- Writing and editing (emails, docs, proposals, content)
+- Analysis and thinking (strategy, decisions, research)
+- One-off tasks that don't need to repeat
+- Learning how to use Claude effectively
+- Quick image and document analysis
+
+**How it works:**
+- Conversation-based interface at claude.ai
+- Projects let you save persistent context (instructions, files)
+- Upload files directly into conversations
+- Works on any device, no setup required
+
+**Limitations:**
+- No integrations with external tools (can't pull data from Stripe, Slack, etc.)
+- Context resets between conversations (unless using Projects)
+- Single-user — can't share with your team
+- Manual process — you initiate every interaction
+
+**Who it's for:** Everyone. If you're reading this Playbook, you should be using Chat at minimum.
+
+### Claude CoWork: The Team Layer
+
+**Best for:**
+- Team knowledge bases that Claude can reference
+- Workflows that need to connect to existing tools
+- Scheduled or triggered tasks
+- Maintaining shared context across a team
+- Standardizing how your team uses AI
+
+**How it works:**
+- Team workspace at claude.ai
+- Connect to tools like Slack, Google Drive, Notion
+- Shared Projects with team-wide context
+- Can be triggered by events or schedules
+- Admin controls for data governance
+
+**Limitations:**
+- Requires a Team or Enterprise plan
+- Less flexible than Code for complex automation
+- Integration options are growing but not exhaustive yet
+- Setup requires some planning around team workflows
+
+**Who it's for:** Teams of 3+ who need shared AI context. Especially valuable for sales teams, support teams, and operations teams where consistency matters.
+
+### Claude Code: The Automation Layer
+
+**Best for:**
+- Connecting any API or tool (not just the ones CoWork supports)
+- Automating repetitive workflows
+- Building systems that run without your input
+- File operations (reading, writing, organizing)
+- Complex multi-step processes
+- Data pipelines and reporting
+
+**How it works:**
+- Runs in your terminal or VS Code
+- Reads and writes files on your computer
+- Connects to any API with documentation
+- Uses CLAUDE.md as persistent context
+- Skills and commands create reusable workflows
+
+<RealWorldProof
+  quote="My naivete has kind of made me better at Claude Code. I have absolutely no idea what it can and can't do, so I just ask it to do everything."
+  author="Laura Roeder"
+  context="Founder who uses Claude Code for marketing, analytics, email, and ad management with zero coding background"
+/>
+
+**Limitations:**
+- Requires installation and basic terminal comfort
+- Runs on your local machine (though you can use it on remote servers)
+- Steeper learning curve (though easier than you think)
+- Requires a Max plan for heavy usage
+
+**Who it's for:** Operators who find themselves doing the same multi-step task repeatedly, or who need integrations that CoWork doesn't support yet. You don't need to be technical — see the [Code for Operators](/claude-playbook/code-for-operators) section.
+
+## The Overlap
+
+Here's what confuses people: many tasks can be done in multiple products. The difference is speed, repeatability, and team access.
+
+| Task | Chat | CoWork | Code |
+|------|------|--------|------|
+| Draft an email | Great | Great | Overkill |
+| Weekly report from data | Manual each time | Scheduled | Fully automated |
+| Team objection library | Single-user only | Shared and updated | Could build, but CoWork is easier |
+| Connect to Stripe API | Can't | Limited | Full access |
+| Batch-update 200 blog posts | Can't | Can't | Perfect |
+| Analyze uploaded spreadsheet | Great | Great | More powerful |
+| Customer support triage | Manual | Automated with integrations | Automated with any tool |
+| Competitive research | Good (with file uploads) | Good (with Drive access) | Can scrape and compile |
+| Meeting prep | Great | Great (pulls from shared docs) | Can pull from calendar + CRM |
+
+<TipCallout type="tip">
+The best signal that you need to move from Chat to Code: you catch yourself thinking, "I do this same thing every week." Any repetitive multi-step task is a Code candidate.
+</TipCallout>
+
+## The Migration Path
+
+Most operators follow this progression naturally:
+
+<StepByStep
+  steps={[
+    { title: "Start with Chat", description: "Learn prompting, set up Projects, get comfortable with Claude's capabilities. This alone will save you hours per week." },
+    { title: "Add CoWork for your team", description: "When you need shared knowledge or tool integrations, bring in CoWork. Great for sales teams, support teams, and ops." },
+    { title: "Explore Code for automation", description: "When you find yourself doing the same multi-step task over and over, or when you need to connect APIs that CoWork doesn't support yet." },
+    { title: "Build your system", description: "The real power comes from using all three together. Chat for thinking, CoWork for your team, Code for automation." }
+  ]}
+/>
+
+## Quick Decision Checklist
+
+Not sure which to pick? Run through these questions:
+
+**Is this a one-time task for just you?**
+Use Chat.
+
+**Does your team need access to the same AI context?**
+Use CoWork.
+
+**Does it involve connecting to an external API?**
+CoWork if supported, Code if not.
+
+**Do you do this same task every week?**
+Code (automate it).
+
+**Are you analyzing a document or writing something?**
+Chat or CoWork — whichever you're already in.
+
+**Do you need to read or write files on your computer?**
+Code.
+
+## Real-World Product Combinations
+
+Here's how experienced operators use the products together:
+
+**The CEO combo:** Chat for strategic thinking and writing, Code for automated reporting and data analysis.
+
+**The marketing lead combo:** Chat for content creation, CoWork for team brand guidelines, Code for bulk content operations.
+
+**The ops manager combo:** CoWork for team workflows and shared knowledge, Code for automating data pipelines between tools.
+
+**The solopreneur combo:** Chat for everything creative, Code for everything repetitive.
+
+## Your Next Step
+
+If you're not sure where to start, take the [assessment](/claude-playbook/assess) — it'll recommend the right product based on your role and goals.
+
+Or jump straight into the next playbook: [The Anatomy of a Great Prompt](/claude-playbook/foundations/anatomy-of-a-prompt).

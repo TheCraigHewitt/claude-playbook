@@ -1,0 +1,165 @@
+---
+title: "Content Creation Pipeline"
+description: "Build a repeatable system for turning one idea into blog posts, newsletters, social posts, and more."
+products: ["Chat", "Projects"]
+tier: "Starter"
+readTime: "14 min"
+---
+
+Creating content is not the bottleneck. Distribution is. Most founders and operators write one piece and publish it once. The real leverage comes from turning every idea into 5-10 pieces across channels — and Claude makes that pipeline almost effortless.
+
+## The Content Multiplication Framework
+
+One core piece of content should feed every channel you're active on. Here's the flow:
+
+1. **Source material** — A blog post, talk, podcast appearance, or long-form idea
+2. **Long-form written piece** — Blog post or newsletter (1,000-2,000 words)
+3. **Newsletter version** — Condensed, personal angle (400-600 words)
+4. **Social posts** — LinkedIn, X/Twitter, threads (multiple angles from same piece)
+5. **Short-form hooks** — Pull quotes, stats, hot takes for daily posting
+
+The key insight: you're not "repurposing." You're extracting different angles from the same core idea for different audiences in different contexts.
+
+## Step 1: Generate the Core Piece
+
+<PromptBlock
+  title="Blog post from raw idea"
+  prompt="Write a blog post about [topic]. Audience: [who reads this]. Angle: [the specific take or insight]. Structure: hook → problem → insight → proof → actionable takeaway. Length: [word count]. Tone: [tone description]. Include a compelling title and subtitle.\n\nKey points to cover:\n- [point 1]\n- [point 2]\n- [point 3]\n\nAvoid: generic advice, listicle energy, anything that sounds like it could apply to any business."
+  variables={[
+    { name: "topic", placeholder: "Why most companies waste money on AI tools they never adopt" },
+    { name: "who reads this", placeholder: "B2B SaaS founders doing $2M-$10M ARR" },
+    { name: "the specific take or insight", placeholder: "The problem isn't the tools — it's that nobody owns AI adoption internally" },
+    { name: "word count", placeholder: "1,200-1,500 words" },
+    { name: "tone description", placeholder: "direct, practical, like a smart friend who's been through this" }
+  ]}
+/>
+
+## Step 2: Convert to Newsletter
+
+<PromptBlock
+  title="Newsletter from blog post"
+  prompt="Convert this blog post into a newsletter edition. The newsletter has a more personal, conversational tone — like I'm writing to a friend who happens to run a business.\n\nStructure:\n- Personal hook (a story, observation, or question from my week)\n- The core insight (distilled to 2-3 paragraphs)\n- One actionable takeaway the reader can use today\n- CTA: [what I want them to do]\n\nLength: 400-600 words. Short paragraphs. No headers (it should read like a letter, not an article).\n\n[Paste blog post]"
+  variables={[
+    { name: "what I want them to do", placeholder: "Reply with their biggest AI adoption challenge" }
+  ]}
+/>
+
+<BeforeAfter
+  before="In today's newsletter, we'll explore why AI adoption fails at most companies and what you can do about it. According to recent studies, 73% of AI initiatives..."
+  after="I watched a founder spend $40K on AI tools last quarter. His team used exactly one of them — and only because it autocompleted their Slack messages. Here's what I told him."
+  explanation="Newsletters are personal. Start with a story or observation, not a topic announcement. Your reader should feel like they're getting an insider perspective, not reading an article."
+/>
+
+## Step 3: Extract Social Posts
+
+One blog post contains 5-10 social posts if you know where to look. Each post should stand alone — someone who never reads your blog should still find it valuable.
+
+<PromptBlock
+  title="LinkedIn posts from blog content"
+  prompt="Extract 5 standalone LinkedIn posts from this blog post. Each post should:\n\n1. Lead with a hook (bold claim, surprising stat, or contrarian take)\n2. Deliver one specific insight\n3. End with a question or call to engage\n4. Be 150-250 words\n5. Use short paragraphs (1-2 sentences each)\n6. NOT read like a summary of the blog post — each should feel like its own original thought\n\nVary the formats: one hot take, one story-driven, one tactical how-to, one data/insight, one myth-busting.\n\n[Paste blog post]"
+  variables={[]}
+/>
+
+<PromptBlock
+  title="X/Twitter thread from blog content"
+  prompt="Convert this blog post into a Twitter/X thread. Rules:\n\n1. First tweet is the hook — it should make someone stop scrolling\n2. 8-12 tweets total\n3. Each tweet should stand alone but flow logically\n4. Include one specific example or data point\n5. End with a summary tweet + CTA\n6. No 'Thread:' or '1/' numbering\n7. No emojis\n\n[Paste blog post]"
+  variables={[]}
+/>
+
+## Step 4: Daily Short-Form Content
+
+<PromptBlock
+  title="Pull quotes and micro-content"
+  prompt="From this blog post, extract:\n\n1. **3 pull quotes** — one-sentence statements that work as standalone social media posts or graphics\n2. **2 hot takes** — contrarian or provocative framings of the core idea (1-2 sentences each)\n3. **1 stat or data point** — framed for maximum shareability\n4. **2 question posts** — questions that invite discussion around the topic\n\nEach should work without any additional context. Someone who's never read the blog post should still find it interesting.\n\n[Paste blog post]"
+  variables={[]}
+/>
+
+## Setting Up the Pipeline
+
+The real power comes from making this repeatable. Set up persistent context with your content pipeline baked in.
+
+<ProductPicker products={["Chat", "CoWork", "Code"]}>
+  {{
+    Chat: <div>
+      <p><strong>Create a "Content Pipeline" Project</strong> in Claude Chat. Add your brand voice guidelines, target audience, and channel-specific formatting rules as project instructions. Upload your content calendar as a file.</p>
+      <p>Each content batch is a new conversation within the Project. Claude remembers your voice, audience, and format preferences every time.</p>
+    </div>,
+    CoWork: <div>
+      <p><strong>Create a shared Content Pipeline space</strong> in CoWork. This lets your whole team — writers, editors, social managers — use the same pipeline with consistent voice and quality.</p>
+      <p>Upload your brand guide, content calendar, and channel requirements. Team members can run any piece through the pipeline and get on-brand output.</p>
+    </div>,
+    Code: <div>
+      <p><strong>Build a content pipeline skill</strong> in Claude Code. Create a slash command like <code>/repurpose</code> that takes a blog post and automatically generates all channel versions.</p>
+      <p>Store your brand voice guide in the project context (CLAUDE.md). The skill reads it automatically. You can even have Claude Code save outputs directly to your content folder.</p>
+    </div>
+  }}
+</ProductPicker>
+
+<StepByStep
+  steps={[
+    { title: "Create a Content Pipeline project", description: "In Claude, create a new Project called 'Content Pipeline.' Add your brand voice guidelines, target audience description, and channel-specific formatting rules as project instructions." },
+    { title: "Add your content calendar", description: "Upload or paste your content themes for the month. Include pillar topics and any seasonal/timely angles." },
+    { title: "Process each core piece", description: "For each blog post or long-form piece, run it through the pipeline: blog → newsletter → LinkedIn → X → pull quotes. Do this in a single conversation so Claude maintains context." },
+    { title: "Batch your social content", description: "Ask Claude to organize all extracted social posts into a weekly calendar with suggested posting times and platforms." },
+    { title: "Review and personalize", description: "The final step is always you. Add personal anecdotes, adjust tone, and make sure nothing sounds generic. This should take 15-20 minutes per piece, not hours." }
+  ]}
+/>
+
+## The Weekly Content Batch
+
+Instead of creating content daily, batch your entire week in one session.
+
+<PromptBlock
+  title="Weekly content batch"
+  prompt="I need to create a week's worth of content from these [X] core ideas:\n\n1. [idea 1]\n2. [idea 2]\n3. [idea 3]\n\nFor each idea, generate:\n- 1 blog post outline (title + 5-7 section headers + key points per section)\n- 1 newsletter draft (400-600 words)\n- 2 LinkedIn posts (150-250 words each)\n- 3 short-form posts for X/Twitter\n\nOrganize the output as a Monday-Friday content calendar. Suggest which pieces to publish on which days for maximum engagement across platforms."
+  variables={[
+    { name: "X", placeholder: "3" },
+    { name: "idea 1", placeholder: "Why I stopped hiring for roles AI can do" },
+    { name: "idea 2", placeholder: "The 3 AI tools that actually stuck at my company" },
+    { name: "idea 3", placeholder: "What I learned from our worst quarter ever" }
+  ]}
+/>
+
+## Converting Other Formats
+
+You don't always start with a written piece. Claude handles format conversion well.
+
+<PromptBlock
+  title="Podcast or video transcript to blog post"
+  prompt="Convert this transcript into a polished blog post. The transcript is from a [podcast/video/talk] about [topic].\n\nRules:\n- Keep my voice and specific examples, but clean up verbal tics and tangents\n- Add structure: clear sections with headers\n- Cut redundancy (speakers often repeat themselves)\n- Add an intro and conclusion the transcript doesn't have\n- Target: [word count]\n- Keep the best quotes as direct quotes, paraphrase the rest\n\n[Paste transcript]"
+  variables={[
+    { name: "topic", placeholder: "how we restructured our sales team around AI" },
+    { name: "word count", placeholder: "1,200 words" }
+  ]}
+/>
+
+<PromptBlock
+  title="Conference talk to content series"
+  prompt="I gave a [X]-minute talk about [topic]. The transcript is below. Turn this into a content series:\n\n1. One cornerstone blog post (1,500 words)\n2. Three LinkedIn posts, each covering a different section of the talk\n3. One newsletter that tells the personal story behind the talk\n4. Five pull quotes for social media graphics\n\nMaintain my speaking voice but tighten for written format.\n\n[Paste transcript]"
+  variables={[
+    { name: "X", placeholder: "30" },
+    { name: "topic", placeholder: "building an AI-first operations team" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="You just published a blog post that's performing well. Your newsletter goes out tomorrow and you need LinkedIn content for the week. You have 30 minutes."
+  answer="Paste the blog post into Claude and run the full pipeline in one conversation. Start with the newsletter conversion, then extract 5 LinkedIn posts, then pull quotes for daily posting. In 30 minutes you'll have a week's worth of content that all reinforces the same core message across every channel."
+  prompt="Here's my blog post that's doing well. I need to maximize its reach across channels in the next 30 minutes. Generate: 1) Newsletter version (personal, 400 words, letter format). 2) 5 LinkedIn posts (varied formats — story, hot take, tactical, data, myth-bust). 3) 5 pull quotes for daily social posts. 4) One X/Twitter thread. Everything should feel like original content for each platform, not a lazy reshare."
+/>
+
+<TipCallout type="tip">
+The biggest mistake in content repurposing is making each piece feel like a summary of the original. Each channel version should lead with a different angle or hook. A LinkedIn post about your blog should feel like a standalone insight, not an ad for your blog.
+</TipCallout>
+
+## Measuring What Works
+
+After a few weeks of running the pipeline, use Claude to analyze performance.
+
+<PromptBlock
+  title="Content performance analysis"
+  prompt="Here are my content performance metrics from the last [time period]:\n\n[Paste metrics — views, engagement, clicks, etc. by piece and platform]\n\nAnalyze:\n1. Which topics resonated most and why?\n2. Which formats performed best on each platform?\n3. Which hooks/openings drove the highest engagement?\n4. What patterns do you see in my best vs. worst performing content?\n5. Based on this data, recommend my content focus for next month — topics, formats, and posting frequency."
+  variables={[
+    { name: "time period", placeholder: "30 days" }
+  ]}
+/>

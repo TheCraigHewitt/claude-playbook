@@ -1,0 +1,243 @@
+---
+title: "Sprint Planning and Roadmap Communication"
+description: "Turn engineering updates into stakeholder-friendly progress reports. Standup notes to client-ready updates."
+products: ["Chat"]
+tier: "Operator"
+readTime: "9 min"
+---
+
+There are two different languages in every product company: the one engineering speaks and the one stakeholders understand. Sprint planning lives in the first. Roadmap communication lives in the second. Claude bridges them.
+
+## Standup Notes to Stakeholder Updates
+
+Your daily standup produces raw engineering updates. Your stakeholders need context-appropriate summaries.
+
+<PromptBlock
+  title="Standup to Client Update"
+  prompt={`Here are this week's engineering standup notes:
+
+\${standupNotes}
+
+Convert these into a stakeholder-friendly weekly update for: \${audience}
+
+FORMAT:
+**Subject:** \${projectName} — Week of \${week} Update
+
+**Progress Summary** (3-5 bullets, non-technical language)
+Focus on outcomes and deliverables, not implementation details. "Users can now export reports as PDF" not "Implemented PDF generation using Puppeteer."
+
+**Key Milestones**
+| Milestone | Status | Expected Date |
+Use: ✅ Complete, 🔄 In Progress (X% done), ⏳ Not Started, ⚠️ At Risk
+
+**Blockers or Risks** (only if relevant)
+Anything that could affect the timeline. Frame as business impact: "The billing integration delay may push the launch from March 15 to March 22" not "Stripe API rate limiting is blocking our migration script."
+
+**Next Week Preview**
+What to expect in the next update. Set expectations for what's coming.
+
+**Demo-Ready Items**
+Anything stakeholders can see or test right now. Include a link or screenshot description if available.
+
+Tone: \${tone}. Keep the total update under 250 words.`}
+  variables={[
+    { name: "standupNotes", placeholder: "Mon: Fixed auth token refresh bug, started API pagination. Tue: API pagination done, found edge case in file upload for files >50MB. Wed: File upload fix in QA, started dashboard performance optimization. Thu: Dashboard query optimization — reduced load time from 4s to 800ms. Fri: Code review, deployed file upload fix to staging." },
+    { name: "audience", placeholder: "Client executive team (non-technical)" },
+    { name: "projectName", placeholder: "Analytics Dashboard v2" },
+    { name: "week", placeholder: "March 3" },
+    { name: "tone", placeholder: "Professional, confident, no jargon" }
+  ]}
+/>
+
+<BeforeAfter
+  before={{
+    content: "Engineering standup: 'Merged PR #847 for query optimization on the analytics_events table. Reduced p95 latency from 4200ms to 780ms. Still need to add index on user_id + event_type composite key for the funnel queries.'"
+  }}
+  after={{
+    content: "Client update: 'Dashboard loading speed improved by 80% this week. Pages that previously took 4 seconds now load in under 1 second. The team is finishing one more optimization that will further improve funnel report speed.'"
+  }}
+  annotation="Same work. Different audience. Claude translates without losing accuracy."
+/>
+
+## Sprint Planning Assistance
+
+Structure your sprint based on competing priorities.
+
+<PromptBlock
+  title="Sprint Prioritization"
+  prompt={`I need to plan our next sprint. Here's what's competing for attention:
+
+BACKLOG ITEMS:
+\${backlogItems}
+
+CONSTRAINTS:
+- Sprint length: \${sprintLength}
+- Available capacity: \${capacity}
+- Hard deadline items: \${deadlines}
+
+PRIORITIZATION CRITERIA:
+- Business impact (revenue, retention, or customer satisfaction)
+- Customer requests / support ticket volume
+- Technical dependencies (does anything block other work?)
+- Strategic alignment with \${quarterGoal}
+
+Help me plan the sprint:
+
+1. **PRIORITY STACK RANK**
+Rank every item by weighted score:
+| Item | Business Impact (1-5) | Urgency (1-5) | Effort (S/M/L) | Dependencies | Rank |
+
+2. **RECOMMENDED SPRINT SCOPE**
+Given \${capacity} capacity, here's what fits:
+- Must do (committed)
+- Stretch goal (if things go well)
+- Explicitly deferred (and why)
+
+3. **DEPENDENCY MAP**
+Which items must be done before others? Which can be parallelized?
+
+4. **RISK FLAGS**
+Any items that seem underestimated, have unclear requirements, or depend on external teams?
+
+5. **SPRINT GOAL**
+Write a one-sentence sprint goal that captures the theme. "By the end of this sprint, [who] can [do what] because [we built what]."`}
+  variables={[
+    { name: "backlogItems", placeholder: "1. SSO integration (enterprise customer requirement, due March 30)\n2. Dashboard performance optimization (5 customer complaints this month)\n3. CSV export feature (10 customer requests)\n4. Fix billing edge case (causes double-charges in 0.1% of transactions)\n5. Update onboarding flow (reduce time-to-value)\n6. API v2 documentation\n7. Mobile responsive improvements\n8. Automated test coverage for payment module" },
+    { name: "sprintLength", placeholder: "2 weeks" },
+    { name: "capacity", placeholder: "4 engineers, 60 story points (historically)" },
+    { name: "deadlines", placeholder: "SSO must be in QA by March 20, billing fix needs to ship this sprint" },
+    { name: "quarterGoal", placeholder: "Reduce churn by improving the enterprise customer experience" }
+  ]}
+/>
+
+## Roadmap Communication
+
+Different stakeholders need different views of the same roadmap.
+
+<PromptBlock
+  title="Multi-Audience Roadmap"
+  prompt={`Here's our product roadmap for \${timeframe}:
+
+\${roadmapItems}
+
+Create three versions of this roadmap:
+
+**VERSION 1: ENGINEERING** (detailed, for internal planning)
+| Quarter | Epic | Key Tasks | Effort | Dependencies | Owner |
+Include technical details, architecture decisions, and risk factors.
+
+**VERSION 2: EXECUTIVE / BOARD** (strategic, for leadership)
+| Theme | What We're Building | Why It Matters | Expected Impact | Timeline |
+No technical details. Focus on business outcomes and metrics. Max 1 page.
+
+**VERSION 3: CUSTOMER-FACING** (for customer advisory board or public roadmap)
+| Timeframe | What's Coming | How It Helps You |
+Use "Now / Next / Later" framing instead of specific dates. No internal details.
+- Now: Currently in development, shipping within 4 weeks
+- Next: Planned for next quarter
+- Later: On our radar, timeline TBD
+
+For each version, also write a 2-sentence narrative intro. The engineering version can be blunt. The executive version should tie to strategy. The customer version should generate excitement without overpromising.`}
+  variables={[
+    { name: "timeframe", placeholder: "Q2 2026" },
+    { name: "roadmapItems", placeholder: "1. SSO + SAML integration (enterprise, Q2)\n2. Real-time dashboard with WebSockets (all tiers, Q2)\n3. API v2 with GraphQL (developer experience, Q2-Q3)\n4. Advanced reporting with custom dimensions (enterprise, Q3)\n5. Mobile app MVP (all tiers, Q3)\n6. AI-powered anomaly detection (enterprise, Q3-Q4)\n7. Marketplace for third-party integrations (platform play, Q4)" }
+  ]}
+/>
+
+## Release Notes and Changelogs
+
+Turn engineering release notes into customer-friendly communications.
+
+<PromptBlock
+  title="Release Notes"
+  prompt={`Here are the technical release notes for version \${version}:
+
+\${technicalNotes}
+
+Write customer-facing release notes:
+
+1. **HEADLINE FEATURES** (1-3 items that customers will notice and care about)
+For each:
+- Feature name (customer-friendly, not internal codename)
+- What it does (1-2 sentences, plain English)
+- Why it matters (what problem it solves or what it enables)
+- How to use it (brief instruction or link to docs)
+
+2. **IMPROVEMENTS** (3-5 items)
+Smaller enhancements, performance improvements, UX tweaks.
+One line each. Focus on the user benefit: "Reports load 3x faster" not "Optimized database queries."
+
+3. **BUG FIXES** (keep it brief)
+Only include fixes that customers would have noticed. Group minor fixes as "Various stability and performance improvements."
+
+4. **COMING SOON** (optional teaser)
+One sentence previewing what's in the next release.
+
+Tone: \${tone}. Keep the total under 300 words.`}
+  variables={[
+    { name: "version", placeholder: "2.4.0" },
+    { name: "technicalNotes", placeholder: "- Implemented WebSocket connections for real-time data updates (replaces polling)\n- Added PDF export using Puppeteer headless Chrome\n- Migrated auth to JWT with refresh token rotation\n- Fixed N+1 query in dashboard endpoint (reduces load time from 4s to 800ms)\n- Added rate limiting middleware (100 req/min per API key)\n- Fixed race condition in payment processing causing duplicate charges\n- Updated React to v19, migrated class components\n- Added E2E tests for checkout flow\n- Fixed timezone handling in report scheduling" },
+    { name: "tone", placeholder: "Professional but friendly, celebrating the improvements" }
+  ]}
+/>
+
+## Sprint Retrospective Analysis
+
+Upload retro notes and get actionable patterns.
+
+<PromptBlock
+  title="Retrospective Pattern Analysis"
+  prompt={`I'm uploading retro notes from the last \${retroCount} sprints. Analyze them for patterns:
+
+\${retroNotes}
+
+1. **RECURRING THEMES**
+What keeps coming up across multiple retros?
+| Theme | # of Sprints Mentioned | Getting Better or Worse? |
+
+2. **WHAT'S ACTUALLY IMPROVING**
+From the "what went well" sections — are the improvements sticking? Or do we celebrate something one sprint and lose it the next?
+
+3. **PERSISTENT PROBLEMS**
+Things that show up in "what didn't go well" multiple times. If we keep talking about it but don't fix it, that's a process failure.
+| Problem | Times Mentioned | Was an Action Item Created? | Was It Completed? |
+
+4. **ACTION ITEM COMPLETION RATE**
+How many retro action items actually get done? If the rate is below 50%, the retro process itself needs fixing.
+
+5. **TOP 3 RECOMMENDATIONS**
+Based on the patterns:
+- One process change that would have the biggest impact
+- One communication improvement
+- One thing to stop doing
+
+Keep the analysis focused on actionable changes, not observations.`}
+  variables={[
+    { name: "retroCount", placeholder: "6" },
+    { name: "retroNotes", placeholder: "[paste retro notes from multiple sprints]" }
+  ]}
+/>
+
+## Capacity and Velocity Tracking
+
+Help stakeholders understand what "80% capacity" actually means for their feature requests.
+
+<ScenarioCard
+  scenario="Your CEO asks: 'Why can't we ship Feature X this month? We have 6 engineers.' You need to explain capacity without making it sound like an excuse."
+  answer="Show the math: current commitments, maintenance overhead, and where Feature X fits in the stack rank. Make it a trade-off conversation, not a 'we can't' conversation."
+  prompt="I need to explain to my CEO why we can't add Feature X to this sprint. Here's our current sprint: [list current sprint items with effort estimates]. Team capacity: 6 engineers, 2-week sprint, ~60 story points capacity. Current sprint is loaded at 55 points. Feature X is estimated at 20 points. Frame this as a trade-off conversation: 'We can add Feature X if we move Y and Z to next sprint. Here's the impact of that swap.' Don't make it sound like we're slow — make it clear that adding X means removing something else."
+/>
+
+<ScenarioCard
+  scenario="A client wants a specific feature built by their contract renewal date (6 weeks away). Engineering says it's 8 weeks of work. How do you communicate this?"
+  answer="Present options, not a flat 'no.' Scope a smaller version that fits in 6 weeks, or propose a phased delivery."
+  prompt="A key client needs Feature Y by their renewal date in 6 weeks. Engineering estimates 8 weeks for the full feature. Help me draft three options to present to the client: (1) A scoped-down v1 that delivers the core value in 5 weeks with the full version following 4 weeks later, (2) The full feature in 8 weeks with weekly progress demos, (3) An interim workaround using existing capabilities that solves 70% of their need immediately. For each option, describe what the client gets, what they don't get, and the timeline. Frame it positively."
+/>
+
+<TipCallout type="tip">
+The best sprint communication answers the question nobody asks directly but everyone thinks: "Is my thing going to get built, and when?" If stakeholders have to ask, your communication isn't working. Proactively update anyone waiting on a feature with status, timeline, and any changes.
+</TipCallout>
+
+<TipCallout type="note">
+Sprint planning and roadmap communication are recurring tasks — they happen every 1-2 weeks. Set up a Claude Project with your team structure, quarterly goals, and communication templates. Each sprint, you paste in the latest standup notes and backlog, and Claude generates the updates in your established format. The setup takes 20 minutes once; it saves 2+ hours every sprint.
+</TipCallout>

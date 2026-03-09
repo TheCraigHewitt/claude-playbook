@@ -1,0 +1,251 @@
+---
+title: "Automated Monthly Reporting"
+description: "Upload raw data, get narrative reports. Or automate the whole thing with Claude Code."
+products: ["Chat", "Code"]
+tier: "Operator"
+readTime: "10 min"
+---
+
+Monthly reporting is the tax every finance team pays. Pull data from three systems, paste into a template, write the same commentary with slightly different numbers, format it, send it. Every month.
+
+Claude turns this into a 15-minute task — or an automated one.
+
+<RealWorldProof
+  quote="I asked Claude Code to generate formatted HTML reports instead of just dumping numbers into a terminal. Now I get polished, client-ready reports I can email directly."
+  author="Laura Roeder"
+  context="Founder who automated financial reporting with Claude Code"
+/>
+
+## Two Approaches
+
+You have two paths depending on your comfort level. Pick your product to see the relevant workflow:
+
+<ProductPicker products={["Chat", "Code"]}>
+  {{
+    Chat: <div>
+      <p><strong>Chat approach:</strong> Upload your data each month, get a narrative report you copy into your template. Takes 15 minutes per month. No setup required — just paste data and get results.</p>
+    </div>,
+    Code: <div>
+      <p><strong>Code approach:</strong> Build a script that reads your data files and generates a formatted HTML or PDF report automatically. Takes 2 hours to set up but runs in seconds after that. Best if you run the same report every month.</p>
+    </div>
+  }}
+</ProductPicker>
+
+## Chat Approach: Data to Narrative
+
+Upload your monthly financials and get board-ready commentary.
+
+<PromptBlock
+  title="Monthly Financial Narrative"
+  prompt={`I'm uploading our monthly P&L data. Write a financial narrative report for \${month} covering:
+
+1. **Revenue Summary** — Total revenue, MoM and YoY change, breakdown by segment. Call out anything that moved more than 10%.
+
+2. **Gross Margin Analysis** — Gross profit and margin percentage. If margin changed more than 1 point, explain the likely driver.
+
+3. **Operating Expenses** — Total opex, breakdown by department (Engineering, Sales, Marketing, G&A, CS). Highlight any department that's over budget by more than 5%.
+
+4. **EBITDA** — EBITDA and EBITDA margin. Compare to plan and prior year.
+
+5. **Cash Position** — Ending cash, burn rate, runway in months.
+
+6. **Key Callouts** — 3-5 bullet points a board member needs to know. Focus on changes, not static metrics. "Revenue grew 12% MoM driven by enterprise expansion" not "Revenue was $1.2M."
+
+Tone: concise, factual, no hedging. Use specific numbers. Format for a board deck — short paragraphs, bold key figures.`}
+  variables={[
+    { name: "month", placeholder: "February 2026" }
+  ]}
+/>
+
+<TipCallout type="tip">
+Upload both the current month and prior month data. Claude does much better comparative analysis when it can see the actual prior period numbers rather than you describing them in the prompt.
+</TipCallout>
+
+## Adding Budget Comparison
+
+Layer in budget data for variance analysis.
+
+<PromptBlock
+  title="Budget vs Actual Commentary"
+  prompt={`I'm uploading two files:
+1. Actual P&L for \${month}
+2. Budget/plan for \${month}
+
+For each major line item, write a one-line variance explanation:
+- Show the actual, budget, and variance (both $ and %)
+- For variances over \${threshold}%, write a brief explanation of the likely cause
+- Flag anything that needs management attention
+
+Format as a table:
+| Line Item | Actual | Budget | Variance ($) | Variance (%) | Commentary |
+
+Then write a 3-paragraph executive summary focusing on the most important variances. What's working, what's off-track, and what actions are recommended.`}
+  variables={[
+    { name: "month", placeholder: "February 2026" },
+    { name: "threshold", placeholder: "10" }
+  ]}
+/>
+
+## Code Approach: Automated HTML Reports
+
+This is where it gets powerful. Claude Code builds a script that reads your data files and generates a polished HTML report — formatted, color-coded, and ready to email.
+
+<PromptBlock
+  title="Automated Report Generator"
+  prompt={`Build a Python script that generates a monthly financial report as a formatted HTML file.
+
+INPUT:
+- Read a CSV file at \${dataPath} with columns: date, category, subcategory, actual_amount, budget_amount
+- Read prior month data from the same file (filter by date)
+
+OUTPUT — an HTML file with:
+
+1. HEADER SECTION
+   - Company name: \${companyName}
+   - Report period
+   - Generated date
+
+2. REVENUE TABLE
+   - Filter category="Revenue"
+   - Show each subcategory, actual, budget, variance, variance %
+   - Color code: green if over budget, red if under budget by >5%
+   - Bold the total row
+
+3. EXPENSE TABLE
+   - Same format as revenue
+   - Color code: green if UNDER budget, red if OVER budget by >5%
+
+4. SUMMARY METRICS (styled as cards/boxes)
+   - Total Revenue (with MoM change arrow)
+   - Gross Margin %
+   - EBITDA
+   - Cash Burn Rate
+
+5. TREND CHARTS
+   - Use a simple charting library (matplotlib → embedded PNG, or Chart.js inline)
+   - Revenue trend (last 6 months)
+   - EBITDA trend (last 6 months)
+
+STYLING:
+   - Clean, professional CSS (inline for email compatibility)
+   - Responsive layout
+   - Print-friendly (no dark backgrounds)
+   - Font: system font stack
+
+Save the output as monthly-report-YYYY-MM.html in the same directory as the data file.`}
+  variables={[
+    { name: "dataPath", placeholder: "./financial-data/2026-actuals.csv" },
+    { name: "companyName", placeholder: "Acme Corp" }
+  ]}
+/>
+
+<BeforeAfter
+  before={{
+    content: "Terminal output: raw numbers dumped to stdout. You copy them into a Google Doc, format manually, add commentary, and send. Takes 2 hours."
+  }}
+  after={{
+    content: "Formatted HTML report with tables, conditional formatting, trend charts, and executive summary. Opens in any browser, prints cleanly, and can be emailed directly. Takes 30 seconds to generate."
+  }}
+  annotation="Laura Roeder's insight: ask Claude Code for formatted HTML output instead of terminal dumps. The extra 30 seconds of generation time saves hours of manual formatting."
+/>
+
+## Multi-Entity Reporting
+
+If you run multiple business units or entities, Claude handles the consolidation.
+
+<PromptBlock
+  title="Multi-Entity Consolidation"
+  prompt={`I have monthly P&L data for \${entityCount} business units in separate CSV files. Build a consolidated report that:
+
+1. Reads each entity's CSV file
+2. Generates an individual summary for each entity (revenue, COGS, gross profit, opex, EBITDA)
+3. Creates a consolidated view that sums all entities
+4. Eliminates intercompany transactions (any line item tagged "intercompany" in the subcategory column)
+5. Shows each entity's contribution as a percentage of consolidated revenue
+
+Output as a single HTML file with:
+- A navigation bar at the top linking to each entity section
+- Individual entity summaries
+- Consolidated summary at the bottom
+- A simple bar chart showing revenue by entity`}
+  variables={[
+    { name: "entityCount", placeholder: "3" }
+  ]}
+/>
+
+## KPI Dashboard Generation
+
+Beyond the P&L, generate a KPI dashboard from operational data.
+
+<PromptBlock
+  title="SaaS KPI Dashboard"
+  prompt={`Generate a KPI dashboard HTML report from our metrics CSV. The CSV has columns: date, metric_name, metric_value.
+
+Metrics to display (with formatting):
+
+GROWTH METRICS (green header):
+- MRR → currency format, show MoM growth %
+- ARR → currency format
+- New customers → integer
+- Net revenue retention → percentage, highlight red if under 100%
+
+EFFICIENCY METRICS (blue header):
+- CAC → currency format
+- LTV → currency format
+- LTV:CAC ratio → decimal, highlight green if over 3.0, yellow if 2-3, red if under 2
+- Payback period → months
+- Burn multiple → decimal, highlight green if under 2, red if over 3
+
+ENGAGEMENT METRICS (purple header):
+- DAU/MAU ratio → percentage
+- Logo churn → percentage, highlight red if over 2%
+- Revenue churn → percentage
+
+For each metric, show:
+- Current month value
+- Prior month value
+- MoM change (arrow up/down + percentage)
+- Sparkline or mini-trend for last 6 months
+
+Layout: card grid, 3 columns, responsive. Include a "last updated" timestamp.`}
+/>
+
+## Scheduling the Automation
+
+Once you have a working report script, make it run automatically.
+
+<StepByStep
+  steps={[
+    { title: "Build the report script", description: "Use the prompts above to create a Python script that reads your data and generates the HTML report." },
+    { title: "Test with real data", description: "Run it against your actual financial data. Fix any formatting issues or calculation errors." },
+    { title: "Set up data export", description: "Configure your accounting system (QBO, Xero, etc.) to export a CSV on a schedule, or use their API." },
+    { title: "Add a cron job or scheduler", description: "Ask Claude Code to set up a monthly cron job, GitHub Action, or simple scheduler that runs the script on the 5th of each month." },
+    { title: "Email delivery", description: "Ask Claude Code to add email sending via SMTP or an API like SendGrid. The HTML report becomes the email body." }
+  ]}
+/>
+
+<TipCallout type="warning">
+Don't over-automate on day one. Get the report generation working first. Run it manually for 2-3 months. Once you trust the output, then add scheduling and email delivery. Automation you don't trust is worse than no automation.
+</TipCallout>
+
+## Common Refinements
+
+After the first version, you'll want to tweak. These are the most common follow-ups:
+
+<ScenarioCard
+  scenario="The report looks good but your CEO wants the executive summary in bullet points, not paragraphs, and wants red/yellow/green status indicators next to each metric."
+  answer="Iterate on the template. Ask Claude to modify the HTML template to use bullet points in the summary section and add traffic-light indicators based on threshold logic."
+  prompt="Update the report template: change the executive summary from paragraphs to bullet points (max 5 bullets). Add a status indicator next to each KPI — green circle if on/above target, yellow if within 5% of target, red if more than 5% below target. The targets are: Revenue growth > 8% MoM, Gross margin > 70%, EBITDA margin > 15%, NRR > 110%."
+/>
+
+<ScenarioCard
+  scenario="Your board wants a one-page PDF, not an HTML file. They want to print it."
+  answer="Ask Claude Code to add PDF generation. It'll use a library like weasyprint or pdfkit to convert the HTML to a clean PDF."
+  prompt="Add PDF output to the report generator. Convert the HTML report to a single-page PDF using weasyprint. Optimize for A4/letter printing: adjust margins, font sizes, and chart sizes to fit on one page. If it doesn't fit, use two pages with a page break between the P&L section and the KPI dashboard."
+/>
+
+## What Makes This Different from a Spreadsheet
+
+The generated HTML report is not a replacement for your financial model — it's the presentation layer. Your source of truth stays in your accounting system or spreadsheet. Claude Code reads the data and generates the report.
+
+This separation matters. Your model stays auditable. Your report stays pretty. Neither compromises for the other.

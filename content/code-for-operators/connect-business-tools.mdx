@@ -1,0 +1,223 @@
+---
+title: "Connect Your Business Tools"
+description: "How to connect Stripe, CRM, analytics, ad platforms, and project management tools. The key insight: Claude figures out the API for you."
+products: ["Code"]
+tier: "Operator"
+readTime: "14 min"
+---
+
+This is where Claude Code goes from interesting to indispensable. When Claude can talk directly to your business tools — Stripe, your CRM, your analytics, your ad platform — it stops being an assistant that analyzes files you export and starts being an operator that works with live data.
+
+The best part: you don't need to know what an API is. Claude handles that.
+
+<RealWorldProof
+  quote="Claude truly does ALL the work, and figures out how to get the data."
+  author="Laura Roeder"
+  context="Non-technical founder who connected Claude Code to her analytics, email, and ad platforms"
+/>
+
+## The Connection Pattern
+
+Every tool connection follows the same three steps:
+
+<StepByStep
+  steps={[
+    { title: "Get an API key from the tool", description: "Log into the tool, go to Settings or Developer/API section, create or copy your API key. This is your 'password' that lets Claude Code talk to the tool." },
+    { title: "Tell Claude Code to use it", description: "Paste the API key when Claude asks, or set it as an environment variable. Claude Code stores it locally on your machine." },
+    { title: "Ask for what you want", description: "Describe the data or action you need in plain English. Claude figures out the API calls, gets the data, and presents it to you." }
+  ]}
+/>
+
+<TipCallout type="warning">
+API keys are like passwords. Never share them, never commit them to public repositories, and never paste them into Claude Chat (the browser version). Claude Code stores them locally on your machine, which is the secure approach.
+</TipCallout>
+
+## Connecting Stripe
+
+Stripe is the most common first connection. Here's the exact process.
+
+**Getting your API key:**
+1. Log into dashboard.stripe.com
+2. Click Developers in the left sidebar
+3. Click API Keys
+4. Copy your "Secret key" (starts with `sk_live_` for production or `sk_test_` for test data)
+
+<PromptBlock
+  title="Connect to Stripe"
+  prompt="I want to connect to my Stripe account. My API key is [key]. First, verify the connection works by pulling:\n1. My current MRR\n2. Number of active subscriptions\n3. Revenue from the last 30 days\n\nDon't modify anything — read-only for now."
+  variables={[{ name: "key", placeholder: "sk_live_..." }]}
+/>
+
+<TipCallout type="tip">
+Start with the TEST API key (sk_test_) if you want to experiment without touching real data. Once you're comfortable, switch to the live key.
+</TipCallout>
+
+Once connected, here's what you can ask:
+
+<PromptBlock
+  title="Stripe revenue analysis"
+  prompt="From our Stripe account:\n1. Monthly recurring revenue trend for the last 12 months\n2. Churn rate by month (cancellations / active subscriptions)\n3. Average revenue per user and how it's trending\n4. New subscriptions vs. cancellations by month\n5. Revenue by plan/price tier\n\nGenerate an HTML dashboard with charts and save it to ~/Claude-Workspace/reports/stripe-dashboard.html"
+/>
+
+## Connecting Your CRM
+
+### HubSpot
+
+**Getting your API key:**
+1. Go to Settings → Integrations → API Key (or Private Apps for newer accounts)
+2. Create a private app with the scopes you need (contacts, deals, companies)
+3. Copy the access token
+
+<PromptBlock
+  title="Connect to HubSpot"
+  prompt="Connect to our HubSpot account using this API token: [token]. Pull:\n1. Total contacts and how many were added this month\n2. Open deals by stage with total pipeline value\n3. Deals closed-won this month vs. last month\n4. Contacts with no activity in 90+ days (stale leads)\n\nCreate a pipeline summary report."
+  variables={[{ name: "token", placeholder: "pat-..." }]}
+/>
+
+### GoHighLevel
+
+<PromptBlock
+  title="Connect to GoHighLevel"
+  prompt="Connect to our GoHighLevel account using this API key: [key]. I want to:\n1. Pull all contacts added in the last 30 days\n2. Show pipeline stages and deal counts\n3. List upcoming appointments for this week\n4. Show SMS and email campaign performance for the last 30 days\n\nStart with a connection test before pulling data."
+  variables={[{ name: "key", placeholder: "your GHL API key" }]}
+/>
+
+## Connecting Analytics
+
+### Google Analytics (GA4)
+
+Google Analytics requires a service account — slightly more setup, but Claude walks you through it.
+
+<PromptBlock
+  title="Connect to Google Analytics"
+  prompt="I want to connect to our Google Analytics 4 property. Walk me through the setup step by step:\n1. How to create a service account in Google Cloud Console\n2. How to grant it access to our GA4 property\n3. How to download the credentials file\n\nOnce I have the credentials file, I'll give you the path and you can pull our data. Our GA4 property ID is [property_id]."
+  variables={[{ name: "property_id", placeholder: "123456789" }]}
+/>
+
+### Plausible Analytics
+
+Plausible is simpler — it has a straightforward API.
+
+<PromptBlock
+  title="Connect to Plausible"
+  prompt="Connect to our Plausible Analytics account. API key: [key]. Site: [domain].\n\nPull a 30-day overview:\n1. Total visitors, unique visitors, page views\n2. Top 10 pages by views\n3. Traffic sources breakdown\n4. Top referrers\n5. Device breakdown (desktop vs. mobile)\n\nCompare this month vs. last month for each metric."
+  variables={[
+    { name: "key", placeholder: "your Plausible API key" },
+    { name: "domain", placeholder: "yoursite.com" }
+  ]}
+/>
+
+## Connecting Ad Platforms
+
+### Google Ads
+
+<PromptBlock
+  title="Connect to Google Ads"
+  prompt="I want to connect to our Google Ads account to pull performance data. Walk me through the OAuth setup for Google Ads API, then pull:\n1. Spend vs. conversions for the last 30 days\n2. Cost per conversion by campaign\n3. Top performing ad groups\n4. Wasted spend — keywords with high spend and zero conversions\n5. Budget pacing — are we on track to spend our monthly budget?\n\nCreate a report I can share with my team."
+/>
+
+### Google Search Console
+
+<PromptBlock
+  title="Connect to Search Console"
+  prompt="Connect to our Google Search Console using the same service account credentials at [path]. Site: [domain].\n\nAnalyze the last 90 days:\n1. Top 20 queries by impressions and their click-through rates\n2. Pages losing traffic (compare last 30 days vs. previous 30)\n3. Pages gaining traffic\n4. Queries where we rank position 5-15 (strike distance keywords)\n5. Pages with high impressions but low CTR (title/description optimization candidates)\n\nThis is our SEO action list — prioritize by impact."
+  variables={[
+    { name: "path", placeholder: "~/credentials/google-service-account.json" },
+    { name: "domain", placeholder: "yoursite.com" }
+  ]}
+/>
+
+## Connecting Project Management
+
+### ClickUp
+
+<PromptBlock
+  title="Connect to ClickUp"
+  prompt="Connect to our ClickUp workspace. API key: [key].\n\n1. Show me all tasks assigned to me that are overdue\n2. Team workload — how many tasks does each person have this week?\n3. Tasks stuck in 'In Progress' for more than 5 days\n4. Sprint progress — what percentage of this sprint's tasks are complete?\n\nFormat as a daily standup briefing I can scan in 2 minutes."
+  variables={[{ name: "key", placeholder: "pk_..." }]}
+/>
+
+### Trello
+
+<PromptBlock
+  title="Connect to Trello"
+  prompt="Connect to our Trello board. API key: [key], Token: [token].\n\nBoard: [board name]\n\n1. Cards per list (show the pipeline)\n2. Cards with no activity in 7+ days (stalled items)\n3. Cards assigned to me with upcoming due dates\n4. Total story points (or card counts) completed this week vs. last week\n\nCreate a simple progress dashboard."
+  variables={[
+    { name: "key", placeholder: "your Trello API key" },
+    { name: "token", placeholder: "your Trello token" },
+    { name: "board name", placeholder: "Product Roadmap" }
+  ]}
+/>
+
+## Connecting Email Marketing
+
+### ActiveCampaign
+
+<PromptBlock
+  title="Connect to ActiveCampaign"
+  prompt="Connect to our ActiveCampaign account. API URL: [url], API key: [key].\n\nPull:\n1. Total contacts and list growth over the last 90 days\n2. Last 10 campaigns with open rates and click rates\n3. Automations that are active with entry and completion counts\n4. Contacts who opened 3+ emails in the last 30 days but haven't purchased (hot leads)\n5. Unsubscribe rate trend\n\nHighlight any metrics that are significantly above or below industry benchmarks."
+  variables={[
+    { name: "url", placeholder: "https://youraccount.api-us1.com" },
+    { name: "key", placeholder: "your ActiveCampaign API key" }
+  ]}
+/>
+
+## Building Multi-Tool Reports
+
+The real magic: connecting multiple tools in a single report.
+
+<PromptBlock
+  title="Cross-platform business dashboard"
+  prompt="Build me a weekly business dashboard that combines data from:\n- Stripe (revenue, MRR, churn)\n- [Analytics tool] (traffic, top pages, sources)\n- [CRM] (pipeline value, deals won, new leads)\n- [Email platform] (list growth, engagement)\n\nFor each section:\n1. Key metric with trend vs. last week\n2. One chart showing the 30-day trend\n3. Green/yellow/red status indicator based on whether we're on track\n\nSave as an HTML file that looks clean enough to share with my leadership team. Run this every Monday morning."
+  variables={[
+    { name: "Analytics tool", placeholder: "Google Analytics" },
+    { name: "CRM", placeholder: "HubSpot" },
+    { name: "Email platform", placeholder: "ActiveCampaign" }
+  ]}
+/>
+
+<BeforeAfter
+  before={{
+    content: "Every Monday: export data from 4 tools, copy into a spreadsheet, make charts, email to the team. Takes 2 hours."
+  }}
+  after={{
+    content: "Every Monday: say 'run the weekly dashboard' to Claude Code. Takes 30 seconds. The report is better, more consistent, and always on time."
+  }}
+  annotation="This is the compound effect of connecting tools. Each individual connection saves time. Together, they transform your operations."
+/>
+
+## Security Best Practices
+
+<TipCallout type="warning">
+API keys are credentials — treat them like passwords. Follow these rules:
+
+1. **Never paste API keys into Claude Chat (the browser).** Only use them in Claude Code (local).
+2. **Use environment variables** — ask Claude Code to store keys in a `.env` file, not hardcoded.
+3. **Use read-only keys when possible** — most tools let you create keys with limited permissions.
+4. **Rotate keys periodically** — especially if someone who had access leaves your team.
+5. **Start with test/sandbox data** — verify Claude is doing what you expect before connecting to production.
+</TipCallout>
+
+<PromptBlock
+  title="Secure API key setup"
+  prompt="Help me set up a secure .env file for my API keys. I need to store keys for:\n- Stripe\n- [CRM]\n- [Analytics]\n- [Email platform]\n\nCreate the .env file with placeholder values, add .env to .gitignore, and show me how to reference these keys in future conversations so I never have to paste them again."
+  variables={[
+    { name: "CRM", placeholder: "HubSpot" },
+    { name: "Analytics", placeholder: "Plausible" },
+    { name: "Email platform", placeholder: "ActiveCampaign" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="You want to connect Claude Code to your company's internal tools, but your IT team is concerned about security."
+  answer="Valid concern. Share these facts: (1) Claude Code runs locally on your machine — API calls go directly from your computer to the tool, not through a third party. (2) API keys are stored locally in .env files, not sent to Anthropic. (3) You can use read-only API keys that can't modify data. (4) On business plans, Anthropic doesn't train on your data. Ask IT for a sandbox/test account to demo before connecting production systems."
+  prompt="Help me draft a brief security summary for my IT team explaining how Claude Code connects to external APIs. Cover: where data flows, where keys are stored, what permissions are needed, and what data retention policies apply."
+/>
+
+## Common Mistakes
+
+**Don't connect everything on day one.** Start with one tool (Stripe is the easiest). Get comfortable with how connections work. Then add tools one at a time.
+
+**Don't use admin API keys when read-only keys exist.** Most tools offer different permission levels. For reporting and analysis, you only need read access. Save the write access for when you're building automations you trust.
+
+**Don't forget that API data costs tokens.** Pulling large datasets uses your Claude Code token budget. Be specific about what data you need rather than pulling everything and filtering later.

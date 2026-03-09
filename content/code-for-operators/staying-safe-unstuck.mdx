@@ -1,0 +1,188 @@
+---
+title: "Staying Safe and Unstuck"
+description: "Security basics, context management, dealing with compacting, and what to do when Claude gets confused."
+products: ["Code"]
+tier: "Starter"
+readTime: "10 min"
+---
+
+Claude Code is powerful. And like any powerful tool, you'll occasionally run into situations where it gets confused, uses too much context, or tries to do something you didn't intend. This guide covers the practical problems you'll actually encounter and how to solve them.
+
+## Security Basics for Non-Developers
+
+You don't need to be a security expert, but you need to know these fundamentals.
+
+### What to Protect
+
+<StepByStep
+  steps={[
+    { title: "API keys and passwords", description: "Always store in a .env file, never in CLAUDE.md or directly in conversations. If you accidentally paste a key in a conversation, rotate it immediately (generate a new one from the tool's settings)." },
+    { title: "Customer data", description: "Be thoughtful about what customer data you process through Claude. Business-tier plans don't train on your data, but understand your data handling policy. Never process data you wouldn't show a contractor." },
+    { title: "Financial data", description: "Processing your own revenue data is fine. Processing customer payment information (credit card numbers, bank accounts) should not go through Claude." },
+    { title: "Legal and HR documents", description: "Contracts, employment agreements, and legal correspondence — use judgment. General analysis is fine. Documents containing Social Security numbers or employee medical information should not be processed." }
+  ]}
+  title="The security checklist"
+/>
+
+<TipCallout type="warning">
+The simple rule: if you wouldn't email it to a trusted contractor, don't put it into Claude Code. Claude processes data securely, but good data hygiene is always your responsibility.
+</TipCallout>
+
+### The .env File Setup
+
+<PromptBlock
+  title="Secure your API keys"
+  prompt="Set up a secure .env file for my workspace:\n\n1. Create a .env file in my workspace root\n2. Add placeholders for these services: [list your tools]\n3. Create a .gitignore file that excludes .env (so it's never committed to version control)\n4. Show me how to verify that .env is properly excluded\n5. Update my CLAUDE.md to reference environment variables instead of inline keys"
+  variables={[{ name: "list your tools", placeholder: "Stripe, HubSpot, Google Analytics, ActiveCampaign" }]}
+/>
+
+### Permission Prompts: What They Mean
+
+Claude Code always asks before taking action. Here's what to watch for:
+
+- **"Claude wants to read [file]"** — Usually safe. Claude is looking at a file for information.
+- **"Claude wants to write [file]"** — Check what file it's writing. Is this a report (safe) or is it modifying something important (review first)?
+- **"Claude wants to run [command]"** — Read the command. If it includes `rm` (delete), `curl` to an unfamiliar URL, or `sudo` (admin access), think twice.
+- **"Claude wants to install [package]"** — This is adding software. Usually fine for data processing libraries, but verify you recognize what's being installed.
+
+<ScenarioCard
+  scenario="Claude asks to run a command you don't understand. The command has pipes, flags, and technical-looking syntax. Should you approve it?"
+  answer="Ask Claude to explain it first. Say: 'Before I approve that, explain in plain English what this command does, what it reads, what it modifies, and whether it's reversible.' Claude will break it down. If you're still unsure, say no and ask for an alternative approach."
+  prompt="Explain this command in plain English before I approve it: [paste the command]. Tell me: what does it read, what does it write or modify, is it reversible, and what could go wrong?"
+/>
+
+## Context Management: The 99% Problem
+
+As your conversation gets longer, Claude Code's context window fills up. When it hits roughly 95-99% capacity, Claude will "compact" — summarizing the conversation to free up space. This is normal, but it can cause issues.
+
+### Signs You're Running Low on Context
+
+- Claude starts forgetting things you told it earlier in the conversation
+- Claude re-asks questions you already answered
+- You see a message about context being compacted
+- Claude's responses become less specific or accurate
+
+### How to Handle Compacting
+
+<PromptBlock
+  title="Pre-compacting context save"
+  prompt="We've been working for a while and I want to make sure we don't lose important context. Before we continue:\n\n1. Summarize everything we've accomplished in this session\n2. List any decisions we've made\n3. List any open action items or unfinished work\n4. Note any specific configurations or settings we've established\n\nWrite this summary to output/session-notes/[date].md so we can reference it in future conversations."
+/>
+
+### Best Practices for Long Sessions
+
+1. **Start new conversations for new topics.** Don't use one conversation for everything. Separate "run the weekly report" from "analyze our pricing strategy."
+
+2. **Save important outputs to files.** Don't just read Claude's response — have it write key information to files that persist between conversations.
+
+3. **Use CLAUDE.md for permanent context.** Anything Claude needs to know every time should be in CLAUDE.md, not repeated in conversations.
+
+4. **Reference files instead of pasting.** Instead of pasting a 1,000-line document into the conversation, say "read the file at [path]." This uses less context.
+
+<TipCallout type="tip">
+A good rule of thumb: if a conversation lasts more than 30-40 minutes of active work, consider starting a new one. Save your progress to files first.
+</TipCallout>
+
+## When Claude Gets Confused
+
+It happens. Claude starts giving wrong answers, goes in circles, or fundamentally misunderstands what you want. Here's the troubleshooting playbook:
+
+### Problem: Claude keeps doing the wrong thing
+
+<PromptBlock
+  title="Reset and redirect"
+  prompt="Stop. Let's reset on this task. Here's what I actually need:\n\n1. The goal: [state it clearly in one sentence]\n2. The constraints: [what the output must and must not include]\n3. The format: [exactly what you want to see]\n\nIgnore our previous attempts. Start fresh with just these requirements."
+/>
+
+### Problem: Claude is hallucinating data or capabilities
+
+Sometimes Claude will claim it can do something it can't, or generate data that looks real but isn't.
+
+<PromptBlock
+  title="Verify Claude's claims"
+  prompt="Before we continue, I want to verify:\n\n1. The data you just showed me — is this pulled from a real source, or is it an example/estimate? If it's from a real source, show me the API call or file you read it from.\n2. The command you're about to run — have you used this API before in our conversation, or are you assuming the endpoint exists?\n3. The number you cited — where did it come from? Can you trace it back to the source?\n\nI need to know what's real data vs. what's generated."
+/>
+
+### Problem: Claude is stuck in a loop
+
+If Claude keeps trying the same approach and failing:
+
+<PromptBlock
+  title="Break out of a loop"
+  prompt="You've tried this approach [X] times and it's not working. Let's try something completely different.\n\n1. What specifically is failing? (Show me the error or the wrong output)\n2. What assumptions are you making that might be wrong?\n3. Suggest 3 fundamentally different approaches to achieve [the goal]\n4. Let me pick which approach to try next"
+  variables={[{ name: "X", placeholder: "3" }]}
+/>
+
+### Problem: Claude broke something
+
+<PromptBlock
+  title="Undo and recover"
+  prompt="Something went wrong with the last action. Before we try to fix it:\n\n1. What exactly did you just do? (List every file modified or command run)\n2. Is this reversible? If so, undo it.\n3. If not reversible, what's the current state and what do we need to fix?\n4. Before taking any corrective action, explain what you plan to do and wait for my approval"
+/>
+
+## The Self-Improvement Prompt
+
+This is one of the most useful prompts in your toolkit. Use it when Claude Code's output quality feels like it's declining.
+
+<PromptBlock
+  title="Claude Code self-improvement"
+  prompt="Let's step back and evaluate how we're working together.\n\n1. Review our CLAUDE.md file. Is there anything missing, outdated, or unclear that's causing suboptimal output?\n2. Review our recent conversations. Where have I had to correct you or ask for something twice? What pattern do you see?\n3. Look at our Skills files. Are any of them producing inconsistent results? What would you change?\n4. Suggest 3 specific improvements to our setup (CLAUDE.md, Skills, workflow) that would make your output better.\n\nBe honest — I'd rather know what's not working than keep getting mediocre results."
+/>
+
+<BeforeAfter
+  before={{
+    content: "Claude keeps getting things wrong. I re-explain every time. I'm frustrated. This tool isn't working."
+  }}
+  after={{
+    content: "Claude keeps getting things wrong. I run the self-improvement prompt. We discover that CLAUDE.md has an outdated metric definition, two Skills have conflicting instructions, and I've been under-specifying my output format. Fix those, and the output quality jumps."
+  }}
+  annotation="When Claude's output is consistently off, the problem is usually in the context or instructions, not in Claude itself."
+/>
+
+## Dealing with Rate Limits
+
+On the Max plan, you have a generous but finite token budget. If you're hitting rate limits:
+
+1. **Space out large workflows.** Running 10 API-heavy reports at once will burn through tokens fast. Spread them across the day.
+2. **Be specific about data ranges.** "Pull all Stripe data" uses far more tokens than "Pull Stripe data for the last 30 days, subscriptions only."
+3. **Use file references instead of pasting.** Pointing Claude to a file uses fewer tokens than pasting the file contents into your message.
+4. **Cache intermediate results.** If multiple workflows use the same data, have Claude save it to a file first, then reference the file in subsequent workflows.
+
+<PromptBlock
+  title="Token-efficient workflow"
+  prompt="I need to run several analyses today and I want to be efficient with my token usage. Here's what I need:\n\n[list your tasks]\n\nSuggest the most token-efficient order to run these. Identify any shared data pulls we can do once and reuse. Cache intermediate results to files where it saves re-pulling data."
+/>
+
+## Common Error Messages and What They Mean
+
+| Error | Meaning | Fix |
+|-------|---------|-----|
+| "Context window limit reached" | Conversation too long | Start a new conversation, save state to files first |
+| "API rate limit exceeded" | Too many requests to an external tool | Wait a few minutes, or reduce the data volume you're requesting |
+| "Permission denied" | Claude can't access a file or directory | Check that you started Claude Code in the right directory, or grant access |
+| "API key invalid" | Key expired, revoked, or mistyped | Check your .env file, regenerate the key from the tool's settings |
+| "Command failed" | A system command didn't work | Ask Claude to explain the error and suggest alternatives |
+
+<RealWorldProof
+  quote="I was ready to give up on Claude Code after a week of frustrating sessions. Then I rewrote my CLAUDE.md with specific rules and definitions, and it was like working with a completely different tool. The context is everything."
+  author="Marketing Director"
+  context="Non-technical operator who now uses Claude Code daily"
+/>
+
+## The Golden Rules
+
+1. **Start new conversations often.** Fresh context = better output.
+2. **Save everything to files.** Conversations are temporary. Files are permanent.
+3. **Read the permission prompts.** Don't auto-approve everything.
+4. **When in doubt, ask Claude to explain.** "What does this do?" is always a valid question.
+5. **When quality drops, fix the context.** Run the self-improvement prompt.
+6. **Keep API keys in .env.** No exceptions.
+7. **Start with read-only operations.** Read before you write. Analyze before you modify.
+
+## Common Mistakes
+
+**Don't ignore permission prompts.** It's tempting to auto-approve everything to go faster. Take the 2 seconds to read what Claude is about to do. The one time it matters will save you hours of cleanup.
+
+**Don't panic when something breaks.** Claude Code asks permission before destructive actions. If something goes wrong, it's almost always recoverable. Take a breath, ask Claude what happened, and fix it together.
+
+**Don't give up after one bad session.** Claude Code's output quality depends heavily on context. A bad session usually means your CLAUDE.md needs improvement or you need to start a fresh conversation — not that the tool doesn't work.

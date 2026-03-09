@@ -1,0 +1,123 @@
+---
+title: "Campaign Brief to Multi-Channel Launch"
+description: "One brief generates email sequences, social posts, landing page copy, and ad creative."
+products: ["Chat", "Projects"]
+tier: "Starter"
+readTime: "13 min"
+---
+
+Most marketing campaigns fail at the handoff. The strategy is solid, but by the time it becomes email copy, social posts, and landing page text, the message has drifted. Each channel sounds like a different company talking about a different product.
+
+Claude solves this by generating all channel assets from a single source of truth — one brief that keeps every touchpoint aligned.
+
+## The Campaign Brief Template
+
+Everything starts here. A strong brief makes every downstream asset better. A vague brief produces generic content on every channel.
+
+<PromptBlock
+  title="Campaign brief"
+  prompt="Create a detailed campaign brief for [campaign name].\n\n**Campaign Overview:**\n- Product/offer: [what we're promoting]\n- Campaign goal: [primary metric we're optimizing for]\n- Target audience: [who, specifically]\n- Campaign timeline: [start date to end date]\n- Budget: [total budget and allocation by channel]\n\n**Messaging Framework:**\n1. Core message (one sentence — if the audience remembers nothing else, they remember this)\n2. Supporting messages (3 max — proof points that support the core message)\n3. Key differentiator (why us over the alternative, including doing nothing)\n4. Objection handling (top 3 objections and how we address each)\n5. Tone and voice (how this campaign should sound)\n\n**Channel Plan:**\nFor each channel we're using, define:\n- Role of the channel (awareness / consideration / conversion)\n- Content format and cadence\n- Specific CTA for that channel\n- Success metric\n\nChannels: [list channels]\n\n**Constraints:**\n- Must include: [required elements — brand guidelines, legal disclaimers, etc.]\n- Must avoid: [off-limits topics, competitor mentions, etc.]"
+  variables={[
+    { name: "campaign name", placeholder: "Q2 Product Launch — AI Sales Coach" },
+    { name: "what we're promoting", placeholder: "New AI-powered sales coaching feature that analyzes rep calls and provides real-time feedback" },
+    { name: "primary metric we're optimizing for", placeholder: "qualified demo requests" },
+    { name: "who, specifically", placeholder: "VP Sales and Revenue leaders at B2B SaaS companies, 50-500 employees, who currently do manual call reviews" },
+    { name: "start date to end date", placeholder: "April 1 to April 30" },
+    { name: "total budget and allocation by channel", placeholder: "$15K — 40% paid social, 30% email, 20% content, 10% retargeting" },
+    { name: "list channels", placeholder: "Email, LinkedIn ads, LinkedIn organic, blog, landing page, webinar" }
+  ]}
+/>
+
+## Generating Channel Assets from the Brief
+
+Once your brief is locked, generate all channel assets in a single conversation. This keeps the messaging consistent because Claude has the full brief as context.
+
+### Landing Page Copy
+
+<PromptBlock
+  title="Landing page from brief"
+  prompt="Using the campaign brief above, write landing page copy for [landing page goal].\n\nStructure:\n1. **Hero section** — Headline (under 10 words), subheadline (one sentence), CTA button text\n2. **Problem section** — 3 pain points the audience recognizes immediately\n3. **Solution section** — What the product does, framed as pain relief (not feature list)\n4. **Social proof** — Placeholder for testimonials + suggested proof points to feature\n5. **How it works** — 3-step process (keep it dead simple)\n6. **Objection handling** — Address top 3 concerns inline\n7. **Final CTA** — Restate the value prop, CTA button, urgency element if applicable\n\nWrite for scanners. Short paragraphs. Bold key phrases. Every section should be independently skimmable."
+  variables={[
+    { name: "landing page goal", placeholder: "drive demo requests" }
+  ]}
+/>
+
+### Email Sequence
+
+<PromptBlock
+  title="Campaign email sequence"
+  prompt="Using the campaign brief, write a [X]-email sequence for [audience segment]. Spacing: [frequency].\n\nFor each email:\n- Subject line (and one A/B alternative)\n- Preview text\n- Body copy (under 150 words)\n- CTA (single, clear action)\n- P.S. line (optional — use only if it adds value)\n\nSequence arc:\n- Email 1: Problem awareness (why this matters now)\n- Email 2: Solution introduction (what we built and why)\n- Email 3: Social proof (who's using it, what results)\n- Email 4: Objection handling (address the top concern)\n- Email 5: Final push (deadline, scarcity, or direct ask)\n\nTone: match the campaign brief. No hype. No 'Hey [First Name]!' openers."
+  variables={[
+    { name: "X", placeholder: "5" },
+    { name: "audience segment", placeholder: "existing customers who haven't tried the new feature" },
+    { name: "frequency", placeholder: "every 3 days" }
+  ]}
+/>
+
+### Social Media Posts
+
+<PromptBlock
+  title="Social campaign posts"
+  prompt="Using the campaign brief, create social media content for [platform].\n\nGenerate:\n- [X] organic posts (varied formats: insight, story, data point, hot take, question)\n- [Y] ad copy variations (for paid promotion)\n\nFor each organic post:\n- Hook (first line that stops the scroll)\n- Body (platform-appropriate length)\n- CTA (comment, share, click)\n- Suggested visual or media type\n\nFor each ad variation:\n- Primary text\n- Headline\n- Description\n- CTA button text\n- Target audience note (who should see this variation)\n\nAll content must reinforce the campaign's core message without sounding repetitive."
+  variables={[
+    { name: "platform", placeholder: "LinkedIn" },
+    { name: "X", placeholder: "8" },
+    { name: "Y", placeholder: "4" }
+  ]}
+/>
+
+### Blog / Content Marketing
+
+<PromptBlock
+  title="Supporting blog content"
+  prompt="Using the campaign brief, outline [X] blog posts that support the campaign. These should drive organic traffic and nurture prospects who aren't ready to convert yet.\n\nFor each post:\n1. Title (SEO-optimized, specific)\n2. Target keyword\n3. Angle (what makes this post different from the 50 others on this topic)\n4. Outline (5-7 sections with 1-2 sentence descriptions)\n5. Internal linking opportunity (which campaign asset does this post link to)\n6. CTA (how does this post feed into the campaign funnel)\n\nMix of content types: one how-to, one comparison, one thought leadership, one data-driven."
+  variables={[
+    { name: "X", placeholder: "4" }
+  ]}
+/>
+
+<BeforeAfter
+  before="Generate campaign assets: some emails, social posts, and a landing page for our new product launch."
+  after="Here's our campaign brief [paste full brief]. Using this as the single source of truth, generate all channel assets. Start with the landing page (hero through final CTA), then a 5-email sequence (problem → solution → proof → objection → close), then 8 LinkedIn posts (varied formats). Every piece should reinforce the core message: [one sentence]. Maintain consistent tone throughout."
+  explanation="The brief is the anchor. Without it, Claude generates each asset in isolation and the campaign feels fragmented. With it, every piece sounds like it came from the same team with the same strategy."
+/>
+
+## Campaign Consistency Check
+
+After generating all assets, use Claude to audit them against the brief.
+
+<PromptBlock
+  title="Campaign consistency audit"
+  prompt="Here are all the assets for our campaign:\n\n[Paste landing page, emails, social posts, ad copy]\n\nAudit for consistency against the campaign brief:\n\n1. **Message alignment** — Does every asset reinforce the core message? Flag any that drift.\n2. **Tone consistency** — Do all assets sound like the same brand? Flag outliers.\n3. **CTA coherence** — Do the CTAs guide the audience through a logical journey, or do they compete with each other?\n4. **Objection coverage** — Are all top objections addressed across the full campaign (not necessarily in every asset)?\n5. **Gap analysis** — Is anything missing? Any stage of the buyer journey not covered?\n\nGive me a red/yellow/green rating for each area with specific fixes for anything that's not green."
+  variables={[]}
+/>
+
+<ScenarioCard
+  scenario="You're launching a new feature next week. Marketing wants email, social, landing page, and a webinar slide deck. Everyone's working from different docs and the messaging is already inconsistent."
+  answer="Stop everything and build the brief first. Spend 30 minutes with Claude getting the brief right — core message, supporting points, tone, objection handling. Then generate all assets from that single conversation. Share the brief with everyone on the team so they can check their work against it. The brief is the alignment tool, not the assets."
+  prompt="We're launching in 7 days and our messaging is inconsistent across channels. I need to create a unified campaign brief and then generate ALL assets from it in one session. Here's what I know about the launch:\n\n[Paste product details, audience, goals]\n\nStep 1: Create the campaign brief.\nStep 2: Generate landing page copy.\nStep 3: Write 5-email launch sequence.\nStep 4: Create 10 social posts (LinkedIn + X).\nStep 5: Write webinar invite + follow-up sequence.\nStep 6: Audit everything for consistency.\n\nLet's start with Step 1."
+/>
+
+<TipCallout type="tip">
+Save your campaign brief as a document in a Claude Project. Then every new conversation in that Project has the brief as context. Your team can generate new assets, draft responses, or create variations — all aligned to the same source of truth.
+</TipCallout>
+
+## Post-Launch: Iteration Prompts
+
+<PromptBlock
+  title="Campaign performance iteration"
+  prompt="Here are the results from the first [X] days of our campaign:\n\n[Paste metrics: open rates, click rates, conversion rates, engagement by channel]\n\nOriginal brief: [paste or reference brief]\n\nAnalyze:\n1. Which messages resonated? Which fell flat? (Based on engagement data)\n2. Which channel is outperforming? Which is underperforming?\n3. Suggest 3 specific optimizations:\n   - One copy change (subject lines, headlines, or hooks that could improve)\n   - One audience/targeting adjustment\n   - One structural change (sequence timing, CTA placement, channel mix)\n\nFor each optimization, draft the revised asset so I can implement immediately."
+  variables={[
+    { name: "X", placeholder: "7" }
+  ]}
+/>
+
+<StepByStep
+  steps={[
+    { title: "Write the brief first", description: "Never generate assets without a brief. Even 15 minutes of brief-writing saves hours of revision later." },
+    { title: "Generate all assets in one conversation", description: "Keep everything in context. Claude will naturally maintain consistency when the brief and all previous assets are in the same conversation." },
+    { title: "Audit before publishing", description: "Use the consistency check prompt to catch drift before anything goes live." },
+    { title: "Iterate with data", description: "After launch, feed performance data back to Claude. It can suggest optimizations based on what's actually working." },
+    { title: "Save the brief in Projects", description: "Your campaign brief should live in a Project so every team member generates on-brief content by default." }
+  ]}
+/>

@@ -1,0 +1,197 @@
+---
+title: "The Non-Developer's Toolbox"
+description: "Complementary tools that work alongside Claude Code: Zapier, browser extensions, Coefficient, and when to use Code vs. CoWork vs. n8n vs. Clay."
+products: ["Code", "CoWork"]
+tier: "Operator"
+readTime: "11 min"
+---
+
+Claude Code is powerful, but it's not the only tool in the box. Some tasks are better handled by other tools — or by combining Claude Code with other tools for maximum effect. This guide helps you pick the right tool for each job.
+
+## The Decision Framework
+
+Before you build anything, ask these three questions:
+
+1. **Does this need to happen automatically, on a schedule, or based on a trigger?** (Zapier, n8n, or Claude Code with cron)
+2. **Does this need to pull live data from a spreadsheet?** (Coefficient.io)
+3. **Is this a one-time analysis or a recurring workflow?** (Claude Code for recurring, Chat for one-time)
+
+<ScenarioCard
+  scenario="A new lead fills out your website form. You want to: add them to your CRM, send them a welcome email, notify your sales team on Slack, and score the lead based on company size. Which tool?"
+  answer="Zapier or n8n. This is trigger-based automation (form submission triggers everything else). Claude Code could do it, but Zapier is purpose-built for trigger-based workflows and runs automatically without you initiating anything."
+  prompt="Compare Zapier and Claude Code for this workflow: form submission → CRM add → welcome email → Slack notification → lead scoring. Which tool is better for each step and why?"
+/>
+
+## When to Use Each Tool
+
+| Need | Best Tool | Why |
+|------|-----------|-----|
+| Trigger-based automation (when X happens, do Y) | Zapier / n8n | Built for event triggers, runs 24/7 |
+| One-time data analysis | Claude Chat | Quick, no setup needed |
+| Recurring reports from APIs | Claude Code | Flexible, connects to anything |
+| Live data in spreadsheets | Coefficient.io | Real-time sync to Google Sheets |
+| Lead enrichment at scale | Clay | Purpose-built, better data sources |
+| Team knowledge base + Q&A | Claude CoWork | Shared context, team access |
+| Complex multi-step workflows | Claude Code | Most flexible, handles any logic |
+| Simple if-this-then-that | Zapier | Fastest to set up, most reliable for simple flows |
+| Browser-based data extraction | Browser extensions | No API needed, works on any website |
+| Email automation sequences | Your email platform | ActiveCampaign, Kit, etc. — use their native automation |
+
+## Zapier: Your Trigger Engine
+
+Zapier shines when something needs to happen automatically in response to an event. Claude Code is great for on-demand work, but it doesn't sit there waiting for triggers.
+
+**Use Zapier for:**
+- New form submission → create CRM record → send email → notify Slack
+- New customer in Stripe → add to email list → assign to CS rep
+- New support ticket → categorize → route to the right person
+- Calendar event starting in 15 minutes → send prep document to Slack
+
+**Use Claude Code instead of Zapier when:**
+- You need complex data processing (Zapier's data transformation is limited)
+- You need to connect to an API that Zapier doesn't support
+- The workflow involves reading and writing files
+- You need analysis, not just data movement
+
+<PromptBlock
+  title="Determine Zapier vs. Claude Code"
+  prompt="I want to automate this workflow:\n\n[describe the workflow]\n\nBreak it down step by step and recommend for each step:\n1. Which tool should handle it (Zapier, Claude Code, email platform, CRM, or manual)\n2. Why that tool is the best fit\n3. How the tools connect (where does Zapier hand off to Claude Code, if anywhere)\n\nOptimize for reliability first, then ease of setup."
+/>
+
+### Zapier + Claude Code Together
+
+The power combo: Zapier handles the trigger and simple routing, then calls Claude Code (via webhook or file drop) for the complex work.
+
+<PromptBlock
+  title="Design a Zapier + Claude Code workflow"
+  prompt="I want to build a system where:\n- Trigger: [what triggers it]\n- Simple routing: [what Zapier handles]\n- Complex processing: [what Claude Code handles]\n- Output: [what the final result should be]\n\nDesign the architecture:\n1. What happens in Zapier (trigger, filters, basic actions)\n2. How Zapier sends data to Claude Code (webhook, file drop, or schedule)\n3. What Claude Code processes and outputs\n4. How the output gets back to the destination (Zapier picks it up, or Claude Code sends directly)\n\nKeep it as simple as possible — fewer steps = fewer failure points."
+  variables={[
+    { name: "what triggers it", placeholder: "new sales call transcript uploaded to Google Drive" },
+    { name: "what Zapier handles", placeholder: "detecting the new file and notifying the system" },
+    { name: "what Claude Code handles", placeholder: "analyzing the transcript, extracting key data, updating the CRM" },
+    { name: "what the final result should be", placeholder: "CRM updated with call notes, follow-up email drafted, Slack notification sent" }
+  ]}
+/>
+
+## n8n: The Open-Source Alternative
+
+If you're comfortable with slightly more complexity and want more control (or lower costs at scale), n8n is Zapier's open-source alternative. It runs on your own server, has no per-task pricing, and supports more complex logic.
+
+**Choose n8n over Zapier when:**
+- You're running hundreds or thousands of automations per month (Zapier gets expensive)
+- You need complex branching logic (if/then/else with multiple paths)
+- You want full control over your data (n8n runs on your infrastructure)
+- You need to connect to internal or custom APIs
+
+**Stick with Zapier when:**
+- You want zero server management
+- Your automations are simple (under 5 steps)
+- You want the easiest possible setup
+- You're running under 750 tasks/month (Zapier's free tier)
+
+## Coefficient.io: Live Data in Spreadsheets
+
+Coefficient connects your business tools directly to Google Sheets, keeping data automatically in sync. This is perfect when your team thinks in spreadsheets but needs live data.
+
+**Use Coefficient when:**
+- Your finance team wants Stripe data in a spreadsheet, updated automatically
+- You need a live CRM pipeline view in Google Sheets
+- Someone needs to do analysis in a spreadsheet with current data
+- You're building a dashboard for someone who lives in Google Sheets
+
+<PromptBlock
+  title="Evaluate Coefficient vs. Claude Code for reporting"
+  prompt="I need to set up recurring reporting. Compare two approaches:\n\nOption A: Coefficient.io syncing data to Google Sheets, with the team analyzing in Sheets\nOption B: Claude Code pulling data from APIs and generating HTML reports\n\nMy team: [describe their technical comfort level]\nReporting needs: [what reports, how often]\nWho uses the reports: [roles]\n\nRecommend the best approach for my situation and explain why."
+/>
+
+## Clay: Purpose-Built Lead Enrichment
+
+If you're enriching leads at scale — adding company info, finding contact details, scoring prospects — Clay is purpose-built for this and does it better than Claude Code.
+
+**Use Clay for:**
+- Enriching a list of 500+ leads with company data, tech stack, headcount
+- Finding email addresses for target accounts
+- Building prospect lists from scratch based on criteria
+- Scoring leads based on firmographic data
+
+**Use Claude Code instead of Clay when:**
+- You need custom enrichment logic (not just standard firmographic data)
+- You're processing under 50 leads (Clay's value is in volume)
+- You need to combine enrichment with analysis or content generation
+
+<PromptBlock
+  title="Lead enrichment tool selection"
+  prompt="I need to enrich [number] leads with company data, find decision-maker contacts, and score them based on our ICP criteria.\n\nOur ICP: [describe your ideal customer]\nData I already have: [what columns/fields I have]\nData I need: [what I want to add]\n\nShould I use Clay, Claude Code, or a combination? Consider cost, accuracy, and time."
+  variables={[
+    { name: "number", placeholder: "200" }
+  ]}
+/>
+
+## Browser Extensions for Data Collection
+
+Sometimes the data you need isn't available via API. Browser extensions can extract data from websites that Claude Code can then process.
+
+**Useful extensions:**
+- **Instant Data Scraper** — Extracts tables and lists from any web page into CSV
+- **Web Scraper** — More advanced scraping with click-through navigation
+- **Copy as Markdown** — Copies web page content in Claude-friendly format
+
+**The workflow:**
+1. Use the browser extension to extract the data
+2. Save as CSV or paste into Claude Code
+3. Let Claude Code analyze, process, and report
+
+<PromptBlock
+  title="Process scraped web data"
+  prompt="I scraped data from [source] using a browser extension. The CSV is at [file path]. This data contains:\n\n[describe what the data is]\n\nClean it up and analyze:\n1. Remove duplicates and formatting artifacts\n2. Standardize column formats\n3. [specific analysis you want]\n4. Generate a summary with the key findings\n5. Save the clean data to output/[filename].csv"
+  variables={[
+    { name: "source", placeholder: "G2 competitor review page" },
+    { name: "file path", placeholder: "~/Downloads/g2-reviews.csv" }
+  ]}
+/>
+
+## ClickUp and Trello Integrations
+
+Your project management tool should remain your project management tool. Don't try to replace it with Claude Code. Instead, use Claude Code to enhance it.
+
+<PromptBlock
+  title="Project management enhancement"
+  prompt="Connect to our [PM tool] and help me:\n\n1. Identify tasks that are blocked or at risk (overdue, no updates, unassigned)\n2. Generate a project status report summarizing: on track, at risk, blocked\n3. Suggest task priorities based on deadlines and dependencies\n4. Draft standup notes based on recent task activity\n\nOutput this as a Slack-ready message I can paste into our team channel."
+  variables={[{ name: "PM tool", placeholder: "ClickUp" }]}
+/>
+
+## The Stack Recommendation
+
+For most operators, here's the recommended stack:
+
+<StepByStep
+  steps={[
+    { title: "Claude Chat for thinking and writing", description: "Daily use. Strategy, content, email, analysis of uploaded documents. The workhorse." },
+    { title: "Claude Code for data and automation", description: "Weekly use. Reports, API connections, file processing, multi-step workflows. The power tool." },
+    { title: "Zapier for triggers", description: "Set and forget. Event-based automations that run without your input." },
+    { title: "Your existing tools for their strengths", description: "Email platform for email sequences. CRM for pipeline management. Spreadsheets for collaborative data. Don't replace what works — enhance it." }
+  ]}
+  title="The operator's AI stack"
+/>
+
+<BeforeAfter
+  before={{
+    content: "One tool for everything (and it does nothing well)."
+  }}
+  after={{
+    content: "The right tool for each job: Claude Chat for thinking, Claude Code for building, Zapier for triggers, and your existing tools for what they do best. Claude connects them all."
+  }}
+  annotation="The goal isn't to replace your tools with AI. It's to make your existing tools work together through AI."
+/>
+
+<TipCallout type="tip">
+Don't over-automate. If a task takes 5 minutes and you do it twice a month, the setup time for automation isn't worth it. Automate the things that take 30+ minutes or that you do daily/weekly. Everything else, just use Claude Chat.
+</TipCallout>
+
+## Common Mistakes
+
+**Don't build a Rube Goldberg machine.** If your automation has 12 steps across 4 tools, it will break constantly. Simpler systems are more reliable. Ask yourself: "Can I do this in fewer steps?"
+
+**Don't duplicate functionality.** If your email platform already has good automation, don't rebuild it in Zapier or Claude Code. Use Claude Code for the things your other tools CAN'T do.
+
+**Don't buy tools you don't need yet.** Start with Claude Chat + Code. Add Zapier when you have trigger-based needs. Add Coefficient or Clay when you have specific, high-volume needs. Most operators don't need all of these.

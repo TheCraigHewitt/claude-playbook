@@ -1,0 +1,149 @@
+---
+title: "Project Management with AI"
+description: "Call transcripts to automatic Trello and ClickUp updates."
+products: ["Code"]
+tier: "Power User"
+readTime: "12 min"
+---
+
+Project managers spend more time updating tools than managing projects. After every meeting, they manually create tasks in Trello or ClickUp, assign owners, set due dates, and update statuses. Claude Code automates the grunt work: it reads a call transcript or meeting notes and makes the updates directly through API calls.
+
+A real example: one operations manager processes a single client call transcript and Claude Code makes 9 parallel API calls — creating tasks, updating statuses, assigning owners, and posting comments — all from one conversation.
+
+## How It Works
+
+<StepByStep
+  steps={[
+    { title: "Connect your project management tool", description: "Set up API access to Trello, ClickUp, Asana, Linear, or Monday. Claude Code works with any tool that has an API." },
+    { title: "Define your project structure", description: "Tell Claude Code how your boards, lists, and projects are organized. This is a one-time setup." },
+    { title: "Feed it meeting content", description: "Paste a call transcript, meeting notes, or even a voice memo transcript. Claude extracts the action items." },
+    { title: "Review and confirm", description: "Claude shows you the proposed updates before making them. You approve, adjust, or reject." },
+    { title: "Claude makes the API calls", description: "Tasks created, statuses updated, comments added, owners assigned — all in seconds." }
+  ]}
+/>
+
+## Setting Up the Connection
+
+### Trello
+
+<PromptBlock
+  title="Connect to Trello"
+  prompt="I want to connect to our Trello workspace so you can create and update cards from meeting notes.\n\nMy Trello API key is in TRELLO_API_KEY and my token is in TRELLO_TOKEN.\n\nFirst, list all my Trello boards so I can tell you which ones to work with.\n\nThen, for my main project board [board name]:\n1. List all lists (columns) and their IDs\n2. Show me the current card count per list\n3. List all labels/tags available\n4. List all team members with access\n\nSave this as our Trello configuration so you can reference it in future conversations."
+  variables={[
+    { name: "board name", placeholder: "Q2 Product Roadmap" }
+  ]}
+/>
+
+### ClickUp
+
+<PromptBlock
+  title="Connect to ClickUp"
+  prompt="I want to connect to our ClickUp workspace for automated task management.\n\nMy ClickUp API token is in CLICKUP_API_TOKEN.\n\nFirst, show me our workspace structure:\n1. List all Spaces\n2. For each Space, list all Folders and Lists\n3. Show me the custom fields configured on our main project list\n4. List team members and their ClickUp user IDs\n\nFocus on the [project name] project — that's where most of our meeting action items will go.\n\nSave this configuration so you can create tasks, update statuses, and assign owners without me re-explaining the structure every time."
+  variables={[
+    { name: "project name", placeholder: "Client Delivery" }
+  ]}
+/>
+
+<TipCallout type="warning">
+Use API tokens with appropriate permissions. For most project management workflows, you need: create tasks, update tasks, add comments, and assign members. You don't need delete permissions — and you shouldn't grant them. If Claude needs to remove something, it should flag it for you to handle manually.
+</TipCallout>
+
+## Meeting Notes to Task Updates
+
+This is the core workflow. After any meeting, paste the content and let Claude do the PM work.
+
+<PromptBlock
+  title="Meeting transcript to project management updates"
+  prompt="Here are notes from our [meeting type] meeting. Extract action items and update our [tool name] board.\n\nMEETING: [meeting name or type]\nDATE: [date]\nATTENDEES: [who was there]\n\nNOTES/TRANSCRIPT:\n[Paste the full meeting notes or call transcript here]\n\nProcess this meeting:\n\n1. EXTRACT ACTION ITEMS\nFor each action item found:\n- Task description (clear, actionable — starts with a verb)\n- Owner (map to a team member based on who committed or was assigned)\n- Due date (based on what was discussed — if no date was mentioned, suggest one)\n- Priority (based on context: urgent, high, medium, low)\n- Related tasks (link to existing tasks if this updates or depends on something)\n\n2. STATUS UPDATES\nFor any existing tasks that were discussed:\n- What's the new status?\n- Any new information to add as a comment?\n- Do any due dates need adjusting?\n\n3. DECISIONS MADE\n- Log any decisions as comments on relevant tasks\n- If a decision changes the scope of an existing task, flag it\n\n4. BLOCKERS\n- Did anyone mention being blocked? Create a task for the blocker resolution.\n\nShow me the proposed updates before making any API calls. I want to confirm."
+  variables={[
+    { name: "meeting type", placeholder: "weekly sprint planning" },
+    { name: "tool name", placeholder: "ClickUp" },
+    { name: "meeting name or type", placeholder: "Weekly Sprint Planning" },
+    { name: "date", placeholder: "March 10, 2026" },
+    { name: "who was there", placeholder: "Sarah (PM), Mike (Engineering), Lisa (Design), Tom (Backend), Dana (QA)" }
+  ]}
+/>
+
+<RealWorldProof
+  quote="After our client strategy call, I pasted the transcript into Claude Code. It created 4 new tasks in ClickUp, updated the status on 3 existing tasks, added comments with key decisions to 2 cards, and assigned everything to the right people. 9 API calls, all in about 15 seconds. Used to take me 20 minutes of clicking around in ClickUp."
+  author="Operations Manager, Digital Agency"
+  context="Managing 6 active client projects across a team of 12"
+/>
+
+## The 9-API-Call Example
+
+Here's what a real session looks like — one transcript generating multiple coordinated updates:
+
+<BeforeAfter
+  before={{ label: "What the PM used to do after a meeting", content: "1. Open ClickUp (2 min)\n2. Create 'Update onboarding flow wireframes' task → assign to Lisa → due Friday (3 min)\n3. Create 'Fix payment retry logic' task → assign to Tom → due Thursday (3 min)\n4. Create 'Write API docs for webhook endpoint' task → assign to Mike → due next Monday (3 min)\n5. Create 'QA regression test sprint 14 features' task → assign to Dana → due next Wednesday (3 min)\n6. Update 'Homepage redesign' status from In Progress to Review (1 min)\n7. Update 'Checkout flow v2' due date from March 15 → March 20 (1 min)\n8. Add comment to 'Mobile nav' task: 'Client approved mockup B in today's call' (2 min)\n9. Add comment to 'Onboarding email sequence' task: 'Deprioritized — revisit in Sprint 16' (2 min)\n\nTotal: ~20 minutes of clicking and typing" }}
+  after={{ label: "What Claude Code does", content: "PM pastes transcript → Claude extracts 9 actions → PM reviews and says 'looks good' → Claude executes all 9 API calls.\n\nTotal: ~2 minutes including review" }}
+  annotation="Same updates, same accuracy. The PM's time goes from updating tools to actually managing the project — talking to stakeholders, unblocking the team, thinking about what's next."
+/>
+
+## Client Call Processing
+
+For agencies and professional services firms: process client calls into both internal tasks and client-facing updates.
+
+<PromptBlock
+  title="Client call to internal tasks and client update"
+  prompt="Here's the transcript from our client call with [client name]. Process this into both internal actions and a client follow-up.\n\nTRANSCRIPT:\n[Paste transcript]\n\nGenerate two outputs:\n\n1. INTERNAL (update our project board):\n- New tasks with owners and deadlines\n- Status changes on existing tasks\n- Any scope changes or new requirements to flag\n- Updated timeline if the conversation changed our delivery dates\n\n2. CLIENT-FACING (follow-up email draft):\n- Thank them for the call\n- Summarize key decisions made\n- List action items and who owns them (both our items and theirs)\n- Confirm next meeting date and agenda\n- Flag any open questions that need their input before we can proceed\n\nFor the internal tasks, map to our [tool name] board structure. For the client email, keep it professional but warm — [email tone]."
+  variables={[
+    { name: "client name", placeholder: "Acme Corp" },
+    { name: "tool name", placeholder: "ClickUp" },
+    { name: "email tone", placeholder: "friendly and direct, not overly formal" }
+  ]}
+/>
+
+## Standup Automation
+
+Daily standups often result in updates that never make it into the project tool.
+
+<PromptBlock
+  title="Standup notes to task updates"
+  prompt="Here are today's standup notes from the team. Update our [tool name] board accordingly.\n\nSTANDUP NOTES:\n[Paste standup notes — can be rough, bullet points from Slack, or a meeting transcript]\n\nFor each person's update:\n1. What they completed → move those tasks to 'Done' (or appropriate status)\n2. What they're working on → update task status to 'In Progress' and add any context as a comment\n3. What's blocked → flag the blocker, create a resolution task if one doesn't exist, and tag the person who can unblock\n\nAlso:\n- Flag any tasks that should have been mentioned but weren't (compare active assigned tasks to what was reported)\n- Calculate: are we on track for our sprint goal based on what's done vs. what's left?\n- Note any dependencies between team members' work that might cause issues"
+  variables={[
+    { name: "tool name", placeholder: "Trello" }
+  ]}
+/>
+
+## Building Slash Commands for Recurring Workflows
+
+Save time by creating Claude Code Skills for your most common PM tasks.
+
+<PromptBlock
+  title="Create PM automation skills"
+  prompt="Create Claude Code skills for our most common project management workflows:\n\n1. /meeting-to-tasks\nInput: meeting transcript or notes\nAction: extract action items, create tasks in [tool], assign owners, set dates\nOutput: summary of all changes made\n\n2. /standup-update\nInput: standup notes from Slack or meeting\nAction: update task statuses, flag blockers, calculate sprint progress\nOutput: sprint health summary\n\n3. /weekly-report\nInput: none (pulls from the tool's API)\nAction: generate a weekly progress report\nOutput: completed tasks, in-progress tasks, blockers, timeline status, risks\n\n4. /client-update [client name]\nInput: client name\nAction: pull all tasks related to that client, generate a status update\nOutput: client-facing progress report formatted for email\n\n5. /sprint-plan\nInput: list of items to plan\nAction: create tasks, estimate effort, assign based on team capacity, set sprint dates\nOutput: sprint board ready to execute\n\nSave these to .claude/commands/ with clear instructions and our tool configuration baked in."
+  variables={[
+    { name: "tool", placeholder: "ClickUp" }
+  ]}
+/>
+
+## Multi-Tool Orchestration
+
+Real project management spans multiple tools. Claude Code can update several at once.
+
+<PromptBlock
+  title="Multi-tool project update"
+  prompt="After this meeting, I need updates across multiple tools. Here are the notes:\n\n[Paste meeting notes]\n\nUpdate the following:\n\n1. [PM tool]: Create tasks, update statuses (use [PM env var])\n2. SLACK: Post a summary to [channel name] with the key decisions and action items\n3. GOOGLE DOCS: Create a meeting notes document in [folder] with the structured notes\n4. CALENDAR: [If applicable] Schedule any follow-up meetings mentioned\n\nCoordinate these updates:\n- Task references in the Slack message should link to the actual [PM tool] tasks\n- The Google Doc should reference the task IDs for traceability\n- Show me everything before executing so I can confirm"
+  variables={[
+    { name: "PM tool", placeholder: "ClickUp" },
+    { name: "PM env var", placeholder: "CLICKUP_API_TOKEN" },
+    { name: "channel name", placeholder: "#project-alpha" },
+    { name: "folder", placeholder: "Project Alpha/Meeting Notes" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="You're on a call and need to create a task in real time, not after the meeting."
+  answer="Keep a Claude Code session open during the meeting. Type quick one-liners like 'Create task: Update pricing page, assign Sarah, due Friday, high priority.' Claude creates it immediately via API. No switching to your PM tool, no losing track of the conversation. You're taking notes and creating tasks simultaneously."
+  prompt="Quick task: Create a [priority] priority task in [tool]: '[task description]', assign to [person], due [date]. Add context: '[any notes from the conversation]'."
+/>
+
+<ScenarioCard
+  scenario="Your team uses Trello and your client uses Asana. You need to keep both in sync."
+  answer="Claude Code can write to both APIs in the same session. Create a skill that takes a task update and writes it to both tools. Shared tasks get a tag or label in both tools so Claude knows which ones to sync. It's not real-time sync (that would require a running service), but after every meeting you can run the sync command and both tools stay current."
+/>
+
+<TipCallout type="note">
+Start with one workflow: meeting notes to task creation. Get that working reliably before adding standup automation, sprint planning, or multi-tool orchestration. Each additional workflow is easy to add once the foundation is solid — but trying to automate everything at once leads to a fragile setup nobody trusts.
+</TipCallout>

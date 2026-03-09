@@ -1,0 +1,342 @@
+---
+title: "The Content Operations Engine"
+description: "17 commands, 34+ context files — a complete content ops system built by a non-developer."
+products: ["Code"]
+tier: "Operator"
+readTime: "20 min"
+---
+
+This is a real Claude Code setup built by a founder with zero engineering background. It powers a complete content operations system: three platforms, seventeen commands, and over thirty context files.
+
+Every detail here is real. The names and specifics have been changed, but the structure, patterns, and workflows are exactly as built.
+
+## The Overview
+
+| Metric | Value |
+|--------|-------|
+| Commands | 17 |
+| Context files | 34+ |
+| Generated outputs | 67+ |
+| Decision journal entries | 7 |
+| Content platforms automated | 3 |
+| Lines of code written by the founder | 0 |
+
+## How It's Organized
+
+The system lives in a single Git repository with this structure:
+
+```
+├── CLAUDE.md          (Master briefing document - 300+ lines)
+├── .claude/
+│   └── commands/      (17 slash commands)
+├── context/
+│   ├── 00-quick-reference.md
+│   ├── 01-bio.md
+│   ├── 02-positioning.md
+│   ├── 03-ideal-customer.md
+│   ├── 04-offers-pricing.md
+│   ├── 05-frameworks.md
+│   ├── 06-competitors.md
+│   ├── 07-content-strategy.md
+│   ├── 08-voice-style-guide.md
+│   ├── 09-roadmap.md
+│   └── decisions/    (Decision journal entries)
+├── output/            (Generated content)
+└── deliverables/      (Client materials)
+```
+
+<TipCallout type="note">
+Notice the numbered context files (00-09). This is a deliberate pattern: quick lookup, medium detail, full deep dive. Claude loads only what it needs for each task.
+</TipCallout>
+
+## The CLAUDE.md: The Master Briefing
+
+This is the most important file. At 300+ lines, it gives Claude complete business context that loads automatically for every session.
+
+What it includes:
+
+- **Repository structure** — Where everything lives and what it does
+- **Command reference** — Quick table of all 17 commands with purposes
+- **Business identity** — One-liner, positioning, target audience
+- **Revenue model** — Current vs. target, all revenue streams
+- **Content strategy** — Platforms, frequency, content mix percentages
+- **Core frameworks** — Three named frameworks used across all content
+- **Voice guide** — How to sound, phrases to use, phrases to avoid
+- **Key beliefs** — Quotes and principles that should inform content
+- **Success metrics** — What to optimize for
+
+<RealWorldProof
+  quote="Treat CLAUDE.md like an onboarding doc for a new hire — you write it completely differently when you think of it that way."
+  author="@bpizzacalla"
+  context="Builder who shipped a full agentic sales platform with zero engineering background"
+/>
+
+### What Makes This CLAUDE.md Work
+
+**1. It's a briefing, not a config file.** Written in natural language, not code syntax. It reads like a strategy memo, not a settings page.
+
+**2. It has a clear hierarchy.** Quick reference at the top, deep context linked below. Claude can skim the top for most tasks and dive deep when needed.
+
+**3. It defines guardrails.** One line that transforms output quality: "Before generating content, ask 2-3 clarifying questions about the specific angle, constraints, and reference examples — don't assume and generate."
+
+**4. It references context files.** Instead of cramming 10,000 words into one file, it says: "For deeper context, reference: `context/08-voice-style-guide.md`." Claude loads these on demand.
+
+**5. It includes anti-patterns.** What NOT to do is as important as what to do:
+
+```markdown
+### What I Avoid
+- "Crushing it" / "killing it" / "game-changer"
+- "10x your results" / "secret sauce"
+- Guru persona, hype without substance
+- Hedging ("I think maybe perhaps")
+- Corporate jargon ("leverage," "synergy")
+```
+
+**6. It prevents scope creep.** A specific guardrail: "If a new product idea comes up, treat it as a video topic, not a business." This stops Claude from spinning up business plans every time a shiny idea surfaces.
+
+## The Command System
+
+Each command is a markdown file in `.claude/commands/` that defines a multi-step workflow. Commands aren't prompts — they're processes.
+
+### Command Pattern: Multi-Step with Context Loading
+
+Every command follows this pattern:
+
+1. **Read context files** — Load the relevant background before starting
+2. **Ask clarifying questions** — Don't assume, ask
+3. **Execute the workflow** — Step-by-step process
+4. **Output to a consistent location** — All output goes to `output/`
+
+### Example: The YouTube Idea Command
+
+This command scores video ideas against a rubric, suggests titles using proven formulas, and generates thumbnail concepts.
+
+**What it does:**
+1. Reads the ideation rubric (scoring criteria, title formulas, hook patterns)
+2. Reads the content strategy (pillars, mix targets)
+3. Reads the audience profile (language, pain points)
+4. Either takes a rough idea and runs a 7-step refinement workflow, or generates 5-7 fresh ideas in batch mode
+5. Scores each idea on 5 dimensions (1-5 per dimension, 25 total)
+6. Generates 5 title options using different archetypes (curiosity gap, emotional, number-driven, contrarian, search-optimized)
+7. Creates 2-3 thumbnail concepts with visual descriptions
+8. Writes 3 hook options (first 30 seconds of the video)
+9. Recommends the best combination and gives a go/no-go assessment
+
+**Why it works:** Every video idea gets the same rigorous evaluation. No more gut-check decisions on what to film. The scoring rubric surfaces weak ideas before they waste production time.
+
+<ScenarioCard
+  scenario="You have a vague video idea — 'something about AI agents for business' — and need to know if it's worth filming."
+  answer="Run the idea through a scoring rubric. Rate it on audience fit, unique angle, proof available, emotional pull, and clarity. If it scores below 15/25, refine the angle or kill it. If above 20/25, you have a strong concept. The rubric replaces gut instinct with systematic evaluation."
+  prompt="/youtube-idea AI agents are changing how businesses operate — something about how CEOs should think about deploying agents on their teams"
+/>
+
+### Example: The Repurpose Command
+
+Takes one piece of content and creates versions for multiple platforms. This is the highest-ROI command in the system.
+
+**Input:** A YouTube script file from `output/`
+
+**Output (one command, five files):**
+1. Substack post (600-1,000 words, more reflective tone)
+2. Five standalone social notes (under 280 characters each)
+3. LinkedIn post (150-300 words, heavy line breaks)
+4. Short-form video script (under 60 seconds)
+5. LinkedIn article (optional, only for deep content)
+
+Each output follows platform-specific formatting rules baked into the skill. Substack gets longer paragraphs and a more personal tone. LinkedIn gets extreme line breaks and a scroll-stopping hook. Social notes are standalone — no context required.
+
+**Time savings:** What used to take 3-4 hours of manual repurposing now takes approximately 20 minutes of review and editing.
+
+### Example: Multi-Mode Commands
+
+Some commands have multiple modes triggered by different inputs:
+
+**Meeting Prep:** `/meeting-prep advisory` vs `/meeting-prep investor` vs `/meeting-prep followup`
+
+Same command, different workflows depending on the meeting type:
+- Advisory mode generates an agenda, talking points, and framework reminders
+- Investor mode generates a conversation brief, anticipated questions, and red lines
+- Follow-up mode extracts action items, drafts emails, and flags decisions for logging
+
+This eliminates the need for separate commands for each variation while keeping all meeting-related context in one place.
+
+### Example: The Email Sequence Builder
+
+The `/email-sequence` command generates multi-email automations for marketing funnels:
+
+**Input:** The goal of the sequence, the audience, and the trigger
+
+**Output:** A complete sequence with:
+- Subject lines for each email
+- Full email body following a specific formatting guide (short paragraphs, conversational, no walls of text)
+- CTA for each email
+- Timing between sends
+- Segmentation logic
+
+The skill loads a dedicated email style guide (`context/email-style-guide.md`) and annotated examples (`context/email-examples.md`) before generating. This ensures every email matches the founder's voice, not generic marketing copy.
+
+<MiniQuiz
+  question="What makes a content operations system like this actually effective?"
+  options={[
+    { label: "Having a large number of commands available", correct: false, explanation: "More commands don't equal a better system. This system started with just 2 commands and grew over months. The number of commands is a result of effectiveness, not the cause." },
+    { label: "The context architecture that gives Claude deep business knowledge", correct: true, explanation: "The layered context files — from quick reference to deep strategy docs — are what transform generic AI output into content that matches the founder's voice, audience, and strategy. Commands are just workflows; context is what makes the output good." },
+    { label: "Using the most advanced automation tools", correct: false, explanation: "This entire system was built with zero lines of code by a non-technical founder. The tools are simple — markdown files and a folder structure. The power comes from well-structured context, not sophisticated tooling." },
+    { label: "Always using the latest AI model", correct: false, explanation: "The model matters less than the context it's given. A great model with no business context produces generic output. A good model with rich context produces output that sounds like the founder." }
+  ]}
+/>
+
+## The Content Pipeline
+
+The system automates a three-platform content pipeline:
+
+```
+YouTube Script (primary creation)
+      ↓
+Substack Post (repurposed via /repurpose command)
+      ↓
+5 Social Notes (daily distribution, standalone)
+      ↓
+LinkedIn Post (extracted key insight)
+      ↓
+Email Newsletter (weekly compilation via /newsletter)
+```
+
+The founder creates one thing: a YouTube video. Everything else is derived from that through the command system.
+
+### The Weekly Rhythm
+
+| Day | Activity | Commands Used |
+|-----|----------|--------------|
+| Monday | Batch ideation for the week | `/youtube-idea` (batch mode) |
+| Tuesday | Script video #1 | `/youtube-script` |
+| Wednesday | Repurpose video #1, script video #2 | `/repurpose`, `/youtube-script` |
+| Thursday | Repurpose video #2, script video #3 | `/repurpose`, `/youtube-script` |
+| Friday | Compile newsletter, repurpose video #3 | `/newsletter`, `/repurpose` |
+
+Three to four videos per week, fully repurposed across three platforms, with a weekly newsletter — all powered by the same system.
+
+## Decision Journals
+
+The `/decision-journal` command captures structured decisions with three modes:
+
+**Log mode** walks the founder through a conversation:
+- What's the decision?
+- What triggered it?
+- What options did you consider?
+- What did you decide and why?
+- What do you expect to happen?
+- When should we revisit?
+
+**Update mode** revisits past decisions:
+- What actually happened?
+- Did the expected outcome match reality?
+- What did you learn?
+
+**Review mode** analyzes all past decisions for patterns:
+- What types of decisions come up most?
+- Bias detection (risk tolerance, sunk cost, status quo)
+- Prediction accuracy (expected vs. actual outcomes)
+- Overdue reviews
+
+Over time, this creates a searchable history of business decisions with outcomes. Claude references past decisions when helping with new ones — "Last time you faced a similar situation, you chose X and the result was Y."
+
+<TipCallout type="tip">
+You don't need dozens of logged decisions for this to be useful. After five entries, Claude starts surfacing relevant patterns. After ten, it's genuinely insightful.
+</TipCallout>
+
+## The Context Architecture
+
+The context files follow a layered design:
+
+### Layer 1: Quick Reference (00)
+
+A single file with the most-accessed facts: current metrics, key dates, active priorities. Updated weekly. Most commands read this file first.
+
+### Layer 2: Core Identity (01-04)
+
+Who the founder is, how they're positioned, who their customer is, what they sell. Updated monthly or when strategy shifts.
+
+### Layer 3: Strategy & Methodology (05-09)
+
+Frameworks, competitors, content strategy, voice guide, roadmap. Updated quarterly or as needed.
+
+### Layer 4: Deep Reference
+
+Specialized files loaded only by specific commands:
+- Email style guide (loaded by `/email-sequence` and `/newsletter`)
+- YouTube ideation rubric (loaded by `/youtube-idea`)
+- Offer details (loaded by `/meeting-prep advisory` and `/consulting-deliverable`)
+
+### Layer 5: Decisions
+
+Individual files in `context/decisions/`, one per decision. Loaded by `/decision-journal` and referenced by strategic commands.
+
+This architecture means a simple content command loads 2-3 files, while a strategic planning session might load 6-8. No command loads everything — that would waste context window on irrelevant information.
+
+## Key Patterns You Can Steal
+
+### 1. Numbered Context Files
+
+Layer your context from quick lookup (00) to deep detail (09). This creates a natural hierarchy that keeps working sets lean.
+
+### 2. Commands as Workflows, Not Prompts
+
+A prompt says "write a blog post." A command says "read the voice guide, then read the content strategy, then ask 2 clarifying questions, then generate a draft following this structure, then save to output/." The difference in output quality is dramatic.
+
+### 3. Multi-Mode Commands
+
+One command file, multiple workflows triggered by input. Meeting prep doesn't need four separate commands. It needs one command with four modes.
+
+### 4. Decision Journals
+
+Structured capture enables pattern detection over time. This is institutional memory that compounds with every decision logged.
+
+### 5. Output Directory Convention
+
+All generated content goes to one place: `output/`. Consistent naming: `output/[type]-[slug].md`. Easy to find, easy to reference, easy to chain into the next command.
+
+### 6. Guardrails in CLAUDE.md
+
+"Ask questions first" prevents generic output. "Treat new ideas as video topics, not businesses" prevents scope creep. Anti-patterns ("don't use these phrases") prevent voice drift.
+
+### 7. Framework References
+
+Named frameworks used consistently across all content types give the founder's content a coherent intellectual backbone. Every video, post, and email can reference the same frameworks, creating a recognizable brand language.
+
+## Getting Started: Minimum Viable System
+
+You don't need 17 commands to start. Here's the minimum viable version of this system:
+
+<StepByStep
+  steps={[
+    { title: "Create CLAUDE.md", description: "Write a 50-100 line briefing document with your business context, voice, and key information. Include a command reference table even if it only has 1-2 entries." },
+    { title: "Create one context file", description: "Your most-referenced document. The voice and style guide is usually the highest-value starting point — it immediately improves every piece of content Claude produces." },
+    { title: "Build your first command", description: "Pick your most repetitive content task and turn it into a multi-step command. If you create content, start with your primary format (blog post, video script, newsletter)." },
+    { title: "Build the repurpose command", description: "If you publish on multiple platforms, a repurpose command is the highest-ROI second command. One input, multiple outputs." },
+    { title: "Create an output folder", description: "All generated content goes to output/. Use consistent naming from day one." },
+    { title: "Iterate daily", description: "Use the system every day. Add context files and commands as you discover patterns. The system grows to fit your workflow, not the other way around." }
+  ]}
+/>
+
+The system you see in this case study wasn't built in a day. It evolved over months of daily use. Each command was born from a real need, not a planning session. Start small, build what you need, and let it grow.
+
+<TipCallout type="warning">
+The biggest mistake in building a system like this: trying to build it all at once. Start with CLAUDE.md and two commands. Use them daily for two weeks. Then add what's missing. Repeat. The best systems are grown, not designed.
+</TipCallout>
+
+## What This System Doesn't Do
+
+For perspective, here's what's NOT in the system:
+
+- **No scheduling automation** — Content is generated, but publishing is still manual
+- **No analytics integration** — No automatic performance tracking (yet)
+- **No approval workflows** — Single operator, no team review process needed
+- **No AI-generated images** — Image prompts are generated, but images are created separately
+
+These aren't gaps — they're intentional boundaries. The system does what delivers the most value for the least complexity. Everything else is deferred until it's genuinely needed.
+
+## The Takeaway
+
+This system exists because one non-technical founder asked: "What if I treated Claude Code like a new hire and gave it a proper onboarding?"
+
+The answer is 17 commands, 34+ context files, and a content operation that runs across three platforms with approximately 20 minutes of editing per video. No code. No engineering. Just well-structured instructions and a willingness to iterate.

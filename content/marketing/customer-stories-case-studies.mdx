@@ -1,0 +1,135 @@
+---
+title: "Customer Stories and Case Studies"
+description: "Turn interview notes, data, and raw feedback into compelling case studies that drive sales."
+products: ["Chat"]
+tier: "Starter"
+readTime: "11 min"
+---
+
+Case studies are your most underrated sales asset. A well-written customer story does more to close deals than any product demo. But most companies don't have enough of them — because turning a customer interview into a polished case study takes time. Claude compresses that process from days to hours.
+
+## The Case Study Pipeline
+
+Every case study follows the same path:
+
+1. **Interview** — You talk to the customer (30-45 minutes)
+2. **Raw notes** — Transcript or detailed notes from the call
+3. **Draft** — Structured narrative with data and quotes
+4. **Review** — Customer approves the story and data
+5. **Publish** — Full case study, summary version, and sales snippets
+
+Claude handles steps 3 and 5. You handle 1, 2, and 4. The process that used to take a week now takes an afternoon.
+
+## From Interview Notes to Draft
+
+<PromptBlock
+  title="Case study from interview notes"
+  prompt="Write a customer case study from these interview notes/transcript. Customer: [company name], [industry], [size].\n\nInterview notes:\n[Paste transcript or detailed notes]\n\nStructure:\n1. **Headline** — Results-focused, specific. Format: 'How [Company] [achieved result] with [product/approach]'\n2. **Snapshot** — Company name, industry, size, product used, key metric (sidebar or callout box)\n3. **The Challenge** — What was broken before? Use the customer's own words. Make the reader feel the pain.\n4. **Why They Chose Us** — What alternatives did they consider? Why us specifically? (This is where competitors lose.)\n5. **The Solution** — What we implemented, specifically. Keep it concrete — features and workflows, not marketing language.\n6. **The Results** — Hard numbers wherever possible. Before/after. Timeframe to results.\n7. **What's Next** — How they plan to expand usage. Forward-looking.\n8. **Pull Quote** — One powerful quote from the customer that captures the transformation. This should work as a standalone testimonial.\n\nTone: let the customer be the hero. This is their story — we're the supporting character.\nLength: 800-1,200 words."
+  variables={[
+    { name: "company name", placeholder: "Meridian Health Systems" },
+    { name: "industry", placeholder: "Healthcare SaaS" },
+    { name: "size", placeholder: "120 employees, $8M ARR" }
+  ]}
+/>
+
+<BeforeAfter
+  before="Meridian Health Systems is a healthcare SaaS company that was looking for a solution to improve their sales process. They evaluated several options and chose our platform. After implementation, they saw great results and would recommend us to others."
+  after="Meridian's sales reps were spending 3 hours per day on manual data entry — leaving barely 2 hours for actual selling. Their VP of Sales, Rachel Torres, put it bluntly: 'We were paying senior reps $150K to be typists.' Within 6 weeks of deployment, data entry dropped to 20 minutes per day. Pipeline velocity doubled."
+  explanation="Case studies live or die on specificity. Vague claims ('great results') don't convince anyone. Specific numbers ($150K reps doing data entry, 3 hours to 20 minutes) tell a story that prospects see themselves in."
+/>
+
+## Interview Question Template
+
+Not sure what to ask in the customer interview? Use Claude to prepare.
+
+<PromptBlock
+  title="Case study interview questions"
+  prompt="Generate interview questions for a customer case study. The customer is [company], a [description]. They've been using our [product/feature] for [timeframe].\n\nI need questions that will give me:\n1. Quotable moments (emotional, specific, memorable)\n2. Hard data (before/after metrics, time saved, revenue impact)\n3. The buying journey (why us, what else they considered)\n4. Objections they overcame (their own or internal stakeholders')\n5. Unexpected benefits (things they didn't expect but now love)\n\nRules:\n- Open-ended questions only (nothing answerable with yes/no)\n- Include 'tell me about a specific time when...' questions (these produce the best stories)\n- Include one 'what would you tell someone considering this?' question\n- Group questions by section, not in a flat list\n- Include follow-up probes for shallow answers\n\n15-20 questions total. Flag the 5 most important ones (if time is short)."
+  variables={[
+    { name: "company", placeholder: "an e-commerce company doing $12M/year" },
+    { name: "description", placeholder: "mid-market DTC brand" },
+    { name: "product/feature", placeholder: "AI-powered customer support automation" },
+    { name: "timeframe", placeholder: "6 months" }
+  ]}
+/>
+
+## Multiple Formats from One Interview
+
+A single customer interview should produce 5+ assets. Here's how to extract everything.
+
+### Short-Form Case Study
+
+<PromptBlock
+  title="One-page case study summary"
+  prompt="Compress this full case study into a one-page summary (250-300 words) for [use case — e.g., website, sales deck, email signature].\n\nFormat:\n- Headline (results-focused, under 10 words)\n- 3-sentence challenge summary\n- 3-sentence solution summary\n- Key metrics (3 bullet points, numbers only)\n- One pull quote\n- CTA\n\n[Paste full case study]"
+  variables={[
+    { name: "use case — e.g., website, sales deck, email signature", placeholder: "the website case studies page" }
+  ]}
+/>
+
+### Sales Enablement Snippets
+
+<PromptBlock
+  title="Sales-ready case study snippets"
+  prompt="From this case study, extract sales enablement assets:\n\n1. **Email snippet** — 2-3 sentences a sales rep can paste into a prospecting email. Must include a specific result.\n2. **Objection handler** — For each common objection below, write a response using this customer's story as proof:\n   - [Objection 1]\n   - [Objection 2]\n   - [Objection 3]\n3. **Discovery call reference** — A 30-second verbal version a rep can share on a discovery call ('One of our customers, similar to you...')\n4. **Proposal insert** — A formatted case study summary for including in proposals (company, challenge, solution, results — 100 words)\n5. **Social proof slide** — Content for a single slide in a sales deck (logo, headline metric, one quote)\n\n[Paste full case study]"
+  variables={[
+    { name: "Objection 1", placeholder: "We're worried about implementation time" },
+    { name: "Objection 2", placeholder: "Our team won't adopt another tool" },
+    { name: "Objection 3", placeholder: "We've tried similar solutions before" }
+  ]}
+/>
+
+### Social Media Version
+
+<PromptBlock
+  title="Case study social posts"
+  prompt="Turn this case study into social media content:\n\n1. **LinkedIn post** — Tell the customer's story in 200-250 words. Focus on the transformation, not our product. End with an insight the reader can apply.\n2. **X/Twitter thread** — 6-8 posts breaking down the key learnings from this customer's journey. Each post should be independently valuable.\n3. **Quote graphic text** — 3 short quotes from the case study formatted for social media graphics (under 20 words each).\n\nDo NOT make these feel like ads. The customer story should provide value even if the reader never visits our website.\n\n[Paste full case study]"
+  variables={[]}
+/>
+
+## Video Testimonial Script
+
+If your customer is willing to do a video testimonial, give them a structure so they sound natural, not stiff.
+
+<PromptBlock
+  title="Video testimonial script/guide"
+  prompt="Create a video testimonial guide for [customer name] at [company]. This is NOT a script they read — it's a guide for what to talk about so they sound natural and cover the right points.\n\nBased on this case study:\n[Paste case study or interview notes]\n\nCreate:\n1. **Pre-recording talking points** — Send these to the customer beforehand so they can gather their thoughts:\n   - 3 questions they should think about (not memorize answers to)\n   - Key metrics they should have handy\n   - One story or moment they should be ready to share\n\n2. **Interview questions** (if someone will interview them on camera):\n   - 5-7 questions in conversational order\n   - Follow-up probes for each\n\n3. **Self-recorded format** (if they're recording solo):\n   - Suggested structure: Intro (10 sec), Challenge (30 sec), Solution (30 sec), Results (30 sec), Recommendation (15 sec)\n   - Specific prompts for each section\n   - Tips: look at camera, natural language, specific examples over generic praise\n\nTarget length: 90-120 seconds final video."
+  variables={[
+    { name: "customer name", placeholder: "Rachel Torres" },
+    { name: "company", placeholder: "Meridian Health Systems" }
+  ]}
+/>
+
+## Customer Approval Process
+
+The review step matters. Make it easy for customers to approve.
+
+<PromptBlock
+  title="Customer approval email"
+  prompt="Write an email to [customer contact] asking them to review and approve their case study. Attach the draft.\n\nThe email should:\n- Thank them for participating (briefly, not effusively)\n- Tell them what we need: review for accuracy, approve quotes, flag anything they want removed\n- Give them a deadline: [date] (frame it as helpful, not demanding)\n- Make it easy to approve: 'Reply with your OK and any changes, or I'm happy to jump on a 10-minute call'\n- Mention what happens next: where it'll be published, and that we'll share it with them for their own marketing\n\nUnder 150 words. Tone: professional, grateful, efficient."
+  variables={[
+    { name: "customer contact", placeholder: "Rachel Torres" },
+    { name: "date", placeholder: "next Friday" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="Your biggest customer just had an incredible quarter using your product. They're thrilled and would probably do a case study. But you've never written one before and the sales team needs it urgently."
+  answer="Start with the interview. Book a 30-minute call, use Claude to generate the interview questions in advance, and record the call. Then paste the transcript into Claude with the case study structure. You'll have a draft in 10 minutes. Send it to the customer for approval, and while you wait, extract the sales snippets, social posts, and email version."
+  prompt="I just finished a 30-minute customer interview. The sales team needs a case study urgently. Here's the transcript:\n\n[Paste transcript]\n\nGenerate everything I need in one pass:\n1. Full case study (800-1,200 words)\n2. One-page summary (250 words)\n3. 3 sales enablement snippets (email, discovery call, proposal)\n4. LinkedIn post version\n5. Customer approval email with the case study attached\n\nPrioritize speed. I'll polish later."
+/>
+
+<TipCallout type="tip">
+The best case studies come from genuine enthusiasm. Don't write about customers who are merely satisfied. Write about customers who are genuinely excited about the results. Their energy translates directly into persuasiveness.
+</TipCallout>
+
+<StepByStep
+  steps={[
+    { title: "Prepare your questions", description: "Use Claude to generate interview questions before the call. Focus on questions that produce specific stories and metrics, not yes/no answers." },
+    { title: "Record the interview", description: "Always record (with permission). You'll miss details in real-time notes. A transcript gives Claude the raw material to write the best case study." },
+    { title: "Generate the full case study", description: "Paste the transcript, get a draft in 10 minutes. Review it yourself before sending to the customer." },
+    { title: "Extract every asset", description: "One interview should produce: full case study, one-pager, sales snippets, social posts, and a pull quote. Don't leave value on the table." },
+    { title: "Get customer approval", description: "Send the draft with a deadline and make approval easy. Most customers are happy to approve with minor changes." },
+    { title: "Distribute everywhere", description: "Website, sales deck, email sequences, social media, proposals. A case study that lives on one web page is wasted." }
+  ]}
+/>

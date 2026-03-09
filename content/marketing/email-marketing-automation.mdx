@@ -1,0 +1,137 @@
+---
+title: "Email Marketing and Automation"
+description: "Write email sequences, build automation flows, and manage your email program with Claude."
+products: ["Chat", "Code"]
+tier: "Growth"
+readTime: "12 min"
+---
+
+Email marketing is the highest-ROI channel most companies underinvest in. Not because they don't know it works, but because writing good email sequences is tedious and building automations takes time. Claude handles both — writing the copy and, with Claude Code, even loading it into your ESP via API.
+
+## Email Sequence Architecture
+
+Before writing a single word, map the sequence structure. What emails, in what order, triggered by what behavior?
+
+<PromptBlock
+  title="Email sequence architecture"
+  prompt="Design an email automation sequence for [trigger event]. The goal is to [desired outcome] within [timeframe].\n\nAudience: [who enters this sequence]\nSegment: [any segmentation criteria]\nESP: [which email platform]\n\nFor each email in the sequence, define:\n1. **Timing** — Days after trigger (or after previous email)\n2. **Subject line** — A/B options\n3. **Purpose** — What this email accomplishes in the buyer journey\n4. **Key message** — One sentence summary\n5. **CTA** — Single action\n6. **Exit conditions** — When should someone be removed from this sequence?\n\nAlso include:\n- Branch points (if they click X, send Y; if they don't open, send Z)\n- Suppression rules (who should NOT receive this sequence)\n- Integration with other sequences (what happens after this one ends)"
+  variables={[
+    { name: "trigger event", placeholder: "new user signs up for free trial" },
+    { name: "desired outcome", placeholder: "convert to paid plan" },
+    { name: "timeframe", placeholder: "14 days (trial length)" },
+    { name: "who enters this sequence", placeholder: "anyone who creates a free account" },
+    { name: "any segmentation criteria", placeholder: "segment by company size (solo vs. team) and use case selected during signup" },
+    { name: "which email platform", placeholder: "Kit (ConvertKit)" }
+  ]}
+/>
+
+## Writing Email Sequences
+
+### Welcome / Onboarding Sequence
+
+<PromptBlock
+  title="Welcome email sequence"
+  prompt="Write a [X]-email welcome sequence for new [subscribers/users/customers]. Trigger: [what triggers entry]. Spacing: [timing between emails].\n\nSequence arc:\n- Email 1 (immediately): Welcome + deliver the promised value (lead magnet, access, etc.)\n- Email 2 (day [Y]): Share the most important thing they should do first\n- Email 3 (day [Z]): Social proof — who else uses this and what results they get\n- Email 4 (day [W]): Address the #1 reason people don't engage\n- Email 5 (day [V]): Clear next step / upgrade CTA\n\nFor each email:\n- Subject line + A/B variant\n- Preview text (under 90 characters)\n- Body copy (under 200 words — short paragraphs, scannable)\n- CTA (button text and link description)\n- P.S. line (optional)\n\nVoice: [voice description]. These emails should feel like they're from a person, not a company."
+  variables={[
+    { name: "X", placeholder: "5" },
+    { name: "Y", placeholder: "2" },
+    { name: "Z", placeholder: "4" },
+    { name: "W", placeholder: "7" },
+    { name: "V", placeholder: "10" },
+    { name: "voice description", placeholder: "Friendly, direct founder voice — like getting a note from someone who genuinely wants to help" }
+  ]}
+/>
+
+### Nurture Sequence
+
+<PromptBlock
+  title="Lead nurture sequence"
+  prompt="Write a [X]-email nurture sequence for leads who [lead source/behavior]. These people are interested but not ready to buy. The goal is to build trust and expertise over time, not push for a sale.\n\nSequence arc — each email delivers standalone value:\n1. Counter-intuitive insight about [their industry/problem]\n2. Framework or mental model they can apply immediately\n3. Case study or story (specific results, not generic success)\n4. Common mistake + how to avoid it\n5. The shift — when they're ready, here's why we're the right choice\n\nFor each email:\n- Subject line (curiosity-driven, not salesy)\n- Body copy (250-400 words)\n- One specific takeaway they can act on today\n- Soft CTA (reply, read more, try something — not 'buy now')\n\nRules: No sales language until email 5. Each email must be worth reading even if they never buy anything."
+  variables={[
+    { name: "X", placeholder: "5" },
+    { name: "lead source/behavior", placeholder: "downloaded our AI readiness assessment but haven't booked a call" }
+  ]}
+/>
+
+### Re-engagement Sequence
+
+<PromptBlock
+  title="Win-back / re-engagement sequence"
+  prompt="Write a [X]-email re-engagement sequence for [audience — e.g., churned customers, inactive subscribers]. These people haven't [engaged/purchased/logged in] in [timeframe].\n\nRules:\n- Don't guilt-trip them for leaving\n- Don't pretend nothing happened\n- Lead with what's new or different since they left\n- Make it easy to come back OR easy to unsubscribe (both are good outcomes)\n\nSequence:\n1. 'Here's what you missed' — One genuinely compelling update\n2. 'We heard you' — Address the likely reason they disengaged\n3. 'Last chance' — Clear offer or value prop + easy way to unsubscribe\n\nFor each email: subject line, body (under 150 words), CTA."
+  variables={[
+    { name: "X", placeholder: "3" },
+    { name: "audience — e.g., churned customers, inactive subscribers", placeholder: "customers who cancelled their subscription 60-90 days ago" },
+    { name: "timeframe", placeholder: "60+ days" }
+  ]}
+/>
+
+<BeforeAfter
+  before="Subject: We miss you! 😢\n\nHi [First Name],\n\nWe noticed you haven't logged in for a while. We miss having you around! Our platform has so many great features waiting for you. Come back and check it out!\n\nClick here to log in →"
+  after="Subject: We shipped the thing you asked for\n\nRemember that workflow builder you said was too rigid? We rebuilt it. Drag-and-drop, custom triggers, works with your existing tools.\n\nTook us 4 months. Figured you'd want to know.\n\n[See what's new →]"
+  explanation="The 'before' is needy and vague. The 'after' gives a specific reason to come back — it shows you listened and built what they wanted. Re-engagement emails need a reason, not a guilt trip."
+/>
+
+## Newsletter Writing
+
+<PromptBlock
+  title="Weekly newsletter"
+  prompt="Write this week's newsletter edition. The newsletter goes to [subscriber count] [audience type] every [frequency].\n\nThis week's content:\n- Main topic: [topic]\n- Supporting link/resource: [link or description]\n- Personal note or observation: [something from my week]\n\nNewsletter format:\n1. One-line hook (subject line territory)\n2. Personal observation or story that leads into the topic (2-3 sentences)\n3. The core insight (3-4 paragraphs, conversational)\n4. One actionable takeaway\n5. Link to go deeper (blog post, video, tool)\n6. Brief sign-off\n\nTotal length: 400-600 words. No headers. It should read like a thoughtful letter, not a blog post. Match this voice: [paste voice description or example]."
+  variables={[
+    { name: "subscriber count", placeholder: "3,200" },
+    { name: "audience type", placeholder: "SaaS founders and operators" },
+    { name: "frequency", placeholder: "Tuesday" },
+    { name: "topic", placeholder: "Why I stopped doing weekly team meetings and what I replaced them with" }
+  ]}
+/>
+
+## Loading Emails into Your ESP
+
+With Claude Code, you can go beyond writing — actually push email content into your ESP via API.
+
+<PromptBlock
+  title="Load emails into ESP via API"
+  prompt="I need to load this email sequence into [ESP] using their API. Here's the sequence content:\n\n[Paste all emails with subject lines, body, timing]\n\nWrite a script that:\n1. Authenticates with the [ESP] API using my API key (from environment variable)\n2. Creates the automation/sequence\n3. Adds each email with correct timing/delays\n4. Sets up any tags or segments needed\n5. Includes error handling and a dry-run mode\n\nESP API docs reference: [link or key endpoints]\nLanguage: [Python/Node.js/etc.]\n\nInclude a README with setup instructions."
+  variables={[
+    { name: "ESP", placeholder: "Kit (ConvertKit)" }
+  ]}
+/>
+
+<TipCallout type="tip">
+Always test your email sequences by sending them to yourself first. Claude can write excellent copy, but rendering issues, broken links, and mobile formatting problems will only show up in your actual inbox.
+</TipCallout>
+
+## Email Performance Optimization
+
+<PromptBlock
+  title="Email performance analysis"
+  prompt="Here are the metrics from our [sequence/campaign name] email sequence:\n\n[Paste: email number, subject line, send count, open rate, click rate, unsubscribe rate, conversion rate]\n\nAnalyze:\n1. Which emails are underperforming and why?\n2. Open rate trends — are subject lines getting weaker over the sequence?\n3. Click rate vs. open rate — where are we losing people in the body?\n4. Unsubscribe spikes — which emails are driving people away?\n5. Drop-off points — where does the sequence lose momentum?\n\nFor each underperforming email, suggest:\n- Revised subject line (A/B test options)\n- Body copy adjustments (specific sections to rewrite)\n- Timing changes (should this email come earlier/later in the sequence?)\n\nWrite the revised versions of the bottom 3 performing emails."
+  variables={[]}
+/>
+
+## Segmentation Strategy
+
+<PromptBlock
+  title="Email segmentation plan"
+  prompt="Help me build a segmentation strategy for our email list. Current list size: [size]. We're using [ESP].\n\nCurrent data we collect:\n[List data points — signup source, industry, role, behavior, purchase history]\n\nDesign:\n1. **Key segments** — 4-6 segments based on our data (name each, define criteria)\n2. **Content strategy per segment** — How should messaging differ for each?\n3. **Automation triggers** — What behaviors should move someone between segments?\n4. **Personalization opportunities** — Where can we customize beyond just [First Name]?\n5. **Sequences per segment** — Which email sequences should each segment receive?\n\nKeep it practical. I have [team size] people managing email. Don't over-segment beyond what we can actually maintain."
+  variables={[
+    { name: "size", placeholder: "8,000" },
+    { name: "ESP", placeholder: "Kit" },
+    { name: "team size", placeholder: "1" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="You have a 5,000-person email list that gets a weekly newsletter but no automations. Open rates are 35% but you're not converting subscribers to customers. You have 3 hours to set up your first automation."
+  answer="Don't try to build everything. Start with one high-impact sequence: a welcome sequence for new subscribers. It's the highest-open-rate email you'll ever send and it sets the tone for the relationship. Use Claude to write 5 emails, then load them into your ESP. You can build the rest later."
+  prompt="I have 3 hours to set up my first email automation. I have a 5,000-person list on [ESP] with no automations. Help me build the highest-impact sequence first.\n\nMy business: [one sentence]. My audience: [who]. My main offer: [what I sell].\n\nGenerate:\n1. The recommended first sequence (and why this one first)\n2. All email copy (5 emails)\n3. Timing and triggers\n4. Step-by-step setup instructions for [ESP]\n\nKeep it simple enough to launch today."
+/>
+
+<StepByStep
+  steps={[
+    { title: "Map the sequence before writing", description: "Use the architecture prompt to define timing, triggers, and exit conditions before you write a word of copy." },
+    { title: "Write all emails in one session", description: "Generate the full sequence in a single Claude conversation so the voice and messaging arc stay consistent." },
+    { title: "Test with your own inbox", description: "Send every email to yourself. Check mobile rendering, link tracking, and unsubscribe functionality." },
+    { title: "Start with one sequence", description: "Welcome sequence first. Nurture second. Re-engagement third. Don't try to build everything at once." },
+    { title: "Review metrics monthly", description: "Paste your email performance data into Claude monthly. Get specific rewrite suggestions for underperforming emails." }
+  ]}
+/>

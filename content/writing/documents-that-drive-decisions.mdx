@@ -1,0 +1,133 @@
+---
+title: "Documents That Drive Decisions"
+description: "Memos, proposals, briefs, one-pagers, and strategic documents that move people to action."
+products: ["Chat"]
+tier: "Starter"
+readTime: "12 min"
+---
+
+Most business documents fail for the same reason: they present information instead of driving a decision. Claude can help you write documents that get people to act — if you prompt it with the decision in mind, not just the content.
+
+## The Decision Document Framework
+
+Every business document exists to move someone from uncertainty to action. Before you prompt Claude, answer three questions:
+
+1. **Who decides?** — The specific person or group making the call
+2. **What do they need to believe?** — The key insight or argument
+3. **What should they do next?** — The concrete action you want
+
+## The Amazon-Style Memo
+
+Jeff Bezos banned PowerPoint for a reason. Narrative memos force clear thinking. Claude is excellent at this format because it requires structured reasoning, not bullet-point decoration.
+
+<PromptBlock
+  title="6-page narrative memo"
+  prompt="Write a narrative memo (Amazon 6-pager style) for [audience] about [topic]. The memo should argue for [recommendation].\n\nStructure:\n1. Opening — state the core question in one paragraph\n2. Background — what led us here (keep it tight)\n3. The problem — what's broken or at risk\n4. Proposed approach — what we should do and why\n5. Key tradeoffs — what we're giving up and why it's worth it\n6. Next steps — specific actions with owners and dates\n\nTone: clear, direct, data-informed. No corporate fluff. Write in prose paragraphs, not bullet points. Target: 1,500-2,000 words."
+  variables={[
+    { name: "audience", placeholder: "the executive team" },
+    { name: "topic", placeholder: "whether to sunset our legacy product and consolidate into the new platform" },
+    { name: "recommendation", placeholder: "sunset the legacy product by Q3, migrate all customers to the new platform" }
+  ]}
+/>
+
+<TipCallout type="tip">
+The best memos start with the conclusion. Don't make your reader hunt for the point. Tell them what you think in paragraph one, then spend the rest of the document proving it.
+</TipCallout>
+
+## Proposals That Win
+
+Proposals fail when they describe what you do instead of what the client gets. Claude can flip that framing if you give it the right inputs.
+
+<PromptBlock
+  title="Client proposal"
+  prompt="Write a proposal for [client/company] for [project/engagement]. Structure:\n\n1. **The Situation** — reflect back what the client told us about their problem (show we listened)\n2. **What's at Stake** — quantify the cost of inaction\n3. **Our Approach** — what we'll do, in phases, with clear deliverables\n4. **Timeline & Investment** — dates, milestones, pricing\n5. **Why Us** — 2-3 differentiators (proof, not claims)\n6. **Next Step** — one clear action to move forward\n\nClient context: [what they told you in the discovery call]. Budget range: [range]. Timeline expectation: [timeline]. Tone: confident, specific, zero fluff. Under 1,500 words."
+  variables={[
+    { name: "client/company", placeholder: "Meridian Health Systems" },
+    { name: "project/engagement", placeholder: "AI-powered customer onboarding redesign" },
+    { name: "what they told you in the discovery call", placeholder: "60-day onboarding, 30% drop-off at step 3, support team overwhelmed" },
+    { name: "range", placeholder: "$50K-$80K" },
+    { name: "timeline", placeholder: "complete by end of Q2" }
+  ]}
+/>
+
+<BeforeAfter
+  before="We are a leading AI consultancy with 10 years of experience helping companies transform their operations. Our team of experts..."
+  after="You told us your onboarding takes 60 days and you're losing 30% of new customers at step 3. That's roughly $2.4M in annual revenue walking out the door. Here's how we fix it in 8 weeks."
+  explanation="The 'before' version talks about you. The 'after' version talks about them. Proposals win when the client sees their own problem reflected back clearly, with a concrete path forward."
+/>
+
+## The One-Pager
+
+When you need to compress a complex idea into a single page — for investors, board members, or busy executives — every word has to earn its place.
+
+<PromptBlock
+  title="Executive one-pager"
+  prompt="Write a one-pager for [audience] about [topic]. This should fit on a single printed page (~500 words max).\n\nStructure:\n- **Headline**: Bold statement that captures the core idea\n- **The Problem** (2-3 sentences): What's broken or what opportunity exists\n- **The Solution** (3-4 sentences): What we're proposing\n- **Key Metrics** (3-5 bullets): Numbers that prove this works or project impact\n- **Ask** (1-2 sentences): What we need from the reader\n\nAvoid jargon. Use concrete numbers. Every sentence should pass the 'so what?' test."
+  variables={[
+    { name: "audience", placeholder: "the board of directors" },
+    { name: "topic", placeholder: "investing $200K in AI tooling for the sales team" }
+  ]}
+/>
+
+## The Strategic Brief
+
+For cross-functional projects where multiple teams need to align on scope, goals, and boundaries.
+
+<PromptBlock
+  title="Project brief"
+  prompt="Write a strategic brief for [project name]. This will be shared with [teams involved] to align on what we're building and why.\n\nInclude:\n1. **Objective** — One sentence. What does success look like?\n2. **Background** — Why now? What triggered this? (3-4 sentences)\n3. **Scope** — What's in and what's explicitly out\n4. **Success metrics** — How we'll measure this worked (3-5 metrics)\n5. **Key risks** — What could go wrong and how we'll mitigate\n6. **Timeline** — Major milestones and dates\n7. **Owners** — Who is responsible for what\n8. **Open questions** — What we still need to figure out\n\nTone: clear, practical. This should be a working document, not a performance."
+  variables={[
+    { name: "project name", placeholder: "Customer Health Score V2" },
+    { name: "teams involved", placeholder: "Product, Engineering, Customer Success, and Data" }
+  ]}
+/>
+
+## The Board Update
+
+Board updates are a specific art. Too long and nobody reads them. Too short and the board asks questions you should have preempted.
+
+<PromptBlock
+  title="Board update memo"
+  prompt="Write a monthly board update for [company]. Period: [month/quarter].\n\nStructure:\n1. **TL;DR** — 3 bullets: one win, one challenge, one decision needed\n2. **Key Metrics** — Table format: metric, last period, this period, target, trend\n3. **Wins** — 2-3 highlights with specific numbers\n4. **Challenges** — 1-2 honest assessments of what's not working\n5. **Strategic Decisions** — Any decisions made this period and rationale\n6. **Ask** — What you need from the board (feedback, introductions, approval)\n7. **Next 30 Days** — Top 3 priorities\n\nData: [paste key metrics]. Tone: transparent, confident. Show you're in control even when sharing bad news."
+  variables={[
+    { name: "company", placeholder: "our B2B SaaS company" },
+    { name: "month/quarter", placeholder: "February 2026" }
+  ]}
+/>
+
+## The Internal RFC (Request for Comments)
+
+When you need buy-in from peers before making a significant change.
+
+<PromptBlock
+  title="Internal RFC"
+  prompt="Write an RFC (Request for Comments) for [proposed change]. This will be shared with [audience] for feedback before we commit.\n\nStructure:\n1. **Summary** — What are we proposing, in plain language?\n2. **Motivation** — Why should we do this? What problem does it solve?\n3. **Detailed Design** — How would this work, specifically?\n4. **Alternatives Considered** — What else did we look at and why did we rule it out?\n5. **Migration / Rollout Plan** — How do we get from here to there?\n6. **Risks and Open Questions** — What could go wrong? What do we not know yet?\n\nTone: thoughtful, inviting feedback. This isn't a decree — it's a proposal. Make it easy for people to disagree constructively."
+  variables={[
+    { name: "proposed change", placeholder: "migrating our monolith to microservices over the next 6 months" },
+    { name: "audience", placeholder: "engineering and product leadership" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="You're presenting to your board next week and need to explain why revenue is down 15% while simultaneously asking for approval to invest $300K in a new product line."
+  answer="Lead with intellectual honesty about the revenue miss — boards respect transparency more than spin. Then frame the investment not as spending during a downturn but as the specific move that fixes the underlying problem. Use Claude to draft the memo, but make sure the narrative connects the revenue decline directly to the opportunity."
+  prompt="Write a board memo that addresses two connected topics: 1) Revenue declined 15% this quarter due to [reasons]. 2) We're requesting $300K to invest in [new initiative]. Frame these as cause and solution — the revenue decline reveals [insight] that this investment directly addresses. Include specific metrics showing the expected ROI timeline. Tone: honest about the miss, confident about the path forward."
+/>
+
+## Iteration Is the Point
+
+The first draft Claude gives you is a starting point, not a finished product. The real value comes from iterating.
+
+<StepByStep
+  steps={[
+    { title: "Generate the first draft", description: "Give Claude your full context, audience, and desired structure. Let it produce a complete first pass." },
+    { title: "Challenge the framing", description: "Ask: 'What's the strongest counterargument to this memo? Rewrite the opening to preempt it.'" },
+    { title: "Tighten the language", description: "Ask: 'Cut this by 30% without losing any substance. Remove every sentence that doesn't directly support the recommendation.'" },
+    { title: "Stress-test with questions", description: "Ask: 'You're [the skeptical board member / the CFO / the engineering lead]. What questions would you ask after reading this? Add a section that addresses them.'" },
+    { title: "Final polish", description: "Ask: 'Read this as someone who has 5 minutes and a strong bias toward inaction. Does this create enough urgency to act? If not, strengthen it.'" }
+  ]}
+/>
+
+<TipCallout type="tip">
+The best technique for improving any document: tell Claude to role-play as the toughest person in the room and poke holes in your argument. Then rewrite to address those holes before anyone else finds them.
+</TipCallout>

@@ -1,0 +1,241 @@
+---
+title: "Projects, Memory & Skills"
+description: "How to give Claude persistent context across conversations."
+products: ["Chat", "CoWork", "Code"]
+tier: "Operator"
+readTime: "10 min"
+---
+
+Re-briefing Claude from scratch every conversation is like re-onboarding the same employee every Monday morning. Projects, CLAUDE.md, and Skills solve this.
+
+## The Problem
+
+Without persistent context, every Claude conversation starts at zero. You end up:
+- Pasting the same background information over and over
+- Getting generic outputs that don't match your voice or standards
+- Spending the first 5 minutes of every session catching Claude up
+- Settling for "good enough" instead of "exactly right"
+
+This is the single biggest time waster for Claude users. And it's completely fixable.
+
+## Claude Chat: Projects
+
+Projects are the most important feature in Claude Chat that most people don't use.
+
+**What a Project is:** A container that holds instructions and files that Claude references in every conversation within that Project.
+
+Think of it this way: if Claude is a brilliant new hire, a Project is their onboarding packet. Everything they need to know to do great work, loaded automatically before every conversation.
+
+### What to Put in Project Instructions
+
+<PromptBlock
+  title="Example Project instructions for a Marketing Director"
+  prompt="You are the AI assistant for [Name], Marketing Director at [Company].\n\nCompany context:\n- B2B SaaS, $8M ARR, 200 customers\n- ICP: Mid-market e-commerce (50-500 employees)\n- Main competitors: [Competitor A], [Competitor B]\n\nWriting style:\n- Professional but conversational\n- Data-driven — always cite numbers when available\n- Short paragraphs, clear headers\n- No jargon: 'use' not 'leverage', 'help' not 'empower'\n\nKey context:\n- Currently running a product launch campaign (Q2)\n- Budget: $50K/quarter for paid acquisition\n- Team: 3 people (content, demand gen, product marketing)\n\nDefault format preferences:\n- Briefs: Start with objective and key message\n- Emails: Under 150 words, clear CTA\n- Reports: Executive summary first, then details"
+  variables={[
+    { name: "Name", placeholder: "Your name" },
+    { name: "Company", placeholder: "Your company name" },
+    { name: "Competitor A", placeholder: "First competitor" },
+    { name: "Competitor B", placeholder: "Second competitor" }
+  ]}
+/>
+
+### What to Upload as Project Files
+
+Project files are reference documents Claude can access in every conversation. Upload things that don't change often:
+
+- **Brand/style guide** — How you write, what words you use and avoid
+- **Product documentation** — What you sell, features, pricing
+- **ICP or persona docs** — Who your customers are
+- **Competitive intel** — How you position against competitors
+- **Templates** — Proposal structures, email formats, report layouts
+
+<TipCallout type="tip">
+You can also upload files to individual conversations (not just Projects). Use Project files for things Claude should always know, and conversation uploads for one-time reference materials.
+</TipCallout>
+
+### Setting Up Your First Project
+
+Here's the fastest path to a useful Project:
+
+<StepByStep
+  steps={[
+    { title: "Create a new Project in Claude Chat", description: "Click 'Projects' in the sidebar, then 'New Project.' Name it something clear — 'Marketing Work' or 'Daily Ops.'" },
+    { title: "Write your core instructions", description: "Start with 4 things: your role, your company (2-3 sentences), your writing style (3-5 bullets), and one format preference." },
+    { title: "Upload 1-2 key files", description: "Your brand guide and your product one-pager are the highest-impact uploads. Don't overdo it on day one." },
+    { title: "Test with a real task", description: "Open a conversation in the Project and try a task you've done before. Compare the output to what you got without Project context." },
+    { title: "Iterate", description: "Add instructions based on what's missing. If Claude keeps using jargon, add 'never use jargon.' If it writes too long, add 'default to concise.' Build the instructions over time." }
+  ]}
+  title="5-minute Project setup"
+/>
+
+### Multiple Projects for Different Roles
+
+Most operators benefit from 2-4 Projects:
+
+| Project | What It Contains | When You Use It |
+|---------|-----------------|-----------------|
+| Marketing & Content | Brand voice, content strategy, audience docs | Writing content, planning campaigns |
+| Sales & Deals | Pricing, objection library, proposal template | Drafting proposals, prepping for calls |
+| Operations | Team structure, processes, tool stack | Planning, process design, reporting |
+| Strategic Thinking | Business context, competitive landscape, goals | Decision-making, brainstorming, analysis |
+
+<ScenarioCard
+  scenario="You use Claude for both marketing content and sales proposals. Your marketing voice is casual and educational, but your sales proposals are more formal and ROI-focused."
+  answer="Create two separate Projects — one for Marketing and one for Sales. Each has its own voice instructions, templates, and reference documents. When you switch tasks, you switch Projects. Claude automatically adjusts."
+/>
+
+## Claude Code: CLAUDE.md
+
+CLAUDE.md is Claude Code's version of Project instructions — but more powerful because it lives in your file system and can be version-controlled.
+
+It's a simple markdown file at the root of your project folder. Every time you start a Claude Code session in that folder, it reads CLAUDE.md first.
+
+<RealWorldProof
+  quote="The gap between default Claude Code and configured Claude Code is wild. Context setup and rules files were doing 90% of the heavy lifting."
+  author="@bpizzacalla"
+  context="Built a full agentic sales platform with Claude Code"
+/>
+
+**Think of CLAUDE.md as an onboarding document for a brilliant new hire.** You write it completely differently when you think of it that way.
+
+### What to Include in CLAUDE.md
+
+- **Business context** — What your company does, who your customers are, your stage
+- **Your role** — How you use Claude Code, what decisions you make
+- **Repository structure** — What's where, so Claude can find things
+- **Voice and style guide** — How outputs should sound
+- **Key tools and integrations** — APIs you connect to, tools you use
+- **Standard processes** — Workflows you repeat
+- **Important files** — Where key documents live
+- **Rules** — Things to always or never do
+
+We go deep on CLAUDE.md in the [CLAUDE.md: Your Business Operating System](/claude-playbook/code-for-operators/claude-md-business-os) playbook.
+
+## Claude CoWork: Shared Context
+
+CoWork lets teams share context across conversations and members. Think of it as Projects, but for your whole team.
+
+**When to use CoWork over Chat Projects:**
+- Multiple team members need the same context
+- You want Claude to pull from shared team knowledge
+- You need integrations with team tools (Slack, Google Drive, Notion, etc.)
+- You want consistency across how different team members get AI output
+
+### CoWork Context Best Practices
+
+The same principles apply — give Claude persistent context — but with a team lens:
+
+- **Shared knowledge base** — Company info, processes, standards that everyone needs
+- **Role-specific instructions** — Different team members can have different default behaviors
+- **Connected tools** — Link to the data sources your team actually uses
+- **Living documents** — Context that updates as your business evolves
+
+## Skills: Reusable Instruction Packages
+
+Skills take persistent context one step further. Instead of general project instructions, Skills are specific instruction packages for specific tasks.
+
+**The difference between Project instructions and Skills:**
+
+| | Project Instructions | Skills |
+|---|---|---|
+| Scope | Everything in this Project | One specific task type |
+| Loading | Always loaded | Loaded when relevant |
+| Example | "We're a B2B SaaS company..." | "When writing proposals, follow this template..." |
+
+### Practical Skill Examples
+
+**Proposal Writer Skill:** Knows your pricing tiers, your standard proposal structure, your terms, and your closing style. Loaded when you ask Claude to write a proposal.
+
+**Meeting Prep Skill:** Knows your meeting prep format, pulls from your CRM context, generates agenda + talking points + follow-up template. Loaded when you say "prep me for a meeting."
+
+**Weekly Report Skill:** Knows your report format, your KPI definitions, where to find the data, and who the audience is. Loaded when you ask for your weekly report.
+
+### How Skills Work Across Products
+
+- **Chat:** Upload Skills as files or define them in Project instructions with clear triggers
+- **CoWork:** Available to the team, can be triggered by events
+- **Code:** Drop a markdown file in your `.claude/commands/` directory — it becomes a slash command
+
+<TipCallout type="note">
+Skills are covered in depth in the [Skills Deep-Dive](/claude-playbook/skills/what-are-skills) section. For now, just know they exist and that they're how you scale from "Claude does one-off tasks" to "Claude runs repeatable workflows."
+</TipCallout>
+
+## The Context Hierarchy
+
+Here's how all of this fits together, from broadest to most specific:
+
+| Layer | Scope | Persistence | Best For |
+|-------|-------|-------------|----------|
+| CLAUDE.md (Code) | All Code sessions in folder | Permanent (file-based) | Full business context for automation |
+| Project instructions (Chat) | All chats in that Project | Permanent | Company/role context for conversations |
+| Skills | Loaded when relevant | Permanent | Task-specific workflows and templates |
+| Uploaded files | Project or conversation | Depends on where uploaded | Reference documents and data |
+| Conversation messages | Single chat thread | Session only | Specific task instructions and refinements |
+
+**The key insight:** Push as much context as possible into the higher layers. The more Claude knows before you type your first message, the less work you do in every conversation.
+
+## Memory: What Claude Remembers Between Conversations
+
+Claude also has a memory feature that saves facts across conversations — things like "I prefer bullet points over paragraphs" or "Our fiscal year starts in April."
+
+Memory is useful but limited. Think of it as Post-it notes on Claude's desk, not a full onboarding document. For serious context, use Projects or CLAUDE.md.
+
+**What memory is good for:**
+- Personal preferences ("always use Oxford commas")
+- Quick facts ("our company was founded in 2018")
+- Corrections ("when I say 'the platform,' I mean Shopify")
+
+**What memory is not good for:**
+- Complex context (use Project instructions)
+- Documents and data (use file uploads)
+- Task-specific instructions (use Skills)
+
+## Your Action Step
+
+Right now, set up persistent context for your product:
+
+<ProductPicker products={["Chat", "CoWork", "Code"]}>
+  {{
+    Chat: <div>
+      <p><strong>Create a Project</strong> with your core business context. Start with your role, company, writing style, and one format preference. Upload your brand guide if you have one.</p>
+      <ol>
+        <li>Click "Projects" in the sidebar, then "New Project"</li>
+        <li>Name it something clear — "Marketing Work" or "Daily Ops"</li>
+        <li>Write 4 things in the instructions: your role, your company (2-3 sentences), your writing style (3-5 bullets), and one format preference</li>
+        <li>Upload 1-2 key files — your brand guide and product one-pager are highest impact</li>
+        <li>Test with a real task you've done before and compare the output</li>
+      </ol>
+    </div>,
+    CoWork: <div>
+      <p><strong>Set up your team's shared context.</strong> Start with the information every team member needs — company context, standards, and key reference documents.</p>
+      <ol>
+        <li>Create a CoWork space with your company's core context</li>
+        <li>Add shared knowledge: company info, processes, standards</li>
+        <li>Connect team tools (Slack, Google Drive, Notion)</li>
+        <li>Set role-specific instructions for different team members</li>
+        <li>Test by having two team members run the same task — outputs should be consistent</li>
+      </ol>
+    </div>,
+    Code: <div>
+      <p><strong>Create a CLAUDE.md file</strong> with your business context, repository structure, and key rules. Even a 20-line file will dramatically improve your outputs.</p>
+      <ol>
+        <li>Create a file called <code>CLAUDE.md</code> at the root of your project folder</li>
+        <li>Add: what your company does, your role, your writing preferences</li>
+        <li>Add: repository structure (what's where)</li>
+        <li>Add: key rules (things to always or never do)</li>
+        <li>Start a new Claude Code session — it reads CLAUDE.md automatically</li>
+      </ol>
+    </div>
+  }}
+</ProductPicker>
+
+You can always add more later. The point is to stop starting from zero.
+
+<MiniQuiz
+  question="What's the most impactful thing you can do to improve Claude's output quality?"
+  options={[
+    { label: "Use longer, more detailed prompts every time", correct: false, explanation: "Detailed prompts help, but doing this every time is exhausting and inconsistent. Persistent context is more effective." },
+    { label: "Set up persistent context so Claude knows your business before every conversation", correct: true, explanation: "Correct. Projects, CLAUDE.md, and Skills mean you invest once and benefit in every future conversation. This is the highest-leverage move." },
+    { label: "Always use the most expensive Claude model", correct: false, explanation: "Model selection matters less than context quality. A well-configured Sonnet outperforms an unconfigured Opus." }
+  ]}
+/>

@@ -1,0 +1,206 @@
+---
+title: "CLAUDE.md: Your Business Operating System"
+description: "How to write a CLAUDE.md file that makes Claude Code know your business, your preferences, and your rules. Context does 90% of the heavy lifting."
+products: ["Code"]
+tier: "Operator"
+readTime: "11 min"
+---
+
+Every time you start a new conversation in Claude Code, there's one file it reads before anything else: `CLAUDE.md`. This file sits in the root of your project folder and acts as Claude's permanent memory. Your company context, your preferences, your rules — all loaded automatically, every time.
+
+This is the single highest-leverage thing you can set up in Claude Code. It transforms Claude from a generic assistant into your assistant.
+
+<RealWorldProof
+  quote="Context setup and rules do 90% of the heavy lifting."
+  author="@bpizzacalla"
+  context="Built a complete agentic sales platform with Claude Code"
+/>
+
+## What Goes in CLAUDE.md
+
+Think of CLAUDE.md as the onboarding document you'd write for a brilliant new hire who needs to understand your business on day one. It should answer:
+
+1. **What does this company do?** (products, customers, market)
+2. **What does this workspace contain?** (folder structure, key files)
+3. **What are the rules?** (always do this, never do that)
+4. **What tools and accounts exist?** (API connections, tools we use)
+5. **What does good output look like?** (formats, style, quality standards)
+
+<MiniQuiz
+  question="What's the best mental model for thinking about your CLAUDE.md file?"
+  options={[
+    { label: "A configuration file with settings and parameters", correct: false, explanation: "CLAUDE.md isn't a config file — it's written in natural language, not code syntax. Thinking of it as a config file leads to dry, structured-but-unhelpful content." },
+    { label: "An onboarding document for a brilliant new hire", correct: true, explanation: "This is the key mindset. A new hire needs to understand what your company does, where things live, what the rules are, and what good output looks like. Write CLAUDE.md the same way and Claude becomes productive immediately." },
+    { label: "A list of commands Claude can execute", correct: false, explanation: "Commands live in separate skill files. CLAUDE.md is about business context, rules, and preferences — the knowledge that makes every command work better." },
+    { label: "A database schema for your business information", correct: false, explanation: "CLAUDE.md is a narrative document, not a structured data format. It should read like a strategy memo, not a technical specification." }
+  ]}
+/>
+
+## CLAUDE.md Template for Operators
+
+<PromptBlock
+  title="Generate your CLAUDE.md"
+  prompt="Help me create a CLAUDE.md file for my Claude Code workspace. Here's my business context:\n\n**Company:** [company name]\n**What we do:** [one-paragraph description]\n**Revenue model:** [how we make money]\n**Customers:** [who we serve]\n**Team size:** [number and key roles]\n**Tools we use:** [list all business tools — CRM, analytics, email, project management, etc.]\n**Key metrics I track:** [the numbers that matter most]\n**My role:** [what I do]\n**Communication style:** [how I want Claude to communicate with me — direct, detailed, etc.]\n\nCreate a CLAUDE.md that:\n1. Is under 500 lines (Claude reads this every conversation — don't make it a novel)\n2. Focuses on information that makes Claude's output better, not generic company history\n3. Includes a folder structure section explaining what each directory contains\n4. Includes a 'Rules' section with hard constraints (things Claude should always or never do)\n5. Includes a 'Tools & APIs' section listing available connections\n6. Includes output format preferences\n\nThis should make every Claude Code conversation start with full context about my business."
+  variables={[
+    { name: "company name", placeholder: "Acme Analytics" },
+    { name: "one-paragraph description", placeholder: "B2B SaaS platform that helps e-commerce companies track customer lifetime value. $2M ARR, 40 employees." }
+  ]}
+/>
+
+## Anatomy of a Great CLAUDE.md
+
+Here's what each section should contain:
+
+### The Company Brief
+
+Keep this to 3-5 sentences. Claude needs to know what you do, who you serve, and what scale you're at.
+
+```markdown
+# CLAUDE.md
+
+## Company
+
+Acme Analytics is a B2B SaaS platform that helps e-commerce companies
+track and optimize customer lifetime value. $2M ARR, 40 employees,
+Series A. We serve mid-market e-commerce brands ($5M-$100M revenue).
+Our main competitors are Klaviyo Analytics, Retention Science, and
+custom-built solutions.
+```
+
+### The Workspace Map
+
+Tell Claude what files and folders exist and what they're for.
+
+```markdown
+## Workspace Structure
+
+- `data/` — Raw data files (CSVs, exports from tools)
+- `reports/` — Generated reports (HTML dashboards, PDFs)
+- `output/` — Working output from Claude (drafts, analyses)
+- `templates/` — Report templates and document formats
+- `.env` — API keys (never commit, never display)
+- `.claude/commands/` — Skills (reusable workflows)
+```
+
+### The Rules
+
+This is the most important section. Hard constraints that Claude must follow.
+
+<PromptBlock
+  title="Define your rules"
+  prompt="Help me write the Rules section of my CLAUDE.md. Here are my requirements:\n\n**Always do:**\n[list things Claude should always do — e.g., ask before modifying data, include date ranges in reports, cite data sources]\n\n**Never do:**\n[list things Claude should never do — e.g., send emails without my review, delete files, share API keys, modify production data]\n\n**Format preferences:**\n[how you want output — e.g., reports in HTML, summaries in markdown, always under X words]\n\n**Tone:**\n[how you want Claude to communicate — e.g., direct and concise, no fluff, no emoji]\n\nWrite these as clear, unambiguous rules. Not guidelines — rules."
+/>
+
+Example rules section:
+
+```markdown
+## Rules
+
+### Hard Rules (Never Break)
+- NEVER modify production data without explicit confirmation
+- NEVER display or log API keys, even partially
+- NEVER send emails or messages without my review
+- NEVER delete files without listing them first and getting approval
+- Always use .env for API keys — never hardcode them
+
+### Output Rules
+- Reports: HTML with clean CSS, suitable for sharing
+- Summaries: Markdown, under 200 words
+- Data analysis: Include the source, date range, and any caveats
+- Charts: Use simple, clean visuals. No 3D effects. Label axes.
+
+### Communication
+- Be direct. No filler phrases ("I'd be happy to help...")
+- If something fails, explain what happened and suggest a fix
+- Ask clarifying questions upfront rather than guessing
+```
+
+### Tools and API Configuration
+
+<PromptBlock
+  title="Tools and API section"
+  prompt="Create the Tools & APIs section of my CLAUDE.md. I have these connected:\n\n[list your tools and what you use each for]\n\nFor each tool, document:\n1. What it's used for\n2. Where the API key is stored (environment variable name)\n3. What Claude can do with it (read only? read-write?)\n4. Any rate limits or usage constraints to be aware of"
+/>
+
+### Key Metrics and Definitions
+
+This prevents Claude from using the wrong definitions for your metrics.
+
+```markdown
+## Key Metrics
+
+- **MRR** — Monthly Recurring Revenue. Calculated from active
+  Stripe subscriptions. Excludes one-time charges and add-ons.
+- **Churn Rate** — Monthly logo churn. Cancellations / start-of-month
+  active customers. We track revenue churn separately.
+- **CAC** — Customer Acquisition Cost. Total sales + marketing spend /
+  new customers acquired. Include salaries.
+- **NPS** — Measured quarterly via Delighted. Benchmark: 45+.
+```
+
+<TipCallout type="tip">
+Defining your metrics in CLAUDE.md prevents a common problem: Claude using a different definition of "churn" or "MRR" than you do. When the definition is in the context file, every report uses the right calculation.
+</TipCallout>
+
+## The Layered CLAUDE.md System
+
+For larger setups, you can have multiple context files:
+
+- **Root CLAUDE.md** — Company-wide context (who we are, rules, tools)
+- **Project-level CLAUDE.md** — Context for specific projects (in subdirectories)
+- **Skills** — Task-specific context (in `.claude/commands/`)
+
+Claude reads all of them, with more specific files taking precedence.
+
+<PromptBlock
+  title="Create a project-level CLAUDE.md"
+  prompt="I have a subdirectory for [project type]. Create a project-level CLAUDE.md that adds context specific to this project without repeating the root CLAUDE.md.\n\nProject context:\n- Purpose: [what this project does]\n- Key files: [important files in this directory]\n- Specific rules: [any rules unique to this project]\n- Output format: [how outputs should look for this project]"
+  variables={[{ name: "project type", placeholder: "monthly reporting — this directory holds all our recurring report templates and outputs" }]}
+/>
+
+## Maintaining Your CLAUDE.md
+
+Your business changes. Your CLAUDE.md should change with it.
+
+<PromptBlock
+  title="CLAUDE.md quarterly review"
+  prompt="Review my current CLAUDE.md file and help me update it:\n\n1. Is any information outdated? (metrics, team structure, tools)\n2. Are there rules I've been overriding in conversations that should just be changed in the file?\n3. Are there new tools or data sources I've connected that aren't documented?\n4. Is anything in here that Claude never actually uses? (trim it)\n5. Are there things I keep re-explaining in conversations that should be in the CLAUDE.md?\n\nSuggest specific edits."
+/>
+
+<BeforeAfter
+  before={{
+    content: "Every conversation with Claude Code starts with me explaining who we are, what we do, what tools we use, and how I want the output formatted."
+  }}
+  after={{
+    content: "Every conversation starts with Claude already knowing all of that. I just say what I need done."
+  }}
+  annotation="The difference between a 5-minute setup conversation and an instant start. Multiply by every conversation you have."
+/>
+
+<ScenarioCard
+  scenario="You run a marketing agency with 5 clients. Each client has different tools, different metrics, and different reporting formats. How do you set up CLAUDE.md?"
+  answer="Create a root CLAUDE.md with your agency-wide rules and processes. Then create a subdirectory for each client with its own CLAUDE.md containing that client's specific tools, metrics, branding, and reporting format. When you work on Client A's report, open Claude Code in Client A's directory and it automatically has the right context."
+  prompt="Set up a multi-client CLAUDE.md structure for my agency:\n\nRoot: agency-wide rules, tools, and processes\nClient directories: client-specific context\n\nClients:\n[list 3-5 clients with their tools and reporting needs]\n\nCreate the root CLAUDE.md and one client-specific CLAUDE.md as a template."
+/>
+
+## The Onboarding Document Test
+
+Here's how to know if your CLAUDE.md is good enough:
+
+**Could a new team member read this file and understand enough about your business to be productive on day one?**
+
+If yes, Claude Code can be productive too. If not, add what's missing.
+
+<RealWorldProof
+  quote="I spent 2 hours writing my CLAUDE.md and it's saved me hundreds of hours since. Every report, every analysis, every workflow starts with Claude already knowing my business. That 2 hours was the best investment I've made in AI."
+  author="CEO"
+  context="Running a 20-person SaaS company, uses Claude Code daily"
+/>
+
+## Common Mistakes
+
+**Don't write a 2,000-line CLAUDE.md.** Claude reads this file every conversation. If it's too long, it wastes context window space and dilutes the important information. Aim for 200-500 lines. If you need more, split into project-level files.
+
+**Don't include sensitive information you wouldn't give to a new employee.** CLAUDE.md is a local file on your machine, but treat it with the same discretion as any business document. Don't put passwords, full API keys, or confidential customer data in it.
+
+**Don't set it and forget it.** Review your CLAUDE.md quarterly. Remove what's outdated. Add what you keep repeating. This is a living document, not a one-time setup.

@@ -1,0 +1,125 @@
+---
+title: "Process Improvement Analysis"
+description: "Describe current workflow, identify bottlenecks, suggest improvements."
+products: ["Chat"]
+tier: "Operator"
+readTime: "10 min"
+---
+
+Most process improvement in small companies looks like this: someone gets frustrated, they complain in a meeting, and the team spends an hour debating fixes without clearly understanding the current process. Claude replaces the guesswork. Describe how things work today, and Claude maps the process, identifies bottlenecks, and proposes specific improvements with before/after comparisons.
+
+## The Process Improvement Workflow
+
+<StepByStep
+  steps={[
+    { title: "Document the current state", description: "Describe the process as it actually works — not how it's supposed to work. Include the workarounds, the manual steps, the waiting." },
+    { title: "Map and visualize", description: "Claude creates a process map showing every step, decision point, handoff, and delay." },
+    { title: "Identify bottlenecks", description: "Claude analyzes the map for delays, redundancies, error-prone steps, and unnecessary handoffs." },
+    { title: "Generate improvement options", description: "For each bottleneck, Claude proposes 2-3 fixes with effort estimates and expected impact." },
+    { title: "Build the implementation plan", description: "Pick the improvements to implement and Claude generates a phased rollout plan." }
+  ]}
+/>
+
+## The Current State Analysis
+
+Start by getting the process out of people's heads and into a structured format.
+
+<PromptBlock
+  title="Document and analyze current process"
+  prompt="I want to improve our [process name] process. Here's how it works today:\n\n[Describe the process — brain dump style. Include:\n- Who's involved at each step\n- What tools are used\n- How long each step takes\n- Where things get stuck or delayed\n- Workarounds people have invented\n- What triggers the process and what the final output is]\n\nAnalyze this process:\n\n1. PROCESS MAP\nCreate a step-by-step map of the current process. For each step:\n- What happens\n- Who does it\n- How long it takes\n- What tool is used\n- Input required and output produced\n\n2. BOTTLENECK ANALYSIS\n- Where are the delays? Why?\n- Where are the handoffs? Each handoff is a potential failure point.\n- Which steps are manual that could be automated?\n- Which steps have the highest error rate?\n- Where does the process depend on one person (single points of failure)?\n\n3. METRICS\n- Total process time (end to end)\n- Active work time vs. waiting time\n- Number of handoffs\n- Number of manual steps\n- Error rate estimate (based on the workarounds people have built)\n\n4. PAIN POINTS\n- Rank the top 5 pain points by severity\n- For each, explain the root cause (not just the symptom)"
+  variables={[
+    { name: "process name", placeholder: "customer onboarding" }
+  ]}
+/>
+
+<TipCallout type="tip">
+The biggest mistake in process improvement: describing how the process is supposed to work instead of how it actually works. Include the "yeah, but in practice..." details. The gap between the documented process and reality is usually where the biggest improvements live.
+</TipCallout>
+
+## Improvement Recommendations
+
+Once you have the current state mapped, Claude can generate specific improvements.
+
+<PromptBlock
+  title="Generate process improvements"
+  prompt="Based on the current state analysis of our [process name]:\n\n[Paste the analysis from the previous step, or summarize the key bottlenecks]\n\nFor each bottleneck, generate 2-3 improvement options:\n\nFor each option, provide:\n1. WHAT CHANGES: Specific description of the new process\n2. EFFORT: Low / Medium / High — and what's involved (new tool, training, policy change, etc.)\n3. IMPACT: Expected improvement in time, error rate, or capacity\n4. RISK: What could go wrong with this change? Any downsides?\n5. PREREQUISITES: What needs to be true before we can implement this?\n\nThen rank all improvements by ROI (impact / effort) and recommend the top 3 to implement first.\n\nAlso tell me:\n- Which improvements are quick wins (implement this week)?\n- Which are medium-term (implement in 30 days)?\n- Which are strategic (require budget, tool changes, or organizational change)?"
+  variables={[
+    { name: "process name", placeholder: "customer onboarding" }
+  ]}
+/>
+
+<BeforeAfter
+  before={{ label: "Current: Customer onboarding process", content: "1. Sales closes deal, emails CS team\n2. CS manager assigns an onboarding rep (1-2 day delay — CS manager is a bottleneck)\n3. Onboarding rep emails customer to schedule kickoff (back-and-forth takes 3-5 days)\n4. Kickoff call happens — rep takes notes in Google Doc\n5. Rep manually creates accounts, sends credentials via email\n6. Rep builds custom training plan (2-3 hours per customer, mostly copy-paste from previous plans)\n7. Training sessions scheduled over 2-3 weeks\n8. Handoff to ongoing CS rep — via verbal/Slack (things get lost)\n\nTotal time: 3-5 weeks\nActive work: ~8 hours per customer\nWaiting time: ~80% of calendar time" }}
+  after={{ label: "Improved: Customer onboarding process", content: "1. Deal closes → CRM automation triggers onboarding workflow (zero delay)\n2. System auto-assigns onboarding rep based on capacity and expertise match\n3. Customer receives scheduling link with pre-populated availability (books within 24 hours)\n4. Kickoff call → transcript auto-generates structured onboarding plan from template\n5. Account creation automated via API — credentials sent automatically\n6. Training plan generated from template, customized by AI based on customer's use case and plan tier (15 min vs. 2-3 hours)\n7. Self-serve training modules available immediately; live sessions scheduled for complex topics only\n8. Structured handoff checklist in CRM — nothing gets lost\n\nTotal time: 1-2 weeks\nActive work: ~3 hours per customer\nWaiting time: ~40% of calendar time" }}
+  annotation="Same quality of onboarding, 60% less time. The biggest wins came from eliminating manual assignment (bottleneck #1), automated scheduling (bottleneck #2), and template-based training plans (bottleneck #3)."
+/>
+
+## Process Mapping for Complex Workflows
+
+For more complex processes with multiple branches and decision points.
+
+<PromptBlock
+  title="Complex process mapping with decision trees"
+  prompt="Map this complex process with all its branches and decision points.\n\nPROCESS: [process name]\n\n[Describe the process, including:\n- The main path (happy path)\n- All the 'what if' scenarios (what happens when things go differently)\n- Exception handling\n- Approval gates\n- Points where the process goes to different people based on conditions]\n\nCreate:\n\n1. MAIN FLOW: The happy path from trigger to completion\n\n2. DECISION TREE: Every branching point with:\n- The condition/question\n- Path A and Path B (and C, D if needed)\n- Who decides\n- How long the decision typically takes\n\n3. EXCEPTION PATHS: What happens when something goes wrong at each stage\n\n4. TEXT-BASED PROCESS DIAGRAM: Create a visual representation using text/ASCII that I can paste into any document. Show the flow, branches, and decision points.\n\n5. HANDOFF MAP: Every point where work transfers between people or teams. For each handoff:\n- From who → to who\n- What information transfers\n- What typically gets lost in this handoff\n- How to prevent information loss"
+  variables={[
+    { name: "process name", placeholder: "Customer support escalation workflow" }
+  ]}
+/>
+
+## Time-Motion Analysis
+
+When you suspect a process takes too long but aren't sure where the time goes.
+
+<PromptBlock
+  title="Time-motion analysis"
+  prompt="Help me do a time-motion analysis of our [process name].\n\nHere's the process with my best estimates of how long each step takes:\n\n[List each step with:\n- What happens\n- Who does it\n- Time to complete (your estimate)\n- Waiting time before the next step\n- Whether it's hands-on-keyboard work or meetings/coordination]\n\nAnalyze:\n\n1. TIME BREAKDOWN\n- Total elapsed time (end to end, including waits)\n- Total active work time (hands on keyboard)\n- Total waiting/coordination time\n- Ratio of value-add work to non-value-add time\n\n2. TIME KILLERS\n- Which steps take the longest relative to their complexity?\n- Where is time being wasted on coordination, waiting for approvals, or context-switching?\n- Which meetings could be eliminated if information flowed differently?\n\n3. CAPACITY ANALYSIS\n- How many instances of this process can one person handle per week/month?\n- What's the theoretical maximum if we eliminated all waste?\n- Where does the process break down at scale?\n\n4. QUICK WINS\n- Which time reductions require zero investment (just process changes)?\n- Which require small tool investments?\n- What's the total time savings potential?"
+  variables={[
+    { name: "process name", placeholder: "monthly financial close" }
+  ]}
+/>
+
+<RealWorldProof
+  quote="We analyzed our proposal process and found that 70% of the elapsed time was waiting — waiting for approvals, waiting for pricing from finance, waiting for legal review. The actual work was 4 hours spread over 12 days. By running pricing and legal in parallel instead of sequentially, and adding pre-approved pricing ranges, we cut proposal turnaround from 12 days to 3."
+  author="VP of Operations, Professional Services Firm"
+  context="60-person firm, processing 20+ proposals per month"
+/>
+
+## Team Process Workshop
+
+Use Claude to facilitate a process improvement workshop with your team.
+
+<PromptBlock
+  title="Process improvement workshop facilitator"
+  prompt="I'm running a 60-minute process improvement workshop with my team. The process we're improving is [process name].\n\nATTENDEES: [who's participating — list roles]\nCURRENT STATE: [paste or summarize the current process]\n\nCreate a workshop facilitation guide:\n\n1. AGENDA (60 minutes total)\n- Time-boxed sections with facilitator instructions\n- Discussion questions for each section\n- How to keep the conversation productive (prevent tangents)\n\n2. PRE-WORK\n- 3 questions to send attendees before the meeting so they come prepared\n\n3. EXERCISES\n- 'Pain point ranking': have each person independently rank their top 3 frustrations, then compare (surfaces divergent perspectives)\n- 'Ideal state design': if we were starting from scratch, how would we design this process?\n- 'Quick wins vs. big bets': categorize improvements by effort and impact\n\n4. OUTPUT TEMPLATE\n- Decision log: what was decided in the meeting\n- Action items: who does what by when\n- Parking lot: ideas to revisit later\n\n5. FOLLOW-UP\n- Summary email template to send after the workshop\n- 30-day check-in agenda to review progress"
+  variables={[
+    { name: "process name", placeholder: "sprint planning and standup process" },
+    { name: "who's participating — list roles", placeholder: "Engineering Manager, 4 Engineers, Product Manager, Designer" }
+  ]}
+/>
+
+## Measuring Improvement
+
+Improvements don't count until you measure them.
+
+<PromptBlock
+  title="Process improvement metrics and tracking"
+  prompt="We've implemented changes to our [process name]. Help me set up measurement.\n\nBEFORE (baseline metrics):\n[Your metrics before the change — time, error rate, cost, volume, whatever you tracked]\n\nCHANGES IMPLEMENTED:\n[What you changed]\n\nCreate a measurement framework:\n\n1. KEY METRICS to track (aligned with the specific changes we made)\n2. HOW to measure each one (what data to collect, where to get it)\n3. MEASUREMENT CADENCE (daily, weekly, monthly for each metric)\n4. TARGET for each metric (what 'success' looks like at 30, 60, 90 days)\n5. DASHBOARD: simple template I can use to track metrics over time\n6. COMPARISON REPORT TEMPLATE: before vs. after format to share results with the team\n7. DIMINISHING RETURNS: at what point is the process 'good enough' and further optimization isn't worth it?"
+  variables={[
+    { name: "process name", placeholder: "customer onboarding" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="You want to improve a process but the people who run it are defensive about criticism."
+  answer="Frame it as documentation, not criticism. Start with: 'I want to map this process so we can figure out where to invest in tools or support — not to find fault.' Then use the current-state prompt and focus the language on the process, not the people. 'This step takes 3 days' is neutral. 'Mike is slow at this step' is not. Claude helps because it describes process flows objectively — it doesn't carry the politics."
+  prompt="Help me map our [process name] in a way that focuses on the process itself, not the people involved. Use neutral language. Frame bottlenecks as 'the process encounters a delay here' rather than assigning blame. I'll share this with the team."
+/>
+
+<ScenarioCard
+  scenario="You've identified improvements but don't have budget for new tools."
+  answer="The highest-impact improvements rarely require new tools. Eliminating unnecessary steps, running steps in parallel instead of sequentially, creating templates for repetitive work, and clarifying handoffs are all free. Tell Claude: 'Recommend improvements that require zero budget — only process changes, template creation, or better communication.' You'll be surprised how much you can improve without spending anything."
+/>
+
+<TipCallout type="note">
+Process improvement is iterative. Don't try to fix everything at once. Pick the single biggest bottleneck, fix it, measure the improvement, then move to the next one. Trying to overhaul an entire process at once usually fails because the team can't absorb that much change simultaneously.
+</TipCallout>

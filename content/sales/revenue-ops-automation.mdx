@@ -1,0 +1,172 @@
+---
+title: "Revenue Operations Automation"
+description: "Connect Stripe, CRM, and analytics into unified reporting."
+products: ["Code"]
+tier: "Power User"
+readTime: "15 min"
+---
+
+Revenue operations at most companies means someone opens five tabs, copies numbers into a spreadsheet, and prays the formulas don't break. Claude Code replaces that with direct API connections to your revenue tools — Stripe, your CRM, analytics platforms — giving you instant answers in plain English.
+
+This isn't about building dashboards. It's about asking "What's our MRR right now?" and getting an answer in 3 seconds.
+
+## The Revenue Stack Connection
+
+<StepByStep
+  steps={[
+    { title: "Connect your revenue tools", description: "Set up API connections to Stripe, your CRM, and analytics. Claude Code handles the authentication — you just provide API keys." },
+    { title: "Build your revenue queries", description: "Teach Claude Code the questions you ask every week. MRR, churn, pipeline, conversion rates. Each becomes a simple command." },
+    { title: "Create unified reports", description: "Pull data from multiple sources into one report. No copy-pasting between tools." },
+    { title: "Automate the cadence", description: "Set up weekly and monthly reports that run automatically and deliver to Slack, email, or a shared folder." }
+  ]}
+/>
+
+## Connecting Stripe
+
+Stripe is usually the first connection because it's where the money lives. The Stripe API is well-documented, and Claude Code handles it naturally.
+
+<PromptBlock
+  title="Connect to Stripe and pull revenue metrics"
+  prompt="I want to connect to our Stripe account and pull revenue metrics. My Stripe API key is stored in the environment variable STRIPE_API_KEY.\n\nFirst, verify the connection works by pulling our current MRR.\n\nThen build me a revenue dashboard that answers these questions:\n\n1. CURRENT STATE\n- What's our MRR right now?\n- How many active subscriptions do we have?\n- What's our average revenue per customer?\n- What's our MRR broken down by plan/tier?\n\n2. TRENDS (last 3 months)\n- MRR growth rate month-over-month\n- New MRR vs. churned MRR vs. expansion MRR\n- Net revenue retention rate\n- Customer count trend\n\n3. CHURN ANALYSIS\n- Which customers churned this month? (company names and plan details)\n- What's the dollar churn rate vs. logo churn rate?\n- Average customer lifetime by plan tier\n- Are there patterns in who churns? (by plan, by tenure, by signup month)\n\n4. EXPANSION\n- Which customers upgraded this month?\n- What's our expansion revenue as a percentage of total MRR?\n- Which plan tier has the highest upgrade rate?\n\nFormat the output as a clean, readable report I could paste into a Slack message or email."
+/>
+
+<TipCallout type="warning">
+Never paste API keys directly into Claude Code prompts. Use environment variables (STRIPE_API_KEY, etc.) or a .env file that's in your .gitignore. Claude Code reads environment variables natively — just reference them by name.
+</TipCallout>
+
+### Instant Revenue Queries
+
+Once Stripe is connected, you can ask questions in plain English.
+
+<PromptBlock
+  title="Quick Stripe revenue queries"
+  prompt="Using our Stripe connection, answer these questions:\n\n1. How much revenue did we collect last week?\n2. Which 5 customers pay us the most?\n3. How many trials converted to paid in the last 30 days? What's the conversion rate?\n4. Show me all failed payments from the last 7 days — are any of them from our top 50 accounts?\n5. What's our runway if current churn continues and we add zero new customers?"
+/>
+
+<RealWorldProof
+  quote="Before Claude Code, our Monday revenue meeting started with 20 minutes of someone screen-sharing a spreadsheet they'd spent an hour building that morning. Now I type 'weekly revenue summary' and paste the output into Slack at 8am. The meeting starts with discussion, not data gathering."
+  author="CEO, SaaS Company ($3M ARR)"
+  context="Team of 15, switched from manual spreadsheet reporting to Claude Code + Stripe integration"
+/>
+
+## Connecting Your CRM
+
+Layer CRM data on top of Stripe to connect revenue to pipeline.
+
+<PromptBlock
+  title="CRM pipeline reporting"
+  prompt="Connect to our [CRM name] using the API key in environment variable [env var name].\n\nPull pipeline data and generate a report:\n\n1. PIPELINE SNAPSHOT\n- Total pipeline value by stage\n- Number of deals by stage\n- Average deal size by stage\n- Weighted pipeline (deal value x probability by stage)\n\n2. PIPELINE VELOCITY\n- Average time deals spend in each stage\n- Deals that have been stuck in a stage for more than [X] days (flag these)\n- This month's pipeline velocity vs. last month\n\n3. FORECAST\n- Based on current pipeline and historical conversion rates, forecast next month's closed revenue\n- Best case / expected / worst case scenarios\n- What needs to happen this month to hit [target number]?\n\n4. REP PERFORMANCE (if available)\n- Pipeline by rep\n- Close rate by rep\n- Average deal size by rep\n- Activity metrics (calls, emails, meetings) if the CRM tracks them"
+  variables={[
+    { name: "CRM name", placeholder: "HubSpot" },
+    { name: "env var name", placeholder: "HUBSPOT_API_KEY" },
+    { name: "X", placeholder: "14" },
+    { name: "target number", placeholder: "$150K" }
+  ]}
+/>
+
+## Unified Revenue Report
+
+The real power comes from combining data sources. Stripe tells you what happened. The CRM tells you what's coming. Together, they give you the full picture.
+
+<PromptBlock
+  title="Weekly unified revenue report"
+  prompt="Generate our weekly revenue report by pulling data from both Stripe and [CRM name].\n\nWEEKLY REVENUE REPORT — Week of [date]\n\n1. REVENUE (from Stripe)\n- This week's collections\n- MRR as of today vs. last week\n- New MRR added\n- MRR churned\n- Net MRR change\n- Notable: any large new deals, upgrades, or churns\n\n2. PIPELINE (from CRM)\n- Total pipeline value\n- Deals expected to close this month\n- Pipeline added this week vs. pipeline closed/lost\n- Deals at risk (stuck, overdue, champion gone quiet)\n\n3. LEADING INDICATORS\n- Trial starts this week vs. last week\n- Demo requests this week\n- Proposal-to-close conversion rate (trailing 30 days)\n- Average sales cycle length (trailing 30 days)\n\n4. ATTENTION NEEDED\n- Deals that need executive involvement\n- Customers showing churn signals\n- Pipeline gaps: are we on track for [quarterly target]?\n\n5. CONTEXT\n- What changed this week that the leadership team should know about?\n- Any patterns in new signups, churn reasons, or competitive losses?\n\nFormat as a clean report suitable for pasting into a Slack channel or email."
+  variables={[
+    { name: "CRM name", placeholder: "HubSpot" },
+    { name: "date", placeholder: "March 10, 2026" },
+    { name: "quarterly target", placeholder: "$450K" }
+  ]}
+/>
+
+## Adding Analytics
+
+Layer your product analytics or website analytics for a complete view.
+
+<PromptBlock
+  title="Connect Google Analytics or product analytics"
+  prompt="I also want to include [analytics source] data in our reporting. Credentials are in environment variable [env var name].\n\nPull these metrics for the last 7 days:\n1. Website traffic to our pricing page and demo page\n2. Trial signups and where they came from (source/medium)\n3. In-product engagement: [key product metrics you track]\n4. Conversion funnel: visit → trial → activated → paid\n\nNow combine this with our Stripe and CRM data to answer:\n- What's our blended CAC? (marketing spend / new customers acquired)\n- Which traffic sources produce customers that actually stick? (tie source to LTV)\n- Is our trial-to-paid conversion rate improving or declining?\n- How does product engagement in the first 7 days correlate with conversion to paid?"
+  variables={[
+    { name: "analytics source", placeholder: "Mixpanel" },
+    { name: "env var name", placeholder: "MIXPANEL_API_KEY" },
+    { name: "key product metrics you track", placeholder: "DAU, feature adoption rates, sessions per user" }
+  ]}
+/>
+
+## Building Slash Commands for Revenue Queries
+
+Once you've proven these queries work, save them as Claude Code Skills so anyone on the team can run them.
+
+<PromptBlock
+  title="Create revenue reporting skills"
+  prompt="I want to save our most common revenue queries as reusable Claude Code skills (slash commands). Create these:\n\n1. /mrr — Pull current MRR from Stripe with breakdown by plan\n2. /pipeline — Pull pipeline snapshot from CRM\n3. /weekly-report — Generate the full unified weekly revenue report\n4. /churn-report — Pull all churn data from the last 30 days with reasons\n5. /forecast — Generate next month's revenue forecast based on pipeline and historical conversion\n6. /health-check — Quick pulse on the 5 metrics that matter most: MRR, growth rate, churn rate, pipeline coverage, trial conversion\n\nFor each skill:\n- Create a markdown file with the instructions\n- Include the API connection details (reference environment variables, never hardcode)\n- Specify the output format\n- Add error handling for when the API is unavailable or returns unexpected data\n\nSave these to our .claude/commands/ directory."
+/>
+
+<TipCallout type="tip">
+Start with one connection (Stripe) and one report (weekly MRR summary). Get that working and useful before adding more sources. The temptation is to build a complete BI platform in one session. The reality is you'll get the most value from the first query within 30 minutes, then expand over time.
+</TipCallout>
+
+## Automating the Cadence
+
+Set up reports to run on a schedule.
+
+<PromptBlock
+  title="Automated reporting schedule"
+  prompt="Set up automated revenue reporting on this schedule:\n\n1. DAILY (8am): Quick health check — MRR, new signups, churns, failed payments. Post to #revenue Slack channel.\n\n2. WEEKLY (Monday 7am): Full weekly revenue report. Post to #leadership Slack channel and email to [email list].\n\n3. MONTHLY (1st of month): Comprehensive monthly report including:\n   - Full MRR waterfall (starting MRR + new + expansion - contraction - churn = ending MRR)\n   - Pipeline review and forecast\n   - Cohort analysis by signup month\n   - Leading indicator trends\n   - Board-ready metrics summary\n   Save to Google Drive at [folder path] and email to [email list].\n\nFor each automation:\n- Create a script that Claude Code can run\n- Add error handling and fallback notifications\n- Include a way to manually trigger any report on demand\n- Log each run so we can verify reports are generating correctly"
+  variables={[
+    { name: "email list", placeholder: "team@company.com" },
+    { name: "folder path", placeholder: "Revenue Reports/2026" }
+  ]}
+/>
+
+## Scenario Modeling
+
+With live data connections, you can model scenarios in real time.
+
+<PromptBlock
+  title="Revenue scenario modeling"
+  prompt="Using our live Stripe and CRM data, model these scenarios:\n\n1. BASE CASE: Current trajectory continues — same growth rate, same churn rate, same conversion rates. Where are we in 3, 6, and 12 months?\n\n2. IMPROVE RETENTION: What happens if we reduce churn by 20%? By 50%? What's the MRR impact at each milestone?\n\n3. INCREASE DEAL SIZE: What if our average deal size increases by [percentage]? (We're testing a new pricing tier.) How does that compound over 12 months?\n\n4. PIPELINE ACCELERATION: What if we close deals 2 weeks faster? What's the revenue impact of shorter sales cycles?\n\n5. WORST CASE: What if our top 3 customers churn next month? What's the impact and how long does recovery take at current growth rates?\n\n6. HIRING IMPACT: If we hire [number] more reps, each ramping over [months], what's the expected pipeline and revenue contribution? When do they become ROI-positive?\n\nFor each scenario, show:\n- Monthly MRR projection for 12 months\n- Cash flow impact\n- Key assumptions\n- Sensitivity: which assumptions drive the biggest variance?"
+  variables={[
+    { name: "percentage", placeholder: "25%" },
+    { name: "number", placeholder: "2" },
+    { name: "months", placeholder: "3" }
+  ]}
+/>
+
+<BeforeAfter
+  before={{ label: "How you get revenue answers today", content: "1. Open Stripe dashboard, screenshot MRR chart\n2. Export Stripe data to CSV\n3. Open CRM, run pipeline report\n4. Copy numbers into Google Sheet\n5. Update formulas, fix broken references\n6. Create charts for the team meeting\n7. Write summary in Slack\n\nTime: 45-90 minutes, every Monday" }}
+  after={{ label: "How you get revenue answers with Claude Code", content: "Type: /weekly-report\n\nTime: 15 seconds\n\nOutput: Complete unified report with Stripe revenue, CRM pipeline, trend analysis, churn details, and forecast — formatted and ready to paste." }}
+  annotation="The time savings compound. 45 minutes/week is 39 hours/year. That's a full work week spent copy-pasting between tabs."
+/>
+
+## Security and Access Control
+
+Revenue data is sensitive. Handle it properly.
+
+<TipCallout type="warning">
+Revenue API connections carry real risk. Follow these rules strictly:
+- Store all API keys in environment variables, never in files or prompts
+- Use read-only API keys where available (Stripe supports restricted keys with specific permissions)
+- Never grant write access unless you specifically need it (read-only handles all reporting use cases)
+- Limit who has access to the Claude Code workspace that has these connections
+- Audit which API keys are active quarterly and revoke any that aren't needed
+</TipCallout>
+
+<ScenarioCard
+  scenario="Your CEO asks you to set up a revenue dashboard they can query themselves using Claude Code."
+  answer="Create a separate Claude Code workspace for the CEO with read-only API keys. Build slash commands for the most common queries (/mrr, /forecast, /churn). Write a one-page getting-started guide. The CEO should be able to ask revenue questions in plain English without understanding API connections. Test it by having them run 5 queries while you watch — if they get confused, simplify the commands."
+  prompt="Create a CEO-friendly revenue query workspace. Include these slash commands with simple, jargon-free outputs: /mrr (current MRR and trend), /pipeline (this month's pipeline summary), /forecast (where we'll land this quarter), /churn (who churned and why). Each output should be under 20 lines and use plain language."
+/>
+
+## What to Connect First
+
+Don't try to connect everything at once. Here's the priority order:
+
+| Priority | Connection | Why First | Time to Set Up |
+|----------|-----------|-----------|----------------|
+| 1 | Stripe | Revenue is the most-asked-about metric. Immediate value. | 30 minutes |
+| 2 | CRM | Pipeline data completes the revenue picture | 1 hour |
+| 3 | Product analytics | Connects usage to revenue for retention insights | 1-2 hours |
+| 4 | Marketing tools | Ties spend to pipeline for CAC analysis | 1-2 hours |
+| 5 | Support/CS tools | Adds churn prediction signals | 2 hours |
+
+Start with Stripe. Build one useful report. Use it for a week. Then add the next source. Each connection makes the others more valuable.

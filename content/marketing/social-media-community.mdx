@@ -1,0 +1,142 @@
+---
+title: "Social Media and Community"
+description: "Content calendars, post generation, community engagement, and managing your social presence."
+products: ["Chat", "Projects"]
+tier: "Starter"
+readTime: "12 min"
+---
+
+Social media is a distribution channel, not a content creation burden. The operators who win on social aren't the ones who post the most — they're the ones who have a system. Claude turns social from a daily scramble into a batch process you run once a week.
+
+## The Social Media Operating System
+
+The goal is simple: spend 2-3 hours per week on social media, total, across all platforms. Here's how.
+
+1. **Monday**: Generate the week's content in one Claude session (60 minutes)
+2. **Tuesday-Friday**: Review, personalize, and schedule (15 minutes/day)
+3. **Daily**: Engage with comments and DMs (15 minutes)
+
+That's it. No staring at blank screens. No "what should I post today?" panic.
+
+## Building Your Content Calendar
+
+<PromptBlock
+  title="Monthly content calendar"
+  prompt="Create a [X]-week social media content calendar for [platforms]. My audience: [audience]. My content pillars:\n\n1. [Pillar 1] — [description, % of content]\n2. [Pillar 2] — [description, % of content]\n3. [Pillar 3] — [description, % of content]\n4. [Pillar 4] — [description, % of content]\n\nPosting frequency: [frequency per platform]\n\nFor each day:\n- Platform\n- Content pillar\n- Post format (text, carousel, video script, poll, thread)\n- Topic/angle (specific enough to write from)\n- Best posting time (for this audience on this platform)\n\nRules:\n- No two consecutive days on the same pillar\n- Include at least [Y] engagement-focused posts per week (questions, polls, debates)\n- Include at least [Z] promotional posts per month (but make them valuable, not salesy)\n- Leave [W] slots as 'reactive' — for trending topics or timely commentary"
+  variables={[
+    { name: "X", placeholder: "4" },
+    { name: "platforms", placeholder: "LinkedIn and X/Twitter" },
+    { name: "audience", placeholder: "B2B SaaS founders and operators" },
+    { name: "Pillar 1", placeholder: "AI Implementation" },
+    { name: "Pillar 2", placeholder: "Leadership and Scaling" },
+    { name: "Pillar 3", placeholder: "Real Talk (honest founder stories)" },
+    { name: "Pillar 4", placeholder: "Tools and Tactics" },
+    { name: "frequency per platform", placeholder: "LinkedIn: 5x/week, X: daily" },
+    { name: "Y", placeholder: "2" },
+    { name: "Z", placeholder: "4" },
+    { name: "W", placeholder: "2" }
+  ]}
+/>
+
+## Platform-Specific Content Generation
+
+### LinkedIn Posts
+
+<PromptBlock
+  title="LinkedIn post batch"
+  prompt="Write [X] LinkedIn posts for the coming week. My audience: [audience]. My positioning: [one sentence on what I'm known for].\n\nPost mix:\n1. **Story post** — A personal experience with a business lesson. Hook → story → lesson → takeaway. 200-300 words.\n2. **Insight post** — A non-obvious observation about [industry/topic]. Start with a bold claim. 150-200 words.\n3. **Tactical post** — A specific how-to or framework someone can apply today. Use line breaks and structure. 200-250 words.\n4. **Contrarian post** — Challenge a common belief. Take a clear position. 150-200 words.\n5. **Question post** — An honest question that invites discussion. 50-100 words.\n\nRules for all posts:\n- First line must be a scroll-stopper (hooks, not clickbait)\n- Short paragraphs (1-2 sentences, then line break)\n- End with a question or invitation to engage\n- No hashtags in the body (max 3 at the bottom if any)\n- No 'I'm humbled' or 'I'm excited to announce' energy\n- Write like a person, not a personal brand"
+  variables={[
+    { name: "X", placeholder: "5" },
+    { name: "audience", placeholder: "founders and operators at $1M-$20M companies" },
+    { name: "one sentence on what I'm known for", placeholder: "Building in public — running a SaaS company while building a media business around AI and leadership" }
+  ]}
+/>
+
+### X/Twitter Posts
+
+<PromptBlock
+  title="X/Twitter content batch"
+  prompt="Write [X] tweets/posts for X/Twitter. Mix of standalone posts and threads. My audience: [audience].\n\nFormats:\n- [Y] standalone posts (under 280 characters — punchy, opinionated)\n- [Z] threads (8-12 posts each, each post standalone but building on previous)\n- [W] quote-tweet templates (give me a take I can use when quote-tweeting relevant content in my space)\n\nVoice: [voice description]. Think hot takes that are actually backed by experience, not engagement bait.\n\nTopics for this week:\n[List 3-5 topics]"
+  variables={[
+    { name: "X", placeholder: "10" },
+    { name: "audience", placeholder: "tech founders and AI practitioners" },
+    { name: "Y", placeholder: "5" },
+    { name: "Z", placeholder: "2" },
+    { name: "W", placeholder: "3" },
+    { name: "voice description", placeholder: "Direct, slightly irreverent, grounded in real experience" }
+  ]}
+/>
+
+<BeforeAfter
+  before="Excited to share 5 tips for using AI in your business! 🚀\n\n1. Start small\n2. Get buy-in\n3. Measure ROI\n4. Train your team\n5. Iterate\n\nWhat tips would you add? Drop them below! 👇"
+  after="We spent $40K on AI tools last year.\n\nThe team actually uses 3 of them.\n\nHere's what I learned about why most AI implementations fail — and the one question I now ask before buying any tool."
+  explanation="The 'before' is generic advice formatted as engagement bait. The 'after' is a specific story that creates genuine curiosity. Specificity always outperforms generic advice on social."
+/>
+
+## Community Management
+
+### Responding to Comments and DMs
+
+<PromptBlock
+  title="Comment response batch"
+  prompt="Here are [X] comments/DMs I received this week on [platform]. For each one, draft a response that:\n\n1. Acknowledges their specific point (no generic replies)\n2. Adds value (a follow-up thought, resource, or question)\n3. Keeps the conversation going when appropriate\n4. Matches my voice: [voice description]\n\nRules:\n- If someone disagrees, engage respectfully — don't ignore or dismiss\n- If someone asks a question my content already answers, point them to it specifically\n- If someone is clearly trolling, draft a brief, dignified response (or recommend ignoring)\n- Keep responses under 100 words unless the question deserves more\n\n[Paste comments/DMs]"
+  variables={[
+    { name: "X", placeholder: "15" },
+    { name: "platform", placeholder: "LinkedIn" },
+    { name: "voice description", placeholder: "warm, direct, grateful but not performatively so" }
+  ]}
+/>
+
+### Community Content
+
+<PromptBlock
+  title="Community discussion prompts"
+  prompt="Generate [X] discussion prompts for my [community platform] community. Members are [member description].\n\nMix:\n- 2 'share your experience' prompts (invite members to contribute their stories)\n- 2 'hot take / debate' prompts (something members will disagree on productively)\n- 2 'resource share' prompts (ask members to share tools, books, or approaches)\n- 1 'challenge' prompt (a small action members can take this week and report back)\n\nRules:\n- Each prompt should be answerable in 2-3 sentences (low barrier to participate)\n- No prompts that feel like homework\n- Each should generate at least 10 responses from an engaged community\n- Avoid anything that could turn into a complaint thread"
+  variables={[
+    { name: "X", placeholder: "7" },
+    { name: "community platform", placeholder: "Circle" },
+    { name: "member description", placeholder: "SaaS founders doing $1M-$10M ARR, mix of technical and non-technical" }
+  ]}
+/>
+
+## Content Repurposing for Social
+
+<PromptBlock
+  title="Repurpose long-form to social"
+  prompt="Here's a [blog post / newsletter / video transcript] I published this week:\n\n[Paste content]\n\nExtract social content for the next 5 days:\n\nDay 1: LinkedIn post — the core thesis, reframed as a personal insight\nDay 2: X thread — the tactical framework, broken into tweet-sized steps\nDay 3: LinkedIn post — the most surprising data point or finding, with commentary\nDay 4: X post — the most quotable line, standalone\nDay 5: LinkedIn post — a reader/viewer question this piece answers, framed as 'Someone asked me...'\n\nEach piece should feel native to its platform. Nobody should feel like they're reading a chopped-up blog post."
+  variables={[]}
+/>
+
+## Engagement Strategy
+
+<PromptBlock
+  title="Engagement and growth plan"
+  prompt="Help me build a [X]-week engagement strategy for [platform]. Current followers: [count]. Goal: [target followers] by [date].\n\nMy content pillars: [list pillars]\nMy posting frequency: [frequency]\n\nDesign:\n1. **Proactive engagement plan** — Who should I be commenting on? (Give me criteria, not specific accounts.) How many comments per day? What makes a good comment vs. a wasted one?\n2. **Collaboration opportunities** — Types of collaborations that would grow my audience (LinkedIn Lives, co-authored posts, newsletter swaps). How to approach potential collaborators.\n3. **Trend hijacking framework** — How to identify trending topics I can credibly comment on. Template for inserting my perspective into trending conversations.\n4. **Weekly engagement routine** — A specific daily schedule for engagement activities.\n5. **Growth metrics to track** — What should I measure weekly to know this is working?"
+  variables={[
+    { name: "X", placeholder: "8" },
+    { name: "platform", placeholder: "LinkedIn" },
+    { name: "count", placeholder: "4,500" },
+    { name: "target followers", placeholder: "8,000" },
+    { name: "date", placeholder: "end of Q2" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="You've been posting on LinkedIn 3x/week for 2 months. Some posts get 50 impressions, others get 5,000. You can't figure out the pattern."
+  answer="Paste your last 15-20 posts with their engagement metrics into Claude. Ask it to identify patterns: what do the high performers have in common (hook type, topic, format, length, time posted)? What do the low performers share? The answer is almost always in the hook — your best posts probably open with a specific claim or story, while your worst open with a generic observation."
+  prompt="Here are my last 20 LinkedIn posts with engagement data (impressions, likes, comments, shares):\n\n[Paste posts with metrics]\n\nAnalyze:\n1. What do my top 5 posts have in common? (Hook, topic, format, length, tone)\n2. What do my bottom 5 posts have in common?\n3. Which content pillar performs best? Worst?\n4. What hook styles drive the most engagement?\n5. Are there posting time patterns?\n\nBased on this, give me a revised content strategy: what to post more of, what to stop posting, and 5 post ideas modeled after my top performers."
+/>
+
+<TipCallout type="tip">
+Set up a Claude Project called "Social Media" with your voice guide, content pillars, and audience description. Every Monday, start a conversation there to batch your week's content. Claude will maintain your voice automatically and you won't have to re-explain your context every time.
+</TipCallout>
+
+<StepByStep
+  steps={[
+    { title: "Define your pillars", description: "Pick 3-4 content pillars that reflect your expertise and what your audience cares about. Everything you post should map to one of these." },
+    { title: "Batch weekly", description: "Generate all social content for the week in one Monday session. Spend 60 minutes with Claude, not 15 minutes panicking every day." },
+    { title: "Personalize before posting", description: "Claude gives you 80% — the structure, the angle, the hook. You add the 20% that makes it yours: personal stories, specific details, your actual opinions." },
+    { title: "Engage daily", description: "15 minutes of genuine engagement (commenting on others' posts, responding to comments) drives more growth than an extra post." },
+    { title: "Review monthly", description: "Paste your metrics into Claude once a month. Get a data-driven content strategy adjustment." }
+  ]}
+/>

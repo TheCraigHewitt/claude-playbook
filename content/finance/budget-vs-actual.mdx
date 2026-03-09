@@ -1,0 +1,234 @@
+---
+title: "Budget vs. Actual Variance Analysis"
+description: "Turn raw variance data into plain-English explanations with board-ready framing."
+products: ["Chat", "Code"]
+tier: "Operator"
+readTime: "9 min"
+---
+
+Variance analysis is where most monthly reporting falls apart. You can see that marketing is 23% over budget, but the board doesn't want to know that — they want to know why and whether it matters.
+
+Claude bridges the gap between "here are the numbers" and "here's what they mean."
+
+## The Core Workflow
+
+Upload your actuals and budget. Get a narrative that explains each significant variance in plain English with the appropriate context.
+
+<PromptBlock
+  title="Full Variance Analysis"
+  prompt={`I'm uploading our P&L with actuals and budget for \${month}. Analyze every line item and produce:
+
+1. **VARIANCE TABLE**
+Format as:
+| Line Item | Actual | Budget | $ Variance | % Variance | Favorable? | Explanation |
+
+Only include the "Explanation" column for variances over \${threshold}% or $\${dollarThreshold}.
+
+2. **MATERIALITY FILTER**
+Separate the variances into:
+- Material (over \${threshold}% AND over $\${dollarThreshold}) — these need explanation
+- Immaterial — note these exist but don't waste the board's time
+
+3. **NARRATIVE SUMMARY** (3-5 paragraphs)
+For each material variance:
+- What happened (the number)
+- Why it likely happened (timing, volume, price, one-time vs recurring)
+- Whether it's a concern or expected
+- What action is recommended (if any)
+
+4. **ONE-LINE BOARD SUMMARY**
+A single sentence a CEO would text to their board chair. Example: "February revenue beat plan by 8% on enterprise expansion; marketing overspend by 15% is timing-related and will normalize by Q2."
+
+Tone: direct, specific, no hedging. Use actual numbers. Frame variances in business terms, not accounting terms.`}
+  variables={[
+    { name: "month", placeholder: "February 2026" },
+    { name: "threshold", placeholder: "10" },
+    { name: "dollarThreshold", placeholder: "5000" }
+  ]}
+/>
+
+## Explaining Variances Like a CFO
+
+The hardest part isn't calculating the variance — it's categorizing why it happened. Claude can generate hypotheses, but you need to give it context.
+
+<BeforeAfter
+  before={{
+    content: "Marketing expense: $87,000 actual vs $75,000 budget. Variance: $12,000 (16% over). Status: Unfavorable."
+  }}
+  after={{
+    content: "Marketing overspent by $12K (16%) driven by two factors: (1) we pulled forward the Q2 conference sponsorship to take an early-bird rate ($8K, net savings of $3K vs Q2 pricing), and (2) Facebook CPAs rose 15% market-wide, adding $4K to paid acquisition costs. The conference pull-forward is timing — it will show as favorable in Q2. The CPA increase is structural and we're shifting budget to LinkedIn where CPAs are stable."
+  }}
+  annotation="The numbers are the same. The story is completely different. Give Claude the context and it writes the CFO version."
+/>
+
+<PromptBlock
+  title="Variance Explanation with Context"
+  prompt={`Here's a variance that needs explanation for the board:
+
+Line item: \${lineItem}
+Actual: $\${actual}
+Budget: $\${budget}
+Variance: $\${variance} (\${variancePct}%)
+
+Context I know:
+\${context}
+
+Write a 2-3 sentence explanation that:
+1. States the variance in plain terms
+2. Explains the driver(s)
+3. Categorizes it: timing shift, volume-driven, price-driven, one-time, or structural change
+4. Recommends whether to adjust the forecast or monitor
+
+Write it in the voice of a CFO presenting to a board — concise, confident, specific.`}
+  variables={[
+    { name: "lineItem", placeholder: "Engineering - Contractor Costs" },
+    { name: "actual", placeholder: "45000" },
+    { name: "budget", placeholder: "30000" },
+    { name: "variance", placeholder: "15000" },
+    { name: "variancePct", placeholder: "50" },
+    { name: "context", placeholder: "We hired two contractors mid-month to accelerate the API v2 launch. Expected to be a 3-month engagement. Budget assumed we'd start contractors in April." }
+  ]}
+/>
+
+## Variance Categories Framework
+
+Use this framework to classify every variance. It changes how the board interprets the same number.
+
+<StepByStep
+  steps={[
+    { title: "Timing", description: "Expense happened earlier or later than budgeted. Will self-correct. Example: pulled forward a conference sponsorship from Q2 to Q1. Board response: 'Noted, will wash out.'" },
+    { title: "Volume", description: "More or fewer units than planned. Revenue variance driven by deal count, expense variance by headcount. Example: closed 3 more deals than planned. Board response: 'Good/bad — is the trend continuing?'" },
+    { title: "Price/Rate", description: "Same volume, different unit cost. Example: average deal size increased 15%. Board response: 'Understand the driver — is it mix shift or pricing power?'" },
+    { title: "One-Time", description: "Non-recurring item. Example: legal fees for a contract dispute. Board response: 'Excluded from run-rate analysis.'" },
+    { title: "Structural", description: "Permanent change to the business model. Example: new team member, new tool, new vendor. Board response: 'Need to reforecast.'" }
+  ]}
+/>
+
+<PromptBlock
+  title="Classify All Variances"
+  prompt={`I'm uploading our variance report. For each line item with a variance over \${threshold}%, classify it into one of these categories:
+
+1. **Timing** — happened earlier/later than planned, will self-correct
+2. **Volume** — more/fewer units than planned
+3. **Price/Rate** — different unit cost than planned
+4. **One-Time** — non-recurring, exclude from run-rate
+5. **Structural** — permanent change, need to reforecast
+
+For each, write one sentence explaining the classification.
+
+Then summarize: "Of the $X total unfavorable variance, $Y is timing-related and will self-correct, $Z is structural and requires a forecast update, and $W is one-time."
+
+This framing helps the board understand whether the variances are noise or signal.`}
+  variables={[
+    { name: "threshold", placeholder: "5" }
+  ]}
+/>
+
+## YTD Cumulative View
+
+Monthly variances are noisy. The YTD view tells the real story.
+
+<PromptBlock
+  title="YTD Variance Roll-Up"
+  prompt={`I'm uploading our YTD P&L (\${months} months of actuals vs budget). Produce:
+
+1. **YTD VARIANCE SUMMARY**
+Same table format as monthly, but cumulative. This smooths out timing variances and reveals structural issues.
+
+2. **TREND ANALYSIS**
+For the top 5 largest YTD variances, show the monthly progression:
+- Month 1: +$X
+- Month 2: +$Y (cumulative: +$Z)
+- Month 3: ...
+
+Identify whether the variance is:
+- Growing (getting worse each month — structural problem)
+- Stable (same delta each month — permanent but not worsening)
+- Converging (self-correcting — likely timing)
+
+3. **FORECAST IMPACT**
+Based on YTD trends, estimate the full-year variance for each material line item. "At current run-rate, Engineering will finish the year $180K over budget. If the contractor engagement ends in April as planned, the full-year overage reduces to $90K."
+
+4. **REFORECAST RECOMMENDATIONS**
+List line items where the budget should be updated, with suggested new numbers and justification.`}
+  variables={[
+    { name: "months", placeholder: "3" }
+  ]}
+/>
+
+## Board-Ready Formatting
+
+<PromptBlock
+  title="Board Deck Variance Slide"
+  prompt={`Take this variance data and format it for a board deck slide. I need:
+
+1. **Headline** — One sentence summarizing the month. Example: "Revenue ahead of plan; opex timing shift will normalize Q2."
+
+2. **Key Metrics Bar** — Show these 4 metrics in a horizontal row:
+   - Revenue: $X (vs plan: $Y, +Z%)
+   - Gross Margin: X% (vs plan: Y%)
+   - EBITDA: $X (vs plan: $Y)
+   - Cash: $X (runway: Y months)
+
+3. **Variance Waterfall** — Describe a bridge from budgeted EBITDA to actual EBITDA:
+   Budgeted EBITDA → Revenue beat → COGS variance → ... → Actual EBITDA
+   (List each component with + or - and the driver)
+
+4. **Traffic Light Summary** — For each department or major line item:
+   🟢 On/ahead of plan
+   🟡 Within 5% of plan, monitoring
+   🔴 Off plan, action required
+
+Keep the total content to what fits on one slide. Ruthlessly prioritize.`}
+/>
+
+<TipCallout type="tip">
+The best board variance reports answer three questions in order: "What happened?" (the number), "Why?" (the driver), and "So what?" (the action). If your variance explanation doesn't hit all three, it's incomplete.
+</TipCallout>
+
+## Automated Variance Reports with Code
+
+For recurring monthly analysis, build a script that does this automatically.
+
+<PromptBlock
+  title="Automated Variance Report Script"
+  prompt={`Build a Python script that reads two CSV files — actuals and budget — and generates a variance analysis HTML report.
+
+INPUT FILES:
+- actuals.csv: columns = category, subcategory, amount
+- budget.csv: same structure
+
+THE SCRIPT SHOULD:
+1. Merge actuals and budget on category + subcategory
+2. Calculate $ variance and % variance
+3. Flag material variances (over \${threshold}% AND over $\${dollarThreshold})
+4. Generate an HTML report with:
+   - Summary metrics at top (total revenue variance, total expense variance, EBITDA variance)
+   - Detailed variance table with conditional formatting (green/red)
+   - A section for "Material Variances Requiring Explanation" — list each material variance with a placeholder for the narrative (I'll fill these in)
+5. Sort the material variances by absolute dollar impact, largest first
+
+Save as variance-report-YYYY-MM.html.`}
+  variables={[
+    { name: "threshold", placeholder: "10" },
+    { name: "dollarThreshold", placeholder: "5000" }
+  ]}
+/>
+
+## Common Pitfalls
+
+<TipCallout type="warning">
+Don't let Claude fabricate explanations for variances. It will confidently generate plausible-sounding reasons that are completely wrong. Always provide the context — "we hired two contractors" or "conference was pulled forward." Claude structures the narrative; you provide the facts.
+</TipCallout>
+
+<ScenarioCard
+  scenario="Your marketing spend is 30% over budget, but you know it's because you shifted spend from Q2 into Q1 to capture lower CPAs. How do you frame this for the board?"
+  answer="Frame it as a timing shift with a net positive outcome. Show the Q1 overage will be offset by Q2 savings, and the early spend actually saved money."
+  prompt="Write a board-ready explanation for this variance: Marketing spend was $130K vs $100K budget (30% over). Context: We pulled $25K of Q2 planned spend into Q1 to lock in early-bird conference rates (saving $5K net) and to front-load paid acquisition before a competitor's product launch. Q2 marketing will come in $25K under budget. Frame this as a strategic timing decision, not an overspend."
+/>
+
+<ScenarioCard
+  scenario="Engineering is over budget by 50% due to contractor costs you didn't budget for. The CEO wants to know if this will continue."
+  answer="Be transparent about the overage, explain the driver, provide a timeline for when it normalizes, and reforecast the rest of the year."
+  prompt="Write a board-ready explanation: Engineering is $45K actual vs $30K budget (50% over). Context: Two contractors hired mid-February for the API v2 launch at $7,500/month each. This was an unbudgeted decision made to hit the April launch deadline. Contractors expected to roll off end of April. Reforecast: March and April will each be ~$15K over budget. May onward returns to budget. Full-year impact: $45K over original budget. Frame this as a deliberate investment decision with a defined end date."
+/>

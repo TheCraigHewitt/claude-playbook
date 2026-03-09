@@ -1,0 +1,138 @@
+---
+title: "Email That Gets Replies"
+description: "Cold outreach, follow-ups, difficult internal comms, and customer responses."
+products: ["Chat"]
+tier: "Starter"
+readTime: "10 min"
+---
+
+Email is the universal business skill. Everyone writes it, most people are bad at it, and Claude can make you dramatically better at it overnight.
+
+## The Email Prompting Framework
+
+Every email prompt should include four things:
+
+1. **Context** — Who are you writing to and why?
+2. **Goal** — What action do you want the reader to take?
+3. **Tone** — How should this sound?
+4. **Constraints** — Length, format, things to avoid
+
+<PromptBlock
+  title="Cold outreach email"
+  prompt="Write a cold outreach email to [recipient name], [their title] at [company]. Context: [why you're reaching out]. Goal: [what you want them to do — e.g., book a 15-min call]. Tone: professional but conversational, like a knowledgeable peer, not a salesperson. Constraints: under 125 words, short paragraphs (2-3 sentences max), no buzzwords, no fake personalization. Include a subject line."
+  variables={[
+    { name: "recipient name", placeholder: "Jane Smith" },
+    { name: "their title", placeholder: "VP of Marketing" },
+    { name: "company", placeholder: "Acme Corp" },
+    { name: "why you're reaching out", placeholder: "They recently posted about struggling with customer churn" },
+    { name: "what you want them to do", placeholder: "Book a 15-minute call to discuss" }
+  ]}
+/>
+
+<MiniQuiz
+  question="What's the most important element when asking Claude to draft an email?"
+  options={[
+    { label: "Requesting a specific word count or length", correct: false, explanation: "Length constraints help, but without context about the recipient and goal, you'll get a perfectly sized generic email that doesn't land." },
+    { label: "Providing specific context about the recipient, goal, and situation", correct: true, explanation: "Context is everything. 'Write a follow-up to my CTO prospect who asked about security compliance' beats 'write a follow-up email' every time. Specificity drives relevance." },
+    { label: "Using a proven email template or framework", correct: false, explanation: "Templates give structure, but the output is only as good as the context you provide. A template filled with vague inputs produces vague emails." },
+    { label: "Asking Claude to write multiple drafts to choose from", correct: false, explanation: "Multiple drafts can help, but if the underlying prompt lacks context, you'll just get multiple versions of the same generic email." }
+  ]}
+/>
+
+## Five Email Templates That Work
+
+### 1. The Follow-Up That Doesn't Feel Desperate
+
+<PromptBlock
+  title="Follow-up after no response"
+  prompt="Write a follow-up email to someone who hasn't responded to my initial outreach 5 days ago. Original email topic: [topic]. Keep it under 50 words. Don't be apologetic. Don't say 'just checking in' or 'bumping this.' Add one new piece of value or insight that makes responding feel worthwhile."
+  variables={[{ name: "topic", placeholder: "Our conversation about AI implementation for their sales team" }]}
+/>
+
+### 2. The Difficult Internal Email
+
+<PromptBlock
+  title="Communicating bad news internally"
+  prompt="Write an internal email to [audience] about [the situation]. I need to be direct and transparent without creating panic. Include: what happened, what we're doing about it, what changes (if any), and next steps. Tone: calm, confident, and honest. Under 200 words."
+  variables={[
+    { name: "audience", placeholder: "the engineering team" },
+    { name: "the situation", placeholder: "we're pausing the product roadmap for Q2 to focus on technical debt" }
+  ]}
+/>
+
+### 3. The Customer Save
+
+<PromptBlock
+  title="Responding to a cancellation request"
+  prompt="Write a response to a customer who wants to cancel their subscription. Their reason: [reason]. We want to save them if possible, but not be pushy. Acknowledge their concern genuinely, offer one specific solution, and make it easy to cancel if they still want to. Tone: empathetic, not desperate."
+  variables={[{ name: "reason", placeholder: "They said they're not using the product enough to justify the cost" }]}
+/>
+
+### 4. The Warm Introduction Request
+
+<PromptBlock
+  title="Asking for an introduction"
+  prompt="Write an email asking [person] to introduce me to [target person] at [target company]. Context: [why I want the introduction]. Make it easy for them to forward — include a short blurb about me they can paste. Keep it respectful of their relationship and under 100 words."
+  variables={[
+    { name: "person", placeholder: "my investor, Sarah" },
+    { name: "target person", placeholder: "the VP of Sales" },
+    { name: "target company", placeholder: "Shopify" },
+    { name: "why I want the introduction", placeholder: "We're building a Shopify integration and want to explore a partnership" }
+  ]}
+/>
+
+### 5. The Batch Triage
+
+<PromptBlock
+  title="Process multiple emails at once"
+  prompt="Here are [X] emails I need to respond to. For each one:\n1. Priority: urgent / important / low / archive\n2. Suggested action: reply / delegate / defer / archive\n3. If 'reply': draft a concise response\n\nGroup by priority in your output. My default tone: professional, direct, warm.\n\n[Paste emails below]"
+  variables={[{ name: "X", placeholder: "15" }]}
+/>
+
+<TipCallout type="tip">
+For batch email triage, set up a Project with your communication style and common contacts. Claude will write replies that actually sound like you.
+</TipCallout>
+
+## The Voice Matching Trick
+
+If you want emails that sound like YOU, not like an AI:
+
+1. Paste 5-10 emails you've written that represent your best writing
+2. Ask Claude: "Analyze my writing style — tone, sentence length, vocabulary, patterns"
+3. Save Claude's analysis in your Project instructions
+4. Now every email Claude drafts will match your voice
+
+<ScenarioCard
+  scenario="Your biggest client just emailed to say they're considering switching to a competitor. The email is polite but firm. You need to respond within the hour."
+  answer="Don't panic-write. Give Claude the full context: the client relationship history, what the competitor offers, your unique value, and what concessions you can make. Ask for three response options ranging from 'graceful acknowledgment' to 'strong retention offer' — then pick the one that fits."
+  prompt="Urgent: my largest client ($120K/year) just emailed saying they're evaluating [competitor]. I need to respond within an hour. Our relationship: 3 years, always been happy until recent pricing change. Our advantages over competitor: [list 2-3]. I can offer: [what concessions are possible]. Draft three response options: 1) Graceful — acknowledge, reaffirm value, suggest a call. 2) Proactive — same plus a specific offer to address their concern. 3) Full retention — pull out all stops with a clear value bridge."
+/>
+
+## Advanced: Email Sequences
+
+When a single email won't do the job, use Claude to map out the full sequence.
+
+<PromptBlock
+  title="Multi-touch email sequence"
+  prompt="Design a [X]-email sequence for [goal]. Audience: [who]. Spacing: [how many days between emails]. For each email, give me:\n- Subject line\n- Core message (one sentence)\n- Full draft (under 100 words each)\n- CTA\n\nRules: Each email should stand alone. Don't reference previous emails explicitly. Escalate value, not urgency. No guilt trips."
+  variables={[
+    { name: "X", placeholder: "4" },
+    { name: "goal", placeholder: "re-engaging churned customers from Q3" },
+    { name: "who", placeholder: "SaaS customers who cancelled 60-90 days ago" },
+    { name: "how many days between emails", placeholder: "3-4 days" }
+  ]}
+/>
+
+## Common Mistakes to Avoid
+
+**Over-prompting tone.** Saying "professional but casual but warm but authoritative" gives Claude mixed signals. Pick one primary tone and one modifier. "Direct and warm" is enough.
+
+**Skipping context.** "Write a follow-up email" gives you generic slop. "Write a follow-up to my CTO prospect who asked about our security compliance and then went quiet" gives you something useful.
+
+**Ignoring the subject line.** The subject line is half the battle. Always ask for it explicitly, or ask Claude to generate 5 options and pick the best one.
+
+<BeforeAfter
+  before="Write a professional email to a potential client about our services."
+  after="Write a cold email to the Head of Revenue at a B2B SaaS company doing $5M ARR. They posted on LinkedIn about struggling with sales rep ramp time. We help companies cut ramp time by 40% using AI-powered coaching. Goal: get them to reply with interest in a 15-min call. Under 100 words. Subject line included."
+  explanation="The 'after' version gives Claude everything it needs: who, why, what you offer, what you want, and constraints. The result will be specific and useful instead of generic."
+/>

@@ -1,0 +1,293 @@
+---
+title: "Skills in Claude Code"
+description: "Filesystem-based skills, slash commands, personal vs. project skills, bundling scripts, and real examples from production systems."
+products: ["Code"]
+tier: "Builder"
+readTime: "14 min"
+---
+
+Claude Code is where skills become truly powerful. Instead of pasting instructions into a chat box, skills live as files on your filesystem. Claude discovers them automatically, loads context from other files, and produces output that writes directly to your project.
+
+This is the playbook for operators who want to build real systems, not just use templates.
+
+## How Claude Code Discovers Skills
+
+Claude Code looks for skills in specific locations, in this order:
+
+### 1. CLAUDE.md — The Master Briefing
+
+The `CLAUDE.md` file in your project root loads automatically for every session. Think of it as persistent context that's always on.
+
+```
+your-project/
+├── CLAUDE.md          ← Loads automatically, every session
+├── context/           ← Referenced by CLAUDE.md
+└── output/            ← Where generated content goes
+```
+
+CLAUDE.md typically contains:
+- Repository structure overview
+- Command reference table
+- Business context and identity
+- Voice and tone guidelines
+- Guardrails that apply to all tasks
+
+### 2. Project Commands — `.claude/commands/`
+
+Files in `.claude/commands/` become slash commands you can invoke by name:
+
+```
+your-project/
+└── .claude/
+    └── commands/
+        ├── meeting-notes.md    → /meeting-notes
+        ├── blog-post.md        → /blog-post
+        ├── weekly-report.md    → /weekly-report
+        └── decision-journal.md → /decision-journal
+```
+
+Type `/meeting-notes` in Claude Code, and the contents of `meeting-notes.md` load as your instructions for that session.
+
+### 3. Personal Commands — `~/.claude/commands/`
+
+Files in your home directory's `.claude/commands/` folder are available in EVERY project. These are your personal skills — not tied to any one project.
+
+```
+~/.claude/
+└── commands/
+    ├── email-drafter.md       → Available everywhere
+    ├── code-reviewer.md       → Available everywhere
+    └── standup-update.md      → Available everywhere
+```
+
+<TipCallout type="tip">
+Use project commands for project-specific workflows (content production, client deliverables). Use personal commands for universal skills you want everywhere (email drafting, code review, general analysis).
+</TipCallout>
+
+## Project Skills vs. Personal Skills
+
+The distinction matters:
+
+| Aspect | Project Skills | Personal Skills |
+|--------|---------------|-----------------|
+| Location | `.claude/commands/` in the project | `~/.claude/commands/` |
+| Scope | Only in this project | Every project |
+| Context | Can reference project files | Only personal/global context |
+| Shared | Committed to git, team can use | Only on your machine |
+| Examples | Content workflows, client deliverables | Email drafting, code review |
+
+### When to Use Project Skills
+
+- The skill references project-specific context files
+- Other team members need access (it's committed to the repo)
+- The skill is specific to one business or workflow
+
+### When to Use Personal Skills
+
+- The skill works the same across all your projects
+- It doesn't need project-specific context
+- It's a personal productivity tool, not a team process
+
+## Anatomy of a Claude Code Skill
+
+Here's a production skill from a real content operations system. This is the YouTube Idea Refiner — a multi-mode skill that scores video ideas, generates titles, and produces thumbnail concepts:
+
+<PromptBlock
+  title="Multi-mode skill with context loading and scoring"
+  prompt="# YouTube Idea Refiner\n\nTake a raw video idea and sharpen it into a shoot-ready concept — or generate fresh ideas if none provided.\n\n## Instructions\n\nYou are a YouTube idea development tool. Your job is to take a rough idea and optimize it against proven growth frameworks before committing to a script.\n\n**Read these files before starting:**\n- context/ideation-rubric.md (scoring criteria, title formulas)\n- context/content-strategy.md (content pillars, mix targets)\n- context/ideal-customer.md (audience language and pain points)\n- context/voice-style-guide.md (tone and voice)\n\n**Also scan** output/ for recent scripts to avoid repetition.\n\n## Mode Detection\n\n**If $ARGUMENTS contains a video idea:** Run the full 7-step refinement workflow.\n\n**If $ARGUMENTS is empty:** Run batch ideation mode — generate 5-7 topic options across content pillars.\n\n## Batch Ideation Mode\n\nGenerate 5-7 distinct video ideas. For each:\n- Title (50-70 chars, curiosity-first)\n- Thumbnail concept (one-line visual)\n- Hook (opening line, ~15 words)\n- Quick Score (/25 across 5 dimensions)\n\nPresent options. Ask which to develop further.\n\n## 7-Step Refinement Workflow\n\n1. Score the idea (5 dimensions, 1-5 each)\n2. Refine the angle (sharpest version)\n3. Generate 5 title options (different archetypes)\n4. Create 2-3 thumbnail concepts\n5. Write 3 hook options (~30 seconds each)\n6. Build content skeleton\n7. Recommend the best title/thumbnail/hook combo\n\n## Output\n\nSave to: output/youtube-idea-[topic-slug].md"
+/>
+
+Notice the key patterns:
+
+1. **Context loading** — Reads 4 files before starting any work
+2. **Mode detection** — Different workflows based on input
+3. **Structured scoring** — Quantitative evaluation, not just vibes
+4. **Consistent output** — Always saves to the same location with a predictable naming scheme
+
+## The `$ARGUMENTS` Variable
+
+Every command file has access to `$ARGUMENTS`, which captures whatever is typed after the slash command:
+
+```
+/meeting-notes paste my notes here
+                ↑ This becomes $ARGUMENTS
+```
+
+Use this to create flexible commands that handle different inputs:
+
+```markdown
+## Input
+
+**Arguments:** $ARGUMENTS
+
+Parse the first word to determine mode:
+- "prep" → Pre-meeting preparation mode
+- "followup" → Post-meeting processing mode
+- "review" → Pattern analysis across all meetings
+
+If no arguments, ask which mode.
+```
+
+<ScenarioCard
+  scenario="You want one skill that handles both pre-meeting prep and post-meeting follow-up, since both need the same background context."
+  answer="Build a multi-mode skill. Parse the first word of $ARGUMENTS to determine mode. Both modes load the same context files, but execute different workflows. This keeps related workflows together and avoids duplicating context-loading instructions."
+  prompt="/meeting-prep advisory Acme Corp\n→ Loads advisory context, generates agenda and talking points\n\n/meeting-prep followup\n→ Asks for notes, extracts action items, drafts follow-up email\n\n/meeting-prep review\n→ Analyzes all past meeting notes for patterns"
+/>
+
+## Bundling Scripts with Skills
+
+Claude Code skills can execute scripts as part of their workflow. This unlocks capabilities that pure text instructions can't provide.
+
+### Example: Transcript Fetching
+
+```markdown
+## Mode: URL Provided
+
+If $ARGUMENTS contains a YouTube URL:
+1. Fetch transcript: `python3 get_transcript.py "<URL>" --stdout`
+2. Read the full transcript
+3. Use it as reference context for the refinement workflow
+```
+
+### Example: Data Processing
+
+```markdown
+## Step 1: Pull Current Metrics
+
+Run: `node scripts/pull-metrics.js --format json`
+
+Parse the JSON output and use it as the basis for analysis.
+```
+
+### Example: File Operations
+
+```markdown
+## Output
+
+After generating the content:
+1. Save the main output to `output/[slug].md`
+2. If this is a repurpose command, also save:
+   - `output/linkedin-[slug].md`
+   - `output/newsletter-[slug].md`
+   - `output/notes-[slug].md`
+```
+
+<TipCallout type="warning">
+Scripts bundled with skills should be simple and focused. A 10-line Python script that fetches data is fine. A 500-line application with dependencies is not a skill — that's a separate tool.
+</TipCallout>
+
+## Real Examples from Production Systems
+
+These patterns come from real Claude Code setups built by non-developers. Every example is from a system in active daily use.
+
+### The Content Repurposing Pipeline
+
+One skill, four platform-specific outputs:
+
+```markdown
+# Content Repurposer
+
+Takes a YouTube script and creates:
+1. Substack post (600-1,000 words, more reflective tone)
+2. 5 standalone social notes (under 280 chars each)
+3. LinkedIn post (150-300 words, heavy line breaks)
+4. Short-form video script (under 60 seconds)
+
+Each output follows platform-specific formatting rules.
+Each is saved to output/ with a consistent naming convention.
+Total editing time for all four: ~20 minutes.
+```
+
+### The Decision Journal
+
+A skill that builds institutional memory over time:
+
+```markdown
+# Decision Journal
+
+Three modes:
+- /decision-journal log → Capture a new decision through conversation
+- /decision-journal update [slug] → Add outcomes to a past decision
+- /decision-journal review → Analyze all decisions for patterns
+
+Decisions saved as individual files:
+  context/decisions/2026-03-08-pricing-change.md
+
+Review mode analyzes ALL decision files for:
+- Bias detection (risk tolerance, status quo bias)
+- Prediction accuracy (expected vs. actual outcomes)
+- Overdue reviews
+- Recurring themes
+```
+
+This pattern is powerful because each decision logged makes the system smarter. After 10+ decisions, the review mode can surface patterns you'd never see yourself.
+
+### The Multi-Context Loader
+
+Skills that read different context files depending on the task:
+
+```markdown
+## Before Starting
+
+Read context files based on meeting type:
+- All types: context/00-quick-reference.md
+- Advisory calls: context/offer-details.md, context/frameworks.md
+- Investor calls: context/financials.md, context/exit-parameters.md
+- Follow-ups: Read recent entries in context/decisions/
+```
+
+This is efficient — each task loads only the context it needs, keeping the working set lean.
+
+## Building Your First Code Skill
+
+<StepByStep
+  steps={[
+    { title: "Pick your most repetitive task", description: "What do you do more than twice a week that follows a pattern? Content, reports, meeting prep, data analysis?" },
+    { title: "Create the file", description: "Create .claude/commands/[skill-name].md in your project. Use kebab-case for the filename." },
+    { title: "Write the skill", description: "Header, instructions, workflow steps, output format, guardrails. Reference the Skill Design Playbook for patterns." },
+    { title: "Add context files if needed", description: "If the skill needs background information, create context files and reference them from the skill." },
+    { title: "Create an output directory", description: "Create an output/ folder. All generated content goes here." },
+    { title: "Test with real input", description: "Run /[skill-name] with real input. Check the output. Fix what's wrong." },
+    { title: "Iterate three times", description: "Run it three times with different inputs. Each time, strengthen the areas that didn't work." }
+  ]}
+/>
+
+## Directory Structure Best Practices
+
+After building several skills, your project structure should look something like this:
+
+```
+your-project/
+├── CLAUDE.md              (Master briefing — loads every session)
+├── .claude/
+│   └── commands/          (Slash commands)
+│       ├── skill-one.md
+│       ├── skill-two.md
+│       └── skill-three.md
+├── context/               (Reference documents)
+│   ├── 00-quick-reference.md
+│   ├── 01-identity.md
+│   ├── 02-audience.md
+│   ├── 03-voice-guide.md
+│   └── decisions/         (Decision journal entries)
+├── output/                (Generated content)
+└── scripts/               (Helper scripts, if any)
+```
+
+<TipCallout type="note">
+The numbered context files (00, 01, 02...) are a deliberate pattern. They create a hierarchy from quick lookup to deep detail. Claude loads them by reference — it reads 00 for fast context and dives into deeper files only when the task requires it.
+</TipCallout>
+
+## Common Mistakes
+
+**Putting everything in CLAUDE.md.** The master briefing should be a summary and reference map — not the complete text of every context file. Point to files, don't embed them.
+
+**Too many commands too soon.** Start with 1-3 commands. Add new ones only when you discover a genuine pattern. Unused commands are clutter.
+
+**No output directory.** Without a consistent output location, generated content scatters across your project. One folder, consistent naming, easy to find.
+
+**Forgetting to commit commands.** If your skills live in `.claude/commands/`, they should be committed to git so they're versioned and shareable.
+
+## What's Next
+
+Individual skills are powerful. But the real magic happens when skills work together as a system. The next playbook covers [composing skill systems](/claude-playbook/skills/composing-skill-systems) — skills that reference other skills, skills combined with commands, and building a complete operational system for your business.

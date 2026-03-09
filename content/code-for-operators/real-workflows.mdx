@@ -1,0 +1,165 @@
+---
+title: "10 Real-World Claude Code Workflows"
+description: "Conversion tracking audits, ad analysis, AI BDR, client decks, support article SEO, call transcript processing, and more. Actual workflows you can copy."
+products: ["Code"]
+tier: "Operator"
+readTime: "15 min"
+---
+
+Theory is great. Here are 10 actual workflows that non-technical operators are running with Claude Code right now. Each one includes the prompt, what it connects to, and approximately how much time it saves.
+
+These aren't toy examples. They're workflows that replaced hours of manual work.
+
+## 1. Conversion Tracking Audit
+
+**The pain:** You're spending money on ads but you're not sure your conversion tracking is set up correctly. Conversions in Google Ads don't match conversions in your CRM. Nobody knows which number is right.
+
+**Time saved:** 4-6 hours per audit (this used to be a consultant engagement)
+
+<PromptBlock
+  title="Conversion tracking audit"
+  prompt="Run a conversion tracking audit for our marketing stack:\n\n1. Connect to Google Ads and pull all conversion actions, their types, and last 30 days of data\n2. Connect to Google Analytics and pull goal completions for the same period\n3. Connect to our CRM ([CRM name]) and pull new leads/opportunities created in the same period\n4. Compare the numbers:\n   - GA conversions vs. Google Ads reported conversions\n   - GA conversions vs. CRM new records\n   - Flag discrepancies greater than 10%\n5. For each discrepancy, suggest likely causes (delayed attribution, duplicate tracking, missing UTMs, etc.)\n6. Check our website's tracking code by reading the site's HTML for tag manager or direct pixel implementations\n\nOutput a report with: findings, discrepancies, likely causes, and recommended fixes."
+  variables={[{ name: "CRM name", placeholder: "HubSpot" }]}
+/>
+
+## 2. Ad Performance Analysis
+
+**The pain:** You export data from Google Ads, Facebook Ads, and your analytics tool. Copy everything into a spreadsheet. Make charts. Spend 2 hours figuring out what's working.
+
+**Time saved:** 2-3 hours weekly
+
+<PromptBlock
+  title="Weekly ad performance analysis"
+  prompt="Pull the last 7 days of ad performance data from:\n- Google Ads: campaigns, ad groups, spend, conversions, CPA\n- Our analytics platform: sessions, conversion rate, revenue by UTM source\n\nAnalyze:\n1. Which campaigns are profitable (CPA below our target of $[target CPA])?\n2. Which campaigns should we pause (CPA > 2x target with 50+ clicks)?\n3. Which ad groups are improving vs. declining week-over-week?\n4. Budget allocation: are we spending proportionally to performance?\n5. Creative fatigue: any ads with declining CTR over 3+ weeks?\n\nRecommendations:\n- Top 3 actions to take this week (specific: 'Pause Campaign X, reallocate $Y to Campaign Z')\n- Budget reallocation suggestions with expected impact\n\nSave as HTML report with charts to ~/Claude-Workspace/reports/ads-weekly-[date].html"
+  variables={[{ name: "target CPA", placeholder: "50" }]}
+/>
+
+## 3. AI Business Development Rep
+
+**The pain:** You need to research prospects before outreach, but manually checking LinkedIn, their website, recent news, and your CRM takes 15 minutes per prospect. At 20 prospects per day, that's 5 hours of research.
+
+**Time saved:** 3-4 hours daily for a sales team
+
+<PromptBlock
+  title="Prospect research and outreach prep"
+  prompt="I need to research and prep outreach for these prospects:\n\n[paste list of company names and contact names]\n\nFor each prospect:\n1. Check our CRM — do we have any history with this company or person?\n2. Research the company: what they do, approximate size, recent news or funding\n3. Research the contact: their role, how long they've been there, any public content they've posted\n4. Identify 1-2 personalization hooks (something specific I can reference in outreach)\n5. Draft a personalized cold email (under 100 words, reference the hook, clear CTA)\n6. Suggest the best time/day to send based on their timezone\n\nOutput as a table: Company | Contact | Hook | Draft Email | Send Time\n\nSave individual email drafts to output/outreach/[date]/"
+/>
+
+## 4. Client Reporting Pipeline
+
+**The pain:** Every month, you pull data for each client from 3 different tools, format it into their preferred report template, add commentary, and send it. Each report takes 45 minutes. With 10 clients, that's a full day.
+
+**Time saved:** 6-8 hours monthly
+
+<PromptBlock
+  title="Automated client report generation"
+  prompt="Generate this month's client report for [client name].\n\nData sources:\n- Stripe: revenue and billing data for their account\n- Analytics: traffic and conversion data for their properties\n- Our project tool: deliverables completed this month\n\nReport format (use their template at templates/client-report-template.html):\n1. Executive summary (3 bullets — wins, challenges, next steps)\n2. Revenue metrics with month-over-month comparison\n3. Traffic and conversion metrics with trends\n4. Deliverables completed this month (checklist format)\n5. Recommendations for next month\n6. Appendix: raw data tables\n\nClient-specific rules:\n- They prefer percentages over absolute numbers for changes\n- Always include year-over-year comparison in addition to month-over-month\n- Their fiscal year starts in April\n\nSave to output/client-reports/[client-name]-[month].html"
+  variables={[{ name: "client name", placeholder: "BigCo Retail" }]}
+/>
+
+## 5. Support Article SEO Audit
+
+**The pain:** Your help center has 200+ articles. Some rank well, most don't. You have no idea which articles to update, which to merge, and which to delete.
+
+**Time saved:** 8-12 hours (one-time, then 2 hours quarterly)
+
+<PromptBlock
+  title="Support article SEO audit"
+  prompt="Audit our help center for SEO:\n\n1. Read the sitemap at [sitemap URL] (or crawl the help center at [help center URL])\n2. For each article, connect to Search Console and pull: impressions, clicks, average position, and CTR\n3. Categorize every article:\n   - **Winners:** Position 1-5, good CTR. Leave alone.\n   - **Strike distance:** Position 5-15. These need optimization.\n   - **Dead weight:** Zero or near-zero impressions for 90+ days. Candidates for merging or removal.\n   - **Cannibalizing:** Multiple articles ranking for the same query. Merge these.\n4. For strike-distance articles, suggest specific title and H1 changes to improve ranking\n5. For cannibalizing articles, suggest which to keep and which to redirect\n\nOutput a prioritized action list: what to do first, with expected traffic impact."
+  variables={[
+    { name: "sitemap URL", placeholder: "help.yoursite.com/sitemap.xml" },
+    { name: "help center URL", placeholder: "help.yoursite.com" }
+  ]}
+/>
+
+## 6. Call Transcript to CRM Update
+
+**The pain:** After every sales call, the rep is supposed to update the CRM with notes, next steps, and deal stage. They don't. Or they write "good call, will follow up."
+
+**Time saved:** 15-20 minutes per call, multiplied by every call every day
+
+<PromptBlock
+  title="Process call transcript into CRM update"
+  prompt="Here's a transcript from a sales call:\n\n[paste transcript or provide file path]\n\nProcess this into actionable CRM data:\n\n1. **Call summary** (3-5 sentences — what happened, what was agreed)\n2. **Deal stage recommendation** — Based on what was discussed, what stage should this deal be in?\n3. **Next steps** — Specific commitments made by both sides, with dates\n4. **Key buying signals** — What did they say that indicates interest, urgency, or hesitation?\n5. **Objections raised** — What concerns did they express? Were they addressed?\n6. **Stakeholders mentioned** — Who else is involved in the decision?\n7. **Budget/timeline signals** — Any mention of budget, timeline, or decision process?\n8. **Follow-up email draft** — A thank-you email that references specific conversation points and confirms next steps\n\nUpdate the CRM record for [contact/company name] with this information."
+  variables={[{ name: "contact/company name", placeholder: "Jane Smith at Acme Corp" }]}
+/>
+
+## 7. Pinterest Content Overhaul
+
+**The pain:** You have a Pinterest business account with 500 pins. Some get traffic, most don't. You need to know what's working, what to double down on, and what format to use going forward.
+
+**Time saved:** 10+ hours (one-time strategic overhaul)
+
+<PromptBlock
+  title="Pinterest analytics overhaul"
+  prompt="Connect to our Pinterest Business account and analyze performance:\n\n1. Pull all pins from the last 12 months with: impressions, saves, clicks, and engagement rate\n2. Identify the top 20% of pins by engagement. What do they have in common? (format, topic, time posted, board, description style)\n3. Identify the bottom 20%. What do THEY have in common?\n4. Board analysis: which boards drive the most engagement?\n5. Timing analysis: when do our best-performing pins get posted?\n6. Content gap: based on what performs well, what content should we create more of?\n\nDeliverables:\n- A 'Pinterest playbook' with specific guidelines for new pins\n- A list of underperforming pins to archive or refresh\n- A 30-day content calendar with pin topics, formats, and optimal posting times\n\nSave everything to output/pinterest-overhaul/"
+/>
+
+## 8. Email List Health and Loading
+
+**The pain:** You need to import contacts, clean your list, segment properly, and set up automation — but the data is scattered across spreadsheets, CRM exports, and old email tools.
+
+**Time saved:** 4-6 hours per import/cleanup
+
+<PromptBlock
+  title="Email list cleanup and import"
+  prompt="I have a CSV of email contacts at [file path] that I need to clean and prepare for import into [email platform].\n\n1. **Deduplication:** Remove exact duplicates and near-duplicates (same email, different name formatting)\n2. **Validation:** Flag emails that look invalid (missing @, disposable domains, role-based addresses like info@)\n3. **Enrichment:** Where possible, extract first name from email addresses or full name fields\n4. **Segmentation:** Based on available data, suggest segment tags (by company size, industry, source)\n5. **Format:** Reformat to match [email platform]'s import template\n6. **Report:** How many total, how many valid, how many removed, how many per segment\n\nSave the clean CSV to output/email-import-[date].csv and the removed records to output/email-rejected-[date].csv"
+  variables={[
+    { name: "file path", placeholder: "~/Documents/email-list-export.csv" },
+    { name: "email platform", placeholder: "ActiveCampaign" }
+  ]}
+/>
+
+## 9. Video Content Production System
+
+**The pain:** For every video you produce, you need a script, thumbnail concepts, description, tags, and social media cuts. Each video requires 3-4 hours of pre and post-production coordination.
+
+**Time saved:** 2-3 hours per video
+
+<PromptBlock
+  title="Video production workflow"
+  prompt="I'm producing a video on [topic]. Run the full production workflow:\n\n**Pre-production:**\n1. Generate 5 title options (optimized for YouTube CTR)\n2. Write a hook for the first 30 seconds (pattern interrupt or curiosity gap)\n3. Create a beat-by-beat outline (not a script — key points with timestamps for a [length] video)\n4. Suggest 3 thumbnail concepts with text overlay\n\n**Post-production (after I record):**\n5. Generate the YouTube description (SEO-optimized, includes chapters/timestamps)\n6. Generate 15 tags\n7. Draft social media posts for: LinkedIn, Twitter/X, and newsletter\n8. Identify 3 clip-worthy moments for short-form content (I'll tell you the timestamps)\n\nSave all outputs to output/videos/[video-slug]/"
+  variables={[
+    { name: "topic", placeholder: "How to use AI agents for customer support" },
+    { name: "length", placeholder: "12-minute" }
+  ]}
+/>
+
+## 10. Financial Model and Scenario Analysis
+
+**The pain:** You want to model different scenarios for your business — what happens if churn increases by 2%, what if you raise prices, what if you add 3 sales reps. Building these models in spreadsheets takes hours and one wrong formula breaks everything.
+
+**Time saved:** 3-5 hours per modeling session
+
+<PromptBlock
+  title="Financial scenario modeling"
+  prompt="Build a financial model for my business based on these inputs:\n\n**Current metrics:**\n- MRR: $[current MRR]\n- Monthly churn rate: [churn]%\n- Average new customers/month: [new customers]\n- ARPU: $[arpu]\n- CAC: $[cac]\n- Monthly operating expenses: $[opex]\n\nModel three scenarios over 12 months:\n\n**Scenario A (Conservative):** Current trends continue unchanged\n**Scenario B (Growth):** [describe what changes — new sales rep, price increase, better conversion]\n**Scenario C (Stress test):** [describe what goes wrong — churn doubles, CAC increases 30%]\n\nFor each scenario, show month-by-month:\n- MRR, customers, revenue, expenses, profit/loss, cash balance, runway\n\nGenerate an HTML report with:\n- Summary table comparing all 3 scenarios at months 3, 6, 9, 12\n- Charts showing the divergence between scenarios\n- Key decision points — when does Scenario C become dangerous?\n- Recommendations based on the analysis\n\nSave to output/financial-model-[date].html"
+  variables={[
+    { name: "current MRR", placeholder: "150000" },
+    { name: "churn", placeholder: "3.5" },
+    { name: "new customers", placeholder: "25" },
+    { name: "arpu", placeholder: "200" },
+    { name: "cac", placeholder: "1200" },
+    { name: "opex", placeholder: "120000" }
+  ]}
+/>
+
+## The Pattern Across All Workflows
+
+Notice what all 10 workflows have in common:
+
+1. **They replace manual data gathering** — Claude connects to the source directly
+2. **They replace manual formatting** — Claude generates the report in the right format
+3. **They add analysis** — Claude doesn't just pull data, it interprets it
+4. **They're repeatable** — Run them weekly, monthly, or on-demand with Skills
+5. **They save real time** — Not 5 minutes here and there, but hours per workflow
+
+<TipCallout type="tip">
+Start with the workflow that causes you the most pain RIGHT NOW. Don't try to build all 10 at once. Get one working, feel the relief, and then add the next one.
+</TipCallout>
+
+## What to Build Next
+
+Now that you've seen what's possible, go build your first workflow. Pick the one that saves you the most time, follow the prompts above, and save it as a Skill so you never have to think about it again.
+
+If you haven't set up your context yet, start with [CLAUDE.md](/claude-playbook/code-for-operators/claude-md-business-os) — it makes every workflow better.

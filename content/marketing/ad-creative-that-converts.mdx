@@ -1,0 +1,155 @@
+---
+title: "Ad Creative That Converts"
+description: "Generate ad variations, test copy angles, and replicate winning formats across platforms."
+products: ["Chat"]
+tier: "Starter"
+readTime: "11 min"
+---
+
+Paid ads are one of the few places where better words directly equal more money. A headline change can double your click-through rate. A hook rewrite can cut your cost-per-acquisition in half. Claude lets you test at volume — generating 20 variations in the time it used to take to write 2.
+
+## The Ad Copy Framework
+
+Every high-converting ad has four elements:
+
+1. **Hook** — Stop the scroll. Pattern interrupt or immediate relevance.
+2. **Problem/Desire** — Connect to what the reader wants or fears.
+3. **Bridge** — Your product/offer as the solution.
+4. **CTA** — One clear action. No ambiguity.
+
+The difference between a $5 CPA and a $50 CPA is usually in the hook and the problem framing — not the product description.
+
+<MiniQuiz
+  question="What's the biggest driver of AI-generated ad copy that actually converts?"
+  options={[
+    { label: "Using the right ad format for each platform", correct: false, explanation: "Format matters for compliance and display, but a perfectly formatted ad with a generic message still gets scrolled past." },
+    { label: "Matching the copy to specific audience pain points with concrete details", correct: true, explanation: "Specificity is the single biggest driver of ad performance. 'Your reps average 34 minutes of talk time — top performers average 22' beats 'improve your sales performance' every time." },
+    { label: "Generating as many variations as possible to find a winner", correct: false, explanation: "Volume helps with testing, but 50 variations of vague copy won't outperform 5 variations that nail a specific pain point. Quality of the angle matters more than quantity." },
+    { label: "Writing the longest possible ad to convey maximum value", correct: false, explanation: "Longer ads aren't better ads. The hook needs to work in the first line — everything after that is secondary to stopping the scroll." }
+  ]}
+/>
+
+## Generating Ad Variations at Volume
+
+<PromptBlock
+  title="Ad copy variations"
+  prompt="Generate [X] ad copy variations for [platform]. Product: [product/offer]. Target audience: [who].\n\nFor each variation:\n- Primary text (hook + body)\n- Headline (under [character limit] characters)\n- Description (one line)\n- CTA button text\n\nUse these angles (at least 2 variations per angle):\n1. **Pain point** — Lead with the problem they're experiencing\n2. **Social proof** — Lead with results or credibility\n3. **Curiosity** — Lead with a question or surprising claim\n4. **Direct offer** — Lead with what they get\n5. **Contrarian** — Challenge a common belief in their industry\n\nConstraints: No superlatives ('best,' 'revolutionary'). No fake urgency. No questions they'd answer 'no' to."
+  variables={[
+    { name: "X", placeholder: "10" },
+    { name: "platform", placeholder: "LinkedIn" },
+    { name: "product/offer", placeholder: "AI-powered sales coaching platform that analyzes rep calls" },
+    { name: "who", placeholder: "VP Sales at B2B SaaS companies with 10-50 reps" },
+    { name: "character limit", placeholder: "70" }
+  ]}
+/>
+
+<TipCallout type="tip">
+Generate more variations than you need. Writing 20 to test 5 is cheaper than agonizing over 5 "perfect" ads. Let the data pick the winner.
+</TipCallout>
+
+## Platform-Specific Formats
+
+### Facebook / Instagram Ads
+
+<PromptBlock
+  title="Facebook/Instagram ad copy"
+  prompt="Write [X] Facebook/Instagram ad variations for [product/offer]. Audience: [who].\n\nFormat requirements:\n- Primary text: 125 characters visible before 'See more' — the hook MUST be in these 125 characters\n- Full primary text: 300-500 characters\n- Headline: Under 40 characters (gets truncated on mobile otherwise)\n- Description: Under 30 characters\n- CTA: Use one of: Learn More, Sign Up, Get Started, Book Now, Download\n\nVary the creative direction:\n- 2 story-driven (personal narrative or customer story)\n- 2 stat-driven (specific numbers or results)\n- 2 problem-aware (speak to the pain directly)\n\nTone: conversational, not corporate. These show up between photos of people's kids."
+  variables={[
+    { name: "X", placeholder: "6" },
+    { name: "product/offer", placeholder: "Free AI readiness assessment for operations teams" },
+    { name: "who", placeholder: "COOs and operations leaders at companies with 50-500 employees" }
+  ]}
+/>
+
+### LinkedIn Ads
+
+<PromptBlock
+  title="LinkedIn ad copy"
+  prompt="Write [X] LinkedIn ad variations for [product/offer]. Audience: [who].\n\nLinkedIn-specific rules:\n- Primary text: Open with a professional hook (not clickbait — LinkedIn audiences punish it)\n- Use line breaks for readability\n- Include one specific data point or result in each ad\n- Headline: Under 70 characters\n- Description: Under 100 characters\n\nFormats to include:\n- 2 Single Image ads\n- 2 Document/Carousel ads (provide the text for each card, 5-7 cards)\n- 2 Text ads (very short — headline + description only)\n\nTone: knowledgeable peer, not salesperson. LinkedIn users scroll past anything that smells like a pitch."
+  variables={[
+    { name: "X", placeholder: "6" },
+    { name: "product/offer", placeholder: "Revenue operations consulting engagement" },
+    { name: "who", placeholder: "CEOs at $5M-$20M B2B companies with underperforming sales teams" }
+  ]}
+/>
+
+### Google Search Ads
+
+<PromptBlock
+  title="Google Search ad copy"
+  prompt="Write Google Search ads for [X] keyword groups. For each keyword group, provide:\n\n- 3 headline options (max 30 characters each)\n- 2 description options (max 90 characters each)\n- Sitelink suggestions (4 per ad group, 25 character headlines)\n- Callout extensions (4 per ad group, 25 characters each)\n\nKeyword groups:\n[List keyword groups]\n\nRules:\n- Include the primary keyword in at least one headline\n- Each headline should be independently meaningful (Google may show any combination)\n- Descriptions should include a clear benefit and CTA\n- No exclamation points (Google often rejects them)\n- No 'best' or '#1' claims without qualification"
+  variables={[
+    { name: "X", placeholder: "3" },
+    { name: "List keyword groups", placeholder: "1) 'AI sales coaching' 2) 'sales call analysis software' 3) 'improve sales rep performance'" }
+  ]}
+/>
+
+## Replicating Winning Ads
+
+When you find an ad that works, Claude can help you scale that winning formula across new audiences, offers, and angles.
+
+<PromptBlock
+  title="Scale a winning ad"
+  prompt="This ad is our top performer:\n\n[Paste winning ad copy + metrics]\n\nAnalyze why it works — identify the specific elements that drive performance (hook type, emotional trigger, structure, specificity level, CTA approach).\n\nThen generate [X] new variations that use the same winning formula but:\n1. [Y] variations targeting a different audience segment: [new segment]\n2. [Z] variations promoting a different feature/offer: [new offer]\n3. [W] variations for a different platform: [new platform]\n\nPreserve the structural elements that make the original work. Change the specifics."
+  variables={[
+    { name: "X", placeholder: "9" },
+    { name: "Y", placeholder: "3" },
+    { name: "new segment", placeholder: "marketing leaders instead of sales leaders" },
+    { name: "Z", placeholder: "3" },
+    { name: "new offer", placeholder: "annual plan discount instead of free trial" },
+    { name: "W", placeholder: "3" },
+    { name: "new platform", placeholder: "Facebook instead of LinkedIn" }
+  ]}
+/>
+
+<BeforeAfter
+  before="Our AI platform helps businesses improve their sales performance with cutting-edge technology. Try it today and see the difference! Click to learn more."
+  after="Your reps are averaging 34 minutes of talk time per call. Top performers average 22. The gap isn't talent — it's coaching. See exactly where each rep loses deals, call by call."
+  explanation="The 'before' could be any product. The 'after' speaks to a specific pain point with specific numbers. Specificity is the single biggest driver of ad performance. Generic claims get scrolled past."
+/>
+
+## A/B Test Planning
+
+<PromptBlock
+  title="A/B test plan"
+  prompt="I want to systematically test my ad creative for [campaign]. Help me build a testing plan.\n\nCurrent best performer: [paste winning ad]\nMonthly ad budget: [budget]\nPlatform: [platform]\n\nCreate a testing matrix:\n1. **Round 1: Hook testing** — Same body, same CTA. 4 different hooks. Goal: find the strongest opening.\n2. **Round 2: Angle testing** — Winning hook + 4 different body angles (pain, social proof, curiosity, direct offer). Goal: find the strongest message.\n3. **Round 3: CTA testing** — Winning hook + winning body + 4 different CTAs. Goal: optimize conversion.\n\nFor each round:\n- Write the specific ad variations\n- Recommend budget allocation per variation\n- Define the success metric and minimum sample size\n- Suggest how long to run before calling a winner"
+  variables={[
+    { name: "campaign", placeholder: "free trial acquisition" },
+    { name: "budget", placeholder: "$5,000/month" },
+    { name: "platform", placeholder: "LinkedIn" }
+  ]}
+/>
+
+## Competitive Ad Analysis
+
+<PromptBlock
+  title="Analyze competitor ads"
+  prompt="Here are [X] ads from competitors in our space:\n\n[Paste competitor ad copy]\n\nAnalyze:\n1. What messaging angles are they using? (Categorize each ad)\n2. What hooks are most common?\n3. What emotional triggers are they targeting?\n4. Where are the gaps — what angles are nobody using?\n5. What's overused? (Anything we should avoid because the audience is fatigued)\n\nBased on this analysis, suggest 5 ad angles we could use that differentiate us from what everyone else is saying."
+  variables={[
+    { name: "X", placeholder: "10" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="Your LinkedIn ads have been running for 3 weeks. CTR is 0.4% (below the 0.6% benchmark). You've spent $3,000. The audience targeting seems right but the creative isn't connecting."
+  answer="The problem is almost always the hook. People scroll past your ad before they ever see your value prop. Generate 10 new hooks — each using a completely different angle. Test them against your existing body copy. Spend $500 testing hooks before you touch anything else."
+  prompt="My LinkedIn ads are underperforming. CTR: 0.4% (need 0.6%+). Here's my current ad:\n\n[Paste current ad]\n\nThe audience targeting is correct. The problem is creative. Generate:\n1. 10 alternative hooks (first 125 characters) — each using a fundamentally different approach\n2. For the 3 strongest hooks, write complete ad variations\n3. Suggest a $500 test plan to identify the winning hook within 5 days"
+/>
+
+<TipCallout type="tip">
+The number one mistake in ad copy: writing about your product instead of your customer's problem. Nobody searches for "AI-powered revenue intelligence platform." They search for "why are my reps missing quota." Start there.
+</TipCallout>
+
+## Ad Creative Checklist
+
+Before you run any ad Claude generates, check these boxes:
+
+<StepByStep
+  steps={[
+    { title: "Hook test", description: "Cover everything except the first line. Does the hook alone make you want to read more? If not, rewrite it." },
+    { title: "Specificity check", description: "Replace every vague claim with a specific number, example, or outcome. 'Improve sales' becomes 'Cut ramp time from 90 days to 45.'" },
+    { title: "So-what test", description: "Read each sentence and ask 'so what?' If you can't answer, cut or rewrite the sentence." },
+    { title: "Platform compliance", description: "Check character limits, prohibited words, and format requirements for your platform. Claude doesn't always know current platform policies." },
+    { title: "Landing page alignment", description: "Does the ad promise match what the landing page delivers? Misalignment kills conversion rates." }
+  ]}
+/>

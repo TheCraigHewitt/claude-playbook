@@ -1,0 +1,194 @@
+---
+title: "Competitive Feature Teardowns"
+description: "10-minute teardowns with feature mapping, coverage analysis, and effort estimates."
+products: ["Chat"]
+tier: "Operator"
+readTime: "9 min"
+---
+
+A client sends you a competitor's product page and asks: "How do we compare?" You used to spend half a day building a feature matrix. Now it takes 10 minutes.
+
+<RealWorldProof
+  quote="A client sent me a competitor's tool and asked for a teardown. I uploaded the screenshots and product page to Claude and had a full feature comparison with effort estimates in 10 minutes. Used to take half a day."
+  author="@mfishbein"
+  context="Product consultant who uses Claude for rapid competitive analysis"
+/>
+
+## The 10-Minute Teardown
+
+Upload a competitor's marketing page, documentation, or screenshots. Claude maps their feature set against yours and identifies gaps.
+
+<PromptBlock
+  title="Rapid Feature Teardown"
+  prompt={`I'm uploading the product/marketing page for \${competitor}, a competitor to our product \${product}.
+
+Produce a feature teardown:
+
+1. **FEATURE EXTRACTION**
+List every feature, capability, and integration \${competitor} claims on this page. Be thorough — include features mentioned in screenshots, pricing tiers, and integration logos.
+
+Organize by category:
+| Category | Feature | Description (one line) |
+
+2. **COVERAGE ANALYSIS**
+Map each feature against our product. For each:
+| Feature | They Have | We Have | Gap? | Priority |
+
+"We Have" options: ✅ Full parity, 🟡 Partial (explain what's missing), ❌ We don't have this
+"Priority" options: Critical (customers ask for this), Nice-to-have (differentiator), Low (rarely matters)
+
+3. **COMPETITIVE GAPS** (features they have that we don't)
+Ranked by likely customer impact:
+- High impact: Features that would lose us a deal
+- Medium impact: Features that create friction but aren't dealbreakers
+- Low impact: Features that look good on a comparison chart but rarely matter in practice
+
+4. **OUR ADVANTAGES** (features we have that they don't)
+Same ranking approach. Don't forget these — competitive analysis should highlight your strengths, not just gaps.
+
+5. **POSITIONING SUMMARY** (3-4 sentences)
+How does \${competitor} position themselves vs the market? What's their angle? How should we position against them?`}
+  variables={[
+    { name: "competitor", placeholder: "Notion" },
+    { name: "product", placeholder: "our project management tool" }
+  ]}
+/>
+
+<TipCallout type="tip">
+Upload multiple pages: the main product page, the pricing page, and any feature comparison page they've published. More input = more thorough extraction. Screenshots of the actual product UI are even better than marketing copy.
+</TipCallout>
+
+## Effort Estimation for Gaps
+
+Once you know the gaps, the next question is: how hard would it be to close them?
+
+<PromptBlock
+  title="Gap Effort Estimates"
+  prompt={`Based on the competitive teardown above, estimate the effort to close each gap we identified.
+
+For each gap feature:
+| Feature | Engineering Effort | Dependencies | Risk | Recommendation |
+
+EFFORT SCALE:
+- Small (< 1 sprint): UI change, config option, minor feature
+- Medium (1-2 sprints): New feature with backend work, API integration
+- Large (3+ sprints): Major new capability, new infrastructure, significant architecture work
+- XL (quarter+): Fundamental new product area, requires new expertise
+
+DEPENDENCIES: What else do we need to build first? Does this require a new API, new data model, third-party integration?
+
+RISK:
+- Low: We've built similar things before
+- Medium: Some unknowns but the approach is clear
+- High: Significant technical unknowns or requires skills we don't have
+
+RECOMMENDATION for each:
+- "Build" — high customer impact, reasonable effort, clear ROI
+- "Partner/integrate" — faster to integrate a third-party than build
+- "Defer" — low priority or high effort relative to impact
+- "Skip" — feature parity isn't needed; our positioning is different
+
+Prioritize the "Build" recommendations into a suggested roadmap order.`}
+/>
+
+## Multi-Competitor Comparison Matrix
+
+When you need to compare across several competitors at once.
+
+<PromptBlock
+  title="Multi-Competitor Matrix"
+  prompt={`Build a competitive feature matrix comparing our product (\${product}) against these competitors: \${competitors}
+
+I'll upload their product pages / documentation for each.
+
+MATRIX FORMAT:
+| Feature Category | Feature | \${product} | \${competitors.split(',').join(' | ')} |
+
+Use: ✅ Full support, 🟡 Partial, ❌ Not available, ❓ Unclear/not documented
+
+FEATURE CATEGORIES to evaluate:
+\${categories}
+
+After the matrix, provide:
+
+1. **HEAD-TO-HEAD SUMMARY** (one paragraph per competitor)
+"Vs \${competitor}: We win on X and Y. They win on Z. The key differentiator is..."
+
+2. **MOST COMMON GAPS** — features that multiple competitors have and we lack (highest priority to address)
+
+3. **UNIQUE ADVANTAGES** — features only we have (these are your positioning strengths)
+
+4. **MARKET TABLE STAKES** — features every competitor has (if we lack any, these are urgent gaps)
+
+5. **OVERALL POSITIONING MAP**
+A 2x2 framework: [pick the two axes that best differentiate the market, e.g., "Ease of use vs Power" or "SMB focus vs Enterprise focus"]. Place each product.`}
+  variables={[
+    { name: "product", placeholder: "ProjectFlow" },
+    { name: "competitors", placeholder: "Notion, Monday, Asana, ClickUp" },
+    { name: "categories", placeholder: "Project Management, Collaboration, Reporting, Integrations, Automations, AI Features, Mobile, API/Developer Tools, Security/Compliance, Pricing/Packaging" }
+  ]}
+/>
+
+<BeforeAfter
+  before={{
+    content: "Competitor analysis as a 20-page slide deck that took a week to build, is outdated by the time it's presented, and nobody reads past slide 4."
+  }}
+  after={{
+    content: "A live feature matrix you can update in 10 minutes whenever a competitor ships something new. Plus effort estimates so your engineering team knows what it would actually take to close each gap."
+  }}
+  annotation="The value of competitive analysis is speed and freshness, not length. A 10-minute teardown you update monthly beats a 20-page deck you update annually."
+/>
+
+## Competitive Response Playbook
+
+Turn the teardown into an actionable sales and product strategy.
+
+<PromptBlock
+  title="Competitive Response Plan"
+  prompt={`Based on the competitive teardown of \${competitor}, build a response playbook for our team:
+
+**FOR SALES (when prospects mention \${competitor})**
+1. Trap-setting questions: 3-5 questions our reps should ask that expose \${competitor}'s weaknesses
+2. Objection responses: For each area where \${competitor} appears stronger, a 2-3 sentence response that reframes the conversation
+3. Proof points: Specific examples or data points that demonstrate our advantages
+4. When to walk away: Prospect profiles where \${competitor} is genuinely the better fit (saves everyone time)
+
+**FOR PRODUCT (what to build next)**
+1. Must-close gaps: Features we need to match within 6 months to stay competitive
+2. Leapfrog opportunities: Areas where we can skip parity and go straight to a better solution
+3. Differentiation plays: Double down on our unique strengths instead of chasing parity
+
+**FOR MARKETING (how to position)**
+1. Updated positioning statement that acknowledges the competitive landscape
+2. Comparison page content: honest, factual comparison (not a hit piece)
+3. Case study angles: customer stories that highlight where we win against \${competitor}
+
+Keep each section actionable. Reps should be able to use the sales section in their next call.`}
+  variables={[
+    { name: "competitor", placeholder: "Notion" }
+  ]}
+/>
+
+## Tracking Competitor Changes
+
+Set up a recurring workflow to keep your competitive intelligence current.
+
+<StepByStep
+  steps={[
+    { title: "Save your baseline teardown", description: "Keep the initial competitive matrix in a document your whole team can access. Date-stamp it." },
+    { title: "Set a monthly review cadence", description: "Once a month, revisit each competitor's product page and changelog. Upload the new pages to Claude and ask: 'What changed since the last analysis?'" },
+    { title: "Track launch announcements", description: "When a competitor announces a new feature, upload the announcement and ask Claude to update the matrix and assess whether it changes any priorities." },
+    { title: "Incorporate win/loss data", description: "If your sales team tracks why you won or lost deals, feed that data into the competitive analysis. 'We lost 3 deals to Competitor X because of feature Y' is more important than any marketing page analysis." },
+    { title: "Update the sales playbook", description: "As the matrix changes, update the sales objection handling. Stale battlecards are worse than no battlecards." }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="Your biggest competitor just launched an AI feature that automates something your customers currently do manually. Your CEO wants a response plan by tomorrow."
+  answer="Upload the competitor's announcement, blog post, and any demo videos. Get a feature analysis, assess whether it's a real threat or marketing vapor, and build a response plan — all in one sitting."
+  prompt="I'm uploading our competitor's launch announcement for their new AI feature. Analyze: (1) What does it actually do? Strip away the marketing language and describe the functionality. (2) How does it compare to our current workflow for the same task? (3) Is this a real product or a beta/waitlist? (4) How hard would it be for us to build something equivalent? (5) Should we build a response, partner with an AI provider, or position differently? I need a recommendation our leadership team can act on by tomorrow."
+/>
+
+<TipCallout type="note">
+The best competitive analysis focuses on customer impact, not feature count. Having more features doesn't mean winning. Understanding which features actually drive purchase decisions — and which ones are checkbox items — is the real insight.
+</TipCallout>

@@ -1,0 +1,305 @@
+---
+title: "Building Your First Skill"
+description: "Step-by-step walkthrough: build a Meeting Notes Processor skill from scratch, install it, and use it."
+products: ["Chat", "Code"]
+tier: "Builder"
+readTime: "12 min"
+---
+
+You're going to build a real skill in the next 15 minutes. Not a toy example — a meeting notes processor that extracts action items, summarizes decisions, and drafts a follow-up email. You'll use this one for real.
+
+## What We're Building
+
+A **Meeting Notes Processor** skill that:
+
+1. Takes raw meeting notes (messy is fine)
+2. Extracts action items with owners and deadlines
+3. Summarizes key decisions
+4. Flags unresolved questions
+5. Drafts a follow-up email to attendees
+6. Outputs everything in a consistent, scannable format
+
+By the end, you'll have a reusable skill file you can invoke with a slash command in Claude Code or paste into a Chat Project.
+
+## The Anatomy of a Skill File
+
+Every skill file follows this structure:
+
+```
+# Skill Title
+
+[Brief description — what this skill does]
+
+## Instructions
+
+[The core instructions Claude will follow]
+
+## Before Starting
+
+[Context to load, files to read, questions to ask]
+
+## Workflow
+
+[Step-by-step process]
+
+## Output
+
+[Where and how to format the result]
+```
+
+That's it. A skill is a markdown file with a clear structure. No code, no configuration, no special syntax.
+
+<TipCallout type="note">
+Skill files use regular markdown. You don't need to learn any special format. If you can write a Google Doc, you can write a skill.
+</TipCallout>
+
+<MiniQuiz
+  question="What is a skill file actually made of?"
+  options={[
+    { label: "A JavaScript module with exported functions", correct: false, explanation: "Skills don't use any programming language. They're written in plain text that anyone can create." },
+    { label: "A markdown file with structured instructions", correct: true, explanation: "A skill is just a markdown file with sections like Instructions, Workflow, and Output. No code, no configuration, no special syntax — if you can write a Google Doc, you can write a skill." },
+    { label: "A JSON configuration file", correct: false, explanation: "Skills don't use JSON or any structured data format. They're written in natural language using markdown for organization." },
+    { label: "A Python script with AI function calls", correct: false, explanation: "No programming is involved. Skills are markdown documents that describe a process in plain English." }
+  ]}
+/>
+
+## Step-by-Step: Build the Meeting Notes Processor
+
+<StepByStep
+  steps={[
+    { title: "Create the file", description: "Create a new markdown file. In Claude Code, this goes in .claude/commands/meeting-notes.md. In Chat, you'll paste the content into Project instructions." },
+    { title: "Write the header and description", description: "Name the skill and explain what it does in one sentence." },
+    { title: "Define the instructions", description: "Tell Claude its role and how to approach the task." },
+    { title: "Specify the workflow", description: "Break the process into clear steps." },
+    { title: "Define the output format", description: "Show Claude exactly what the result should look like." },
+    { title: "Add guardrails", description: "Include what NOT to do — prevents the most common failures." },
+    { title: "Test and iterate", description: "Run it with real notes, fix what doesn't work." }
+  ]}
+/>
+
+### Step 1: Create the File
+
+**For Claude Code:** Create `.claude/commands/meeting-notes.md` in your project.
+
+**For Claude Chat:** You'll paste the final content into a Project's custom instructions.
+
+### Step 2: Write the Header
+
+```markdown
+# Meeting Notes Processor
+
+Process raw meeting notes into structured output: action items, decisions, open questions, and a follow-up email.
+```
+
+The header tells Claude (and you) what this skill does at a glance. Keep it to one sentence.
+
+### Step 3: Define the Instructions
+
+```markdown
+## Instructions
+
+You are a meeting notes processor. Your job is to turn messy,
+stream-of-consciousness meeting notes into clean, actionable output.
+
+**Your approach:**
+- Extract facts, don't infer. If something isn't explicitly stated, don't assume it.
+- When an action item has no clear owner, flag it as "UNASSIGNED."
+- When a deadline isn't specified, flag it as "TBD."
+- Keep summaries tight — one sentence per decision, no filler.
+```
+
+Notice the guardrails built in: "extract facts, don't infer" and "flag as UNASSIGNED." These prevent Claude's most common failure mode — making things up to fill gaps.
+
+### Step 4: Specify the Input
+
+```markdown
+## Input
+
+**Meeting notes:** $ARGUMENTS
+
+If no notes provided, ask the user to paste their meeting notes.
+```
+
+The `$ARGUMENTS` variable captures whatever is typed after the slash command. In Claude Code, running `/meeting-notes` with pasted text passes that text as the input.
+
+### Step 5: Define the Workflow
+
+```markdown
+## Workflow
+
+### 1. Parse the Notes
+Read through the entire meeting notes first. Identify:
+- Who was present (if mentioned)
+- The main topics discussed
+- Any decisions made
+- Any tasks assigned
+- Any questions left open
+
+### 2. Extract Action Items
+For each action item, capture:
+- What needs to be done (specific, not vague)
+- Who owns it
+- When it's due (if stated)
+- Priority (if inferable from context)
+
+### 3. Summarize Decisions
+For each decision identified:
+- What was decided (one sentence)
+- Brief rationale if given (one sentence)
+- Who made the call (if stated)
+
+### 4. Flag Open Questions
+List any topics that were discussed but not resolved.
+For each, note what was said and what's still needed.
+
+### 5. Draft Follow-Up Email
+Write a brief follow-up email that includes:
+- Thank attendees
+- Summarize key decisions
+- List action items with owners
+- Call out open items that need resolution
+- Tone: professional, warm, concise
+```
+
+Each step is explicit. Claude knows exactly what to do and in what order.
+
+### Step 6: Define the Output Format
+
+```markdown
+## Output Format
+
+Present the output in this structure:
+
+### Meeting Summary
+**Date:** [Extract from notes or ask]
+**Attendees:** [List names]
+**Duration:** [If mentioned]
+
+### Action Items
+| # | Action | Owner | Deadline | Priority |
+|---|--------|-------|----------|----------|
+| 1 | [Specific task] | [Name or UNASSIGNED] | [Date or TBD] | [H/M/L] |
+
+### Decisions Made
+1. **[Decision]** — [One-sentence rationale]
+
+### Open Questions
+- [Question] — Context: [What was discussed, what's still needed]
+
+### Follow-Up Email
+
+Subject: [Meeting topic] — Action Items & Next Steps
+
+[Draft email body]
+```
+
+The output format gives Claude a template to fill. This ensures consistent structure every time.
+
+### Step 7: Add Guardrails
+
+```markdown
+## Guardrails
+
+- Do NOT fabricate action items. If it wasn't discussed, don't add it.
+- Do NOT assign owners unless explicitly stated in the notes.
+- Do NOT editorialize in the summary. Report what was said, not what should have been said.
+- Keep the follow-up email under 200 words.
+- If the notes are too vague to extract meaningful output, say so and ask for clarification.
+```
+
+Guardrails are the most underrated part of a skill. They prevent the failure modes you'd otherwise discover only after bad output.
+
+## The Complete Skill File
+
+Here's the full file, ready to use:
+
+<PromptBlock
+  title="Complete Meeting Notes Processor skill"
+  prompt="# Meeting Notes Processor\n\nProcess raw meeting notes into structured output: action items, decisions, open questions, and a follow-up email.\n\n## Instructions\n\nYou are a meeting notes processor. Your job is to turn messy, stream-of-consciousness meeting notes into clean, actionable output.\n\n**Your approach:**\n- Extract facts, don't infer. If something isn't explicitly stated, don't assume it.\n- When an action item has no clear owner, flag it as 'UNASSIGNED.'\n- When a deadline isn't specified, flag it as 'TBD.'\n- Keep summaries tight — one sentence per decision, no filler.\n\n## Input\n\n**Meeting notes:** $ARGUMENTS\n\nIf no notes provided, ask the user to paste their meeting notes.\n\n## Workflow\n\n1. Parse the full notes first\n2. Extract action items (what, who, when, priority)\n3. Summarize decisions (one sentence each)\n4. Flag open questions\n5. Draft follow-up email (under 200 words)\n\n## Guardrails\n\n- Do NOT fabricate action items\n- Do NOT assign owners unless stated\n- Do NOT editorialize\n- If notes are too vague, ask for clarification"
+/>
+
+## Installing the Skill
+
+### In Claude Code
+
+1. Create the file at `.claude/commands/meeting-notes.md`
+2. That's it. Run `/meeting-notes` in any Claude Code session in that project
+
+<TipCallout type="tip">
+For personal skills you want available across all projects, place the file in `~/.claude/commands/` instead. These load globally, in every project.
+</TipCallout>
+
+### In Claude Chat
+
+1. Create a new Project
+2. Open Project settings and add custom instructions
+3. Paste the skill content into the instructions field
+4. Start a new conversation in that Project and paste your meeting notes
+
+### In Claude CoWork
+
+1. Save the skill as a `.md` file
+2. Upload it as knowledge in your workspace settings
+3. Any conversation in that workspace can now use it
+
+## Testing Your Skill
+
+Here's a set of messy meeting notes you can use to test:
+
+<PromptBlock
+  title="Test input: messy meeting notes"
+  prompt="ok so we talked about the Q2 launch timeline, sarah thinks we can ship by march 15 but dev team is worried about the auth integration. jake said he needs another week for the API work. we agreed to push the internal beta to march 22 and keep the public launch on april 1. marketing needs copy by march 10 — lisa is handling that. oh and we need to figure out pricing, nobody had a strong opinion, john said he'd pull competitor data by next friday. also sarah mentioned we should probably get legal to review the new terms of service before launch but nobody volunteered to own that. budget was briefly discussed, we're at 80% of Q1 spend and on track."
+/>
+
+Run this through your skill and check:
+
+- Did it extract all the action items?
+- Did it correctly identify owners vs. UNASSIGNED?
+- Did it catch the open questions (pricing, legal review ownership)?
+- Is the follow-up email clean and complete?
+
+## Iterating on Your Skill
+
+Your first version won't be perfect. Here's what to watch for:
+
+**Too verbose?** Add a constraint: "Keep each decision summary to one sentence maximum."
+
+**Missing items?** Add more explicit parsing instructions: "Look for conditional language like 'should probably' and 'we need to' as potential action items."
+
+**Wrong tone in the email?** Add examples: "The email should sound like: 'Hi team, great discussion today. Here's what we landed on...' NOT like: 'Dear colleagues, I am writing to summarize the key outcomes of our strategic alignment session...'"
+
+**Inconsistent format?** Make the output template more rigid. Show exactly what each row in the table should look like.
+
+<ScenarioCard
+  scenario="You built your first skill and it works 80% of the time, but occasionally Claude adds action items that weren't discussed in the meeting."
+  answer="Strengthen the guardrails. Add: 'For each action item, quote the exact phrase from the notes that this item is based on. If you cannot find a supporting quote, do not include the item.' This forces Claude to ground every extraction in the actual text."
+  prompt="## Guardrails Update\n\n- For each action item, include a 'Source' column that quotes the exact phrase from the notes.\n- If you cannot find a supporting quote, do NOT include the action item.\n- Flag any items where the source is ambiguous with [VERIFY]."
+/>
+
+## Beyond Meeting Notes: Your Next Skill
+
+Now that you've built one, think about what you do repeatedly:
+
+| Candidate Task | Why It's a Good Skill |
+|---------------|----------------------|
+| Weekly status reports | Same format, same audience, same data sources |
+| Customer email responses | Consistent tone, standard information, predictable patterns |
+| Content briefs | Same template, same quality checklist |
+| Sales proposal drafts | Standard structure, personalized details |
+| Code review summaries | Same criteria, same format every time |
+
+Pick the task that takes the most time and build that next.
+
+## Common First-Skill Mistakes
+
+**Too broad.** "Help me with all my writing" is not a skill — it's a wish. Narrow it to one specific workflow.
+
+**Too rigid.** Don't try to anticipate every edge case. Start with the 80% use case and handle exceptions through conversation.
+
+**No examples.** Skills without examples produce generic output. Include 1-2 examples of what good output looks like.
+
+**No guardrails.** The most important part of a skill isn't what Claude SHOULD do — it's what Claude should NOT do.
+
+## What's Next
+
+You've built your first skill. The next playbook covers [skill design patterns](/claude-playbook/skills/skill-design-playbook) — how to write descriptions that tell Claude when to use a skill, how to structure progressive disclosure, and the "onboarding doc" mindset that makes skills dramatically more effective.

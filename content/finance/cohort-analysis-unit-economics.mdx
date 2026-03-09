@@ -1,0 +1,259 @@
+---
+title: "Cohort Analysis and Unit Economics"
+description: "Process customer data into cohort tracking by source, calculate CAC, LTV, and payback period."
+products: ["Chat", "Code"]
+tier: "Operator"
+readTime: "11 min"
+---
+
+You know you should be tracking cohort retention and unit economics by acquisition channel. But the data lives in three different systems, the export is a mess, and building the pivot tables takes half a day.
+
+Claude handles the messy middle — processing raw customer data into cohort retention curves, LTV calculations, and channel-level unit economics.
+
+<RealWorldProof
+  quote="I exported our ActiveCampaign data and had Claude build cohort tracking by ad source. Took 20 minutes to get what would have taken my team a full day to build in a spreadsheet."
+  author="Laura Roeder"
+  context="Founder who used Claude to build cohort analysis from raw marketing data"
+/>
+
+## Cohort Retention Analysis
+
+Start with the most fundamental analysis: how do customers retained over time, grouped by when they signed up?
+
+<PromptBlock
+  title="Monthly Cohort Retention Table"
+  prompt={`I'm uploading a CSV of customer data with columns: \${columns}
+
+Build a monthly cohort retention analysis:
+
+1. **COHORT ASSIGNMENT**
+Group customers by their signup month (the cohort).
+
+2. **RETENTION TABLE**
+Create a triangular retention table:
+| Cohort | Month 0 | Month 1 | Month 2 | Month 3 | ... | Month \${months} |
+| Jan 2025 | 100% | 88% | 82% | ... | |
+| Feb 2025 | 100% | 85% | ... | | |
+
+Month 0 = 100% (by definition)
+Each subsequent month = (customers still active) / (customers in cohort)
+
+3. **RETENTION CURVE**
+Calculate the average retention rate at each month across all cohorts.
+Identify: is retention improving (newer cohorts retain better) or degrading?
+
+4. **STABILIZATION POINT**
+At what month does retention stabilize? (Where the MoM drop becomes <1%)
+
+5. **OUTPUT**
+- Retention table as a formatted CSV or Excel file
+- Summary statistics: Month 1 retention, Month 3 retention, Month 6 retention, Month 12 retention
+- Is retention improving over time? Compare first-half cohorts vs second-half cohorts.
+
+A customer is "active" if they have any activity/payment after their signup month. Define churn as: \${churnDefinition}`}
+  variables={[
+    { name: "columns", placeholder: "customer_id, signup_date, last_active_date, plan_type, monthly_revenue, acquisition_source" },
+    { name: "months", placeholder: "12" },
+    { name: "churnDefinition", placeholder: "no payment in the most recent 30 days" }
+  ]}
+/>
+
+<TipCallout type="tip">
+Always define what "active" and "churned" means explicitly. Claude will use whatever definition you give it. A customer who hasn't logged in for 60 days but is still paying is very different from one who cancelled. Be specific.
+</TipCallout>
+
+## Cohort Analysis by Acquisition Source
+
+This is where cohort analysis gets actionable — breaking it down by where customers came from.
+
+<PromptBlock
+  title="Cohort by Acquisition Source"
+  prompt={`Using the same customer data, build separate cohort retention tables for each acquisition source.
+
+SOURCES TO SEGMENT: \${sources}
+
+For each source, show:
+1. **Cohort retention table** (same format as above, but filtered by source)
+2. **Average retention at Month 1, 3, 6, 12**
+3. **Cohort size** (how many customers in each cohort from this source)
+
+Then build a **COMPARISON TABLE**:
+| Source | Avg Month 1 Ret | Avg Month 3 Ret | Avg Month 6 Ret | Avg Month 12 Ret | Avg Cohort Size |
+
+Sort by Month 12 retention, best to worst.
+
+Finally, write a 2-paragraph analysis:
+- Which source produces the most durable customers?
+- Which source has volume but poor retention (red flag)?
+- Are there any sources where retention is improving/degrading over time?
+
+This directly informs CAC budget allocation — spending more on channels with better retention is almost always the right move.`}
+  variables={[
+    { name: "sources", placeholder: "Google Ads, Facebook Ads, Organic Search, Referral, Direct, Partner" }
+  ]}
+/>
+
+<BeforeAfter
+  before={{
+    content: "Blended churn rate: 3.2% monthly. 'We need to reduce churn.' No clarity on where to focus."
+  }}
+  after={{
+    content: "Churn by source: Google Ads 2.1%, Organic 1.8%, Facebook 5.4%, Direct 2.5%. Facebook customers churn at 3x the organic rate. We're spending $40K/mo on Facebook acquiring customers with a 7-month average lifespan vs 18 months for organic. Recommendation: cut Facebook spend 50%, redirect to content/SEO."
+  }}
+  annotation="Blended metrics hide the signal. Cohort analysis by source reveals where to invest and where to cut."
+/>
+
+## Unit Economics: CAC, LTV, Payback Period
+
+Once you have retention curves, calculate the metrics that actually matter.
+
+<PromptBlock
+  title="Full Unit Economics Calculation"
+  prompt={`I'm uploading two data sets:
+1. Customer data (same as before): signup dates, revenue, retention, acquisition source
+2. Marketing spend data: \${spendColumns}
+
+Calculate unit economics for each acquisition source:
+
+**CAC (Customer Acquisition Cost)**
+- Total spend per source per month / new customers acquired from that source
+- Show monthly CAC and trailing 3-month average (to smooth noise)
+
+**LTV (Lifetime Value)**
+- Method 1: Historical — average revenue per customer × average customer lifespan (in months)
+- Method 2: Predictive — ARPU / monthly churn rate (for each source separately)
+- Show both methods and note which is more reliable given our data history
+
+**LTV:CAC RATIO**
+- For each source
+- Flag any source with LTV:CAC below 3.0
+
+**PAYBACK PERIOD**
+- CAC / monthly ARPU = months to recover acquisition cost
+- For each source
+
+**SUMMARY TABLE**
+| Source | CAC | ARPU | LTV (Historical) | LTV (Predictive) | LTV:CAC | Payback (months) | Verdict |
+
+Verdict column:
+- "Scale" if LTV:CAC > 4 and payback < 12 months
+- "Maintain" if LTV:CAC 3-4 and payback < 18 months
+- "Optimize" if LTV:CAC 2-3 (need to improve retention or reduce CAC)
+- "Cut" if LTV:CAC < 2
+
+Write a 3-paragraph investment recommendation: where to increase spend, where to hold, and where to cut.`}
+  variables={[
+    { name: "spendColumns", placeholder: "month, source, spend_amount" }
+  ]}
+/>
+
+## Revenue Cohort Analysis
+
+Retention is about customers. Revenue cohorts tell you about money — do customers spend more or less over time?
+
+<PromptBlock
+  title="Revenue Retention / Net Dollar Retention"
+  prompt={`Build a revenue cohort analysis from our customer data:
+
+1. **REVENUE RETENTION TABLE**
+Same triangular format as customer retention, but tracking revenue instead of customer count:
+| Cohort | Month 0 Revenue | Month 1 | Month 2 | ... |
+
+Month 0 = 100% (starting MRR for that cohort)
+Month N = (total MRR from surviving customers in that cohort) / (original cohort MRR)
+
+If Month N > 100%, we have net expansion (surviving customers are paying more).
+
+2. **NET REVENUE RETENTION (NRR)**
+Calculate NRR for each cohort and overall:
+NRR = (Starting MRR - Churned MRR - Contraction MRR + Expansion MRR) / Starting MRR
+
+3. **EXPANSION VS CONTRACTION**
+Break down the components:
+| Cohort | Starting MRR | Expansion | Contraction | Churn | Ending MRR | NRR |
+
+4. **ANALYSIS**
+- Is NRR above or below 100%?
+- Is it improving with newer cohorts?
+- Where is expansion coming from — upgrades, seat additions, or usage-based pricing?
+- Is contraction (downgrades) a significant factor?
+
+NRR above 120% means the business grows even without new customers. Below 90% means you're on a treadmill.`}
+/>
+
+## Multi-Turn Cohort Session
+
+Cohort analysis is inherently iterative. Start broad, then dig into the segments that matter.
+
+<ScenarioCard
+  scenario="Your blended LTV:CAC is 3.5x, which looks healthy. But your CEO suspects that enterprise customers have dramatically better economics than SMB. How do you validate this?"
+  answer="Segment the cohort analysis by plan type or ACV band. You'll likely find that enterprise LTV:CAC is 6x+ while SMB is under 2x, which changes your go-to-market strategy."
+  prompt="Segment all the unit economics we just calculated by plan type. Split into: SMB (under $200/mo), Mid-Market ($200-$2000/mo), Enterprise ($2000+/mo). Show CAC, LTV, LTV:CAC, payback period, and retention curves for each segment separately. I want to see if our blended 3.5x LTV:CAC is hiding a segment that's unprofitable."
+/>
+
+<ScenarioCard
+  scenario="You've identified that Facebook customers have poor retention. Your marketing team pushes back: 'The recent campaigns are different — we changed targeting.' How do you test this?"
+  answer="Compare recent Facebook cohorts (last 3 months) against older Facebook cohorts. If retention is improving, the new targeting may be working. If not, the channel fundamentally attracts lower-quality customers."
+  prompt="Compare Facebook acquisition cohorts from the last 3 months against Facebook cohorts from 4-12 months ago. Show retention curves for both groups side by side. Is Month 1 and Month 3 retention improving with the newer cohorts? Also calculate the early-signal CAC for recent cohorts — if CAC went up but retention improved, the net economics might still be better."
+/>
+
+## Building the Full Model in Code
+
+For ongoing tracking, build a script that recalculates everything monthly.
+
+<PromptBlock
+  title="Automated Cohort Analysis Script"
+  prompt={`Build a Python script that processes our customer data and generates a complete cohort analysis:
+
+INPUT:
+- Customer CSV: \${customerColumns}
+- Marketing spend CSV: month, source, spend_amount
+
+OUTPUT — an HTML dashboard with:
+
+1. **CUSTOMER RETENTION HEATMAP**
+Triangular retention table with color coding:
+- Dark green: >90% retention
+- Light green: 80-90%
+- Yellow: 70-80%
+- Orange: 60-70%
+- Red: <60%
+
+2. **RETENTION BY SOURCE** (one heatmap per source)
+
+3. **UNIT ECONOMICS TABLE**
+CAC, LTV, LTV:CAC, Payback by source with traffic-light indicators
+
+4. **TREND CHARTS**
+- Average retention curves by source (line chart)
+- CAC trend by source over time (line chart)
+- LTV:CAC ratio trend (line chart with 3.0x reference line)
+
+5. **REVENUE COHORT TABLE**
+Same heatmap format but tracking revenue retention / NRR
+
+Use pandas for data processing and matplotlib for charts (embedded as base64 PNGs in the HTML). Make the HTML self-contained — no external dependencies.
+
+The script should be re-runnable monthly with updated data files.`}
+  variables={[
+    { name: "customerColumns", placeholder: "customer_id, signup_date, last_active_date, plan_type, monthly_revenue, acquisition_source, cancel_date" }
+  ]}
+/>
+
+<TipCallout type="warning">
+Be careful with LTV calculations on young businesses. If your oldest cohort is only 12 months old, predicting lifetime value using ARPU / churn rate can massively overestimate LTV. Use the historical method and clearly label the data horizon. "LTV based on 12 months of observed data" is more honest than "predicted LTV."
+</TipCallout>
+
+## What This Tells You
+
+The output of cohort analysis answers the three questions every CEO and investor asks:
+
+1. **Are we acquiring the right customers?** (Retention by source tells you)
+2. **Are we spending efficiently?** (LTV:CAC by channel tells you)
+3. **Is the business getting healthier over time?** (Newer cohorts retaining better = yes)
+
+<TipCallout type="note">
+You don't need perfect data to start. Even if your acquisition source tracking is incomplete, running cohort analysis on what you have is infinitely more useful than blended averages. Start with what you've got. Improve the tracking as you go.
+</TipCallout>
+
+If the cohort analysis reveals a channel problem, the next step is the [Sensitivity and Scenario Modeling](/claude-playbook/finance/sensitivity-scenario-modeling) playbook — model what happens to your business if you shift spend across channels.

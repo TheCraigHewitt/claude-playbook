@@ -1,0 +1,138 @@
+---
+title: "Choosing the Right Claude Model"
+description: "Opus vs. Sonnet vs. Haiku — when to use which."
+products: ["Chat", "CoWork", "Code"]
+tier: "Starter"
+readTime: "6 min"
+---
+
+Claude comes in multiple model sizes. Choosing the right one saves money and often gets better results. Here's the practical guide.
+
+## The Three Models
+
+| Model | Speed | Quality | Cost | Best For |
+|-------|-------|---------|------|----------|
+| **Opus** | Slower | Highest | Most expensive | Complex analysis, nuanced writing, strategic thinking |
+| **Sonnet** | Fast | Very high | Moderate | Most daily tasks, great balance of speed and quality |
+| **Haiku** | Fastest | Good | Cheapest | Simple tasks, classification, quick answers |
+
+Think of it like hiring: Opus is the senior consultant you bring in for the hard problems. Sonnet is the sharp full-time employee who handles most of the work. Haiku is the efficient assistant who knocks out straightforward tasks instantly.
+
+## When to Use Each
+
+### Opus: The Deep Thinker
+
+Use Opus when quality matters most and you can wait a few extra seconds:
+
+- **Board presentations and investor communications** — Where every word counts and nuance matters
+- **Complex strategic analysis** — Multi-variable decisions with trade-offs
+- **Nuanced writing** — Where tone, subtlety, and sophistication matter
+- **Difficult problems** — Anything that requires careful, multi-step reasoning
+- **High-stakes decisions** — When getting it right the first time is worth the extra time
+
+<ScenarioCard
+  scenario="You need to draft a response to an investor who's asking tough questions about your churn rate. The email needs to be honest, confident, and strategically framed without being defensive."
+  answer="Use Opus. This is a high-stakes communication where tone, word choice, and strategic framing all matter. Opus excels at this kind of nuanced writing where the difference between 'good' and 'great' has real business consequences."
+  prompt="Draft a response to our lead investor who emailed asking about our churn increase (4% to 6% monthly). Be transparent about the cause (mid-quarter pricing change), show we've already acted (reverted pricing, churn declining), and frame the forward path confidently. Tone: honest, composed, and in command — not defensive or apologetic. Under 300 words."
+/>
+
+### Sonnet: The Daily Driver
+
+Use Sonnet for 80% of your work. It's the sweet spot of speed, quality, and cost:
+
+- **Email drafting and editing** — Fast enough for rapid iteration
+- **Content creation** — Blog posts, social media, newsletters
+- **Data analysis** — Summarizing trends, finding patterns
+- **Meeting prep and follow-ups** — Agendas, talking points, recap emails
+- **General research and summarization** — Distilling long documents into key points
+- **Creative brainstorming** — Generating ideas, exploring angles
+
+Most operators should default to Sonnet and only switch when they have a specific reason.
+
+### Haiku: The Quick Answer
+
+Use Haiku when speed is everything and the task is simple:
+
+- **Yes/no questions** — "Does this email sound professional?"
+- **Quick categorization** — "Is this customer email a complaint, a question, or a feature request?"
+- **Simple reformatting** — "Convert this paragraph into bullet points"
+- **Data extraction** — "Pull the revenue numbers from this report"
+- **Grammar and spell-checking** — Quick proofreading passes
+
+<TipCallout type="tip">
+If you're on a Pro or Max plan, you can switch models mid-conversation. Start complex work with Opus, then switch to Sonnet for follow-up refinements. This is the power user move — you get deep thinking where it matters and fast iteration where it doesn't.
+</TipCallout>
+
+## Extended Thinking
+
+Claude also has an "extended thinking" mode that gives the model more time to reason through complex problems before responding. Think of it as the difference between asking someone for a quick take versus asking them to sit down and really think it through.
+
+**Use extended thinking for:**
+- Multi-step analysis with many variables
+- Problems with competing constraints
+- Mathematical or logical reasoning
+- Strategy with significant trade-offs
+- Debugging complex issues
+
+**Skip extended thinking for:**
+- Simple writing tasks
+- Quick questions with straightforward answers
+- Reformatting or editing existing content
+- Tasks where speed matters more than depth
+
+<BeforeAfter
+  before={{
+    label: "Without extended thinking",
+    content: "Quick analysis: your pricing looks competitive, I'd suggest testing a higher tier."
+  }}
+  after={{
+    label: "With extended thinking",
+    content: "After analyzing your pricing against competitors A, B, and C across all tiers, considering your positioning as a premium solution, your current conversion rate of 3.2%, and the price sensitivity data you shared — here are three specific pricing changes ranked by expected revenue impact, with risk assessment for each."
+  }}
+  annotation="Extended thinking doesn't change what Claude knows — it changes how deeply it reasons through the problem before answering."
+/>
+
+## Common Model Selection Mistakes
+
+### Mistake: Always using Opus "just in case"
+
+Opus is slower and uses more of your token budget. For straightforward tasks, you're paying more for the same quality output. Sonnet handles 80% of work just as well.
+
+### Mistake: Using Haiku for complex writing
+
+Haiku is great for speed but produces noticeably simpler output. If the writing needs to be persuasive, nuanced, or strategically framed, step up to Sonnet or Opus.
+
+### Mistake: Ignoring extended thinking for hard problems
+
+If you find yourself asking Claude to "think harder" or "go deeper," you probably need extended thinking mode, not a better prompt. Turn it on, give Claude the space to reason, and the output quality jumps significantly.
+
+## The Decision Flowchart
+
+When a task comes in, run through this quick check:
+
+<StepByStep
+  steps={[
+    { title: "Is it simple and straightforward?", description: "Quick categorization, reformatting, yes/no questions → Haiku" },
+    { title: "Is it standard business work?", description: "Emails, content, analysis, meeting prep, brainstorming → Sonnet" },
+    { title: "Is it high-stakes or complex?", description: "Board communications, strategic analysis, nuanced writing → Opus" },
+    { title: "Does it require deep reasoning?", description: "Multi-variable trade-offs, complex problem-solving → Turn on extended thinking" }
+  ]}
+  title="Quick model selection"
+/>
+
+## The Bottom Line
+
+**Start with Sonnet.** It handles the vast majority of tasks well. Switch to Opus when you need extra quality for high-stakes work. Use Haiku when speed is the priority and the task is simple.
+
+Here's the most important thing to remember: **the difference in output quality between Sonnet and Opus is smaller than the difference between a vague prompt and a well-structured one.** A great prompt with Sonnet will outperform a lazy prompt with Opus every time.
+
+Get your prompting right first (see [The Anatomy of a Great Prompt](/claude-playbook/foundations/anatomy-of-a-prompt)), then optimize model selection for the marginal gains.
+
+<MiniQuiz
+  question="You need to quickly sort 50 customer support emails into categories (billing, technical, feature request, general). Which model should you use?"
+  options={[
+    { label: "Opus — you want the highest quality classification", correct: false, explanation: "Opus would work but it's overkill for straightforward categorization. You'd spend more time and tokens without meaningful quality improvement." },
+    { label: "Sonnet — it's the safe default", correct: false, explanation: "Sonnet would work fine, but this is a simple classification task. Haiku is faster and more cost-effective for this type of work." },
+    { label: "Haiku — fast, cheap, and perfectly capable for simple categorization", correct: true, explanation: "Correct. Classification is exactly what Haiku excels at — it's fast, uses fewer tokens, and handles straightforward categorization just as well as larger models." }
+  ]}
+/>

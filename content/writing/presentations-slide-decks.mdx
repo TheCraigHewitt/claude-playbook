@@ -1,0 +1,154 @@
+---
+title: "Presentations and Slide Decks"
+description: "From outline to narrative arc to speaker notes — build presentations that hold attention."
+products: ["Chat"]
+tier: "Starter"
+readTime: "11 min"
+---
+
+Slide decks are where good ideas go to die. Most business presentations are bullet-point graveyards — walls of text that the presenter reads aloud while the audience checks email. Claude can help you build presentations that actually hold attention, but only if you start with narrative, not slides.
+
+## The Presentation Workflow
+
+Most people start with slides. That's backwards. Here's the correct order:
+
+1. **Narrative arc** — What story are you telling?
+2. **Slide outline** — What does each slide need to accomplish?
+3. **Content per slide** — Headlines, key points, visuals
+4. **Speaker notes** — What you'll actually say
+5. **Rehearsal script** — The talk, end to end
+
+Claude is excellent at steps 1, 2, 4, and 5. Step 3 requires your judgment on visuals and data.
+
+## Step 1: Build the Narrative Arc
+
+<PromptBlock
+  title="Presentation narrative arc"
+  prompt="I'm giving a [length]-minute presentation to [audience] about [topic]. My goal is to [what you want the audience to think, feel, or do after].\n\nBuild the narrative arc:\n\n1. **Opening hook** — How should I start? (Not 'Thanks for having me.' Something that earns attention in the first 10 seconds.)\n2. **The problem** — What tension or challenge sets up the rest of the talk?\n3. **Key insight** — What's the core idea I'm arguing for?\n4. **Evidence** — 2-3 proof points (stories, data, examples) that support the insight\n5. **The turn** — Where does the talk shift from 'here's the problem' to 'here's what to do about it'?\n6. **Actionable framework** — What concrete model or steps should the audience walk away with?\n7. **Closing** — How do I end memorably? (Not 'Any questions?' — something that sticks.)\n\nContext about my audience: [audience context]. My expertise/credibility on this topic: [credibility]."
+  variables={[
+    { name: "length", placeholder: "20" },
+    { name: "audience", placeholder: "SaaS founders at a conference" },
+    { name: "topic", placeholder: "why most AI implementations fail and how to fix it" },
+    { name: "what you want the audience to think, feel, or do after", placeholder: "immediately audit their AI tools and kill the ones nobody's using" },
+    { name: "audience context", placeholder: "Technical founders, $2M-$20M ARR, already using some AI tools" },
+    { name: "credibility", placeholder: "I run a SaaS company and cut our tool spend 60% after an AI audit" }
+  ]}
+/>
+
+<TipCallout type="tip">
+The single best test for a presentation narrative: can you explain the entire arc in 3 sentences? If not, it's too complicated. One core idea per talk.
+</TipCallout>
+
+## Step 2: Slide Outline
+
+<PromptBlock
+  title="Slide-by-slide outline"
+  prompt="Based on this narrative arc, create a slide-by-slide outline for a [X]-slide deck.\n\nFor each slide:\n- **Slide number and title** (the headline the audience sees)\n- **Purpose** — What does this slide accomplish in the narrative?\n- **Key content** — What goes on the slide (keep it minimal — no walls of text)\n- **Visual suggestion** — What image, chart, or graphic would strengthen this slide?\n- **Time on slide** — How long should I spend here?\n\nRules:\n- No slide should have more than 6 words in the headline\n- No slide should have more than 3 bullet points\n- Include at least 3 'image only' slides (a powerful photo with no text except the headline)\n- The first slide is NOT a title slide. It's the hook.\n\n[Paste narrative arc]"
+  variables={[
+    { name: "X", placeholder: "15" }
+  ]}
+/>
+
+<BeforeAfter
+  before="Slide 1: Title — 'AI Implementation Best Practices for SaaS Companies: A Comprehensive Overview'\nSlide 2: Agenda\nSlide 3: About Me"
+  after="Slide 1: '$340,000.' (Nothing else. Just the number. This is what our company wasted on AI tools nobody used last year.)\nSlide 2: 'We bought 14 AI tools. The team used 3.' (Photo of a graveyard of app icons)\nSlide 3: 'Sound familiar?' (Show of hands moment)"
+  explanation="The 'before' is a standard corporate deck that loses the audience in 30 seconds. The 'after' creates immediate tension and curiosity. Never start with your title, agenda, or bio. Start with something that makes people put their phones down."
+/>
+
+## Step 3: Speaker Notes
+
+This is where Claude shines. Speaker notes should be conversational — what you'd actually say, not what you'd write.
+
+<PromptBlock
+  title="Speaker notes for each slide"
+  prompt="Write speaker notes for each slide in this deck. These are what I'll actually SAY while the slide is displayed.\n\nRules:\n- Write in my speaking voice, not written prose. Use contractions, fragments, and conversational rhythm.\n- Each slide's notes should be [X] sentences (roughly [Y] seconds of talking)\n- Include transition lines — how I move from one slide to the next\n- Mark any audience interaction moments (show of hands, pause for effect, ask a question)\n- Include [CLICK] markers if the slide has reveal animations\n- Don't repeat what's on the slide. The notes should ADD to what the audience reads.\n\n[Paste slide outline]"
+  variables={[
+    { name: "X", placeholder: "3-5" },
+    { name: "Y", placeholder: "30-60" }
+  ]}
+/>
+
+## Step 4: Full Rehearsal Script
+
+<PromptBlock
+  title="Complete talk script"
+  prompt="Write the complete talk for this presentation as a continuous script I can rehearse from. This is a [X]-minute talk.\n\nRules:\n- Write exactly how I should say it, not how I'd write it\n- Include stage directions in brackets: [PAUSE], [ADVANCE SLIDE], [MAKE EYE CONTACT WITH AUDIENCE]\n- Mark timing checkpoints: [5-MINUTE MARK], [10-MINUTE MARK], etc.\n- Build in 2-3 moments where I can ad-lib or tell a personal story (mark these as [PERSONAL STORY ABOUT: topic])\n- The opening should grab attention in the first sentence\n- The closing should be memorized, not improvised — make it punchy\n\n[Paste slide outline and speaker notes]"
+  variables={[
+    { name: "X", placeholder: "20" }
+  ]}
+/>
+
+## Specific Presentation Types
+
+### Investor Pitch Deck
+
+<PromptBlock
+  title="Investor pitch deck"
+  prompt="Create a pitch deck outline for a [stage] fundraise. We're raising [amount] for [company — one sentence description].\n\nUse this structure (proven for investor decks):\n1. Hook — The big problem, stated dramatically\n2. Problem — Who has this problem and how painful is it?\n3. Solution — What we built (demo slide or product screenshot)\n4. Traction — Key metrics that prove it's working\n5. Market — How big is this opportunity? (TAM/SAM/SOM)\n6. Business Model — How we make money\n7. Team — Why this team wins\n8. The Ask — How much, what it funds, what milestones it unlocks\n9. Vision — Where this goes in 5 years\n\nFor each slide: headline, 2-3 key data points, and one supporting visual. No more than 10 slides total.\n\nOur key metrics: [paste metrics]. Our differentiator: [what makes us different]. Why now: [why the timing is right]."
+  variables={[
+    { name: "stage", placeholder: "Series A" },
+    { name: "amount", placeholder: "$8M" },
+    { name: "company — one sentence description", placeholder: "AI-powered revenue operations platform for B2B SaaS companies" }
+  ]}
+/>
+
+### Internal Strategy Presentation
+
+<PromptBlock
+  title="Internal strategy deck"
+  prompt="Create a strategy presentation for [audience] about [strategic initiative]. This is an internal presentation — no selling required, but I need buy-in.\n\nStructure:\n1. Where we are (current state — honest assessment)\n2. Where we need to be (target state — with metrics)\n3. The gap (what's preventing us from getting there)\n4. The plan (phased approach with milestones)\n5. Resources needed (people, budget, tools)\n6. Risks (what could go wrong and how we'll mitigate)\n7. Timeline (visual roadmap)\n8. The ask (what I need from this group)\n\nTone: direct and confident. Don't oversell. Acknowledge tradeoffs.\n\nContext: [paste relevant context about the initiative]"
+  variables={[
+    { name: "audience", placeholder: "the leadership team" },
+    { name: "strategic initiative", placeholder: "restructuring customer success around AI-powered health scoring" }
+  ]}
+/>
+
+### Conference Talk
+
+<PromptBlock
+  title="Conference talk outline"
+  prompt="I'm speaking at [conference/event] for [time] minutes. Topic: [topic]. Audience: [audience description].\n\nI want this to be a talk people remember and tweet about. Help me build the outline.\n\nConstraints:\n- One core idea only. No 'here are 7 tips' talks.\n- Must include at least one personal story that makes me human\n- Must include one counterintuitive or surprising claim\n- Must end with a specific, actionable takeaway — not a vague inspiration\n- Must have an opening that would work as a cold open on YouTube\n\nGive me: narrative arc, slide outline (max [X] slides), suggested visuals, and key transition lines between sections."
+  variables={[
+    { name: "conference/event", placeholder: "SaaStr Annual" },
+    { name: "time", placeholder: "25" },
+    { name: "topic", placeholder: "why I fired half my sales team and replaced them with AI" },
+    { name: "audience description", placeholder: "SaaS founders and operators, mostly Series A-C" },
+    { name: "X", placeholder: "20" }
+  ]}
+/>
+
+## Polishing and Iteration
+
+### Strengthening Weak Slides
+
+<PromptBlock
+  title="Improve weak slides"
+  prompt="Here's my slide deck outline. Identify the 3 weakest slides — the ones where the audience is most likely to tune out or get confused. For each one:\n\n1. Why it's weak\n2. How to fix it (specific revision, not vague advice)\n3. Rewritten slide content\n\nAlso flag any transition between slides that feels jarring or illogical.\n\n[Paste slide outline]"
+  variables={[]}
+/>
+
+### Q&A Preparation
+
+<PromptBlock
+  title="Anticipate Q&A"
+  prompt="Based on this presentation, generate the 10 most likely questions from the audience. For each:\n\n1. The question\n2. Why someone would ask it (what concern or gap drives this question)\n3. A concise, confident answer (3-4 sentences max)\n4. A bridge line to redirect if the question goes off-topic\n\nAudience: [audience]. Include at least 2 hostile or skeptical questions.\n\n[Paste presentation outline or script]"
+  variables={[
+    { name: "audience", placeholder: "C-suite executives evaluating this proposal" }
+  ]}
+/>
+
+<ScenarioCard
+  scenario="You're presenting your Q2 strategy to the board in 48 hours. You have a rough outline in your head but nothing on slides. The presentation needs to be 20 minutes with 10 minutes of Q&A."
+  answer="Start with the narrative arc — don't touch slides until you know the story. Feed Claude your outline, key metrics, and the board's likely concerns. Get the arc first, then the slide outline, then speaker notes. Rehearse once with the script, then again without it. The slides are the last thing you build, not the first."
+  prompt="I have 48 hours to build a board presentation. Here's my rough outline and key data points:\n\n[Paste outline and metrics]\n\nGive me the full package in order:\n1. Narrative arc (5 minutes to review)\n2. Slide outline with headlines and key content (15 slides max)\n3. Speaker notes for each slide\n4. 10 anticipated board questions with answers\n5. A 2-sentence opening I should memorize\n6. A 2-sentence closing I should memorize"
+/>
+
+<StepByStep
+  steps={[
+    { title: "Narrative first, slides second", description: "Use Claude to build the story arc before you open your slide tool. A clear narrative makes every slide obvious." },
+    { title: "Write headlines, not bullets", description: "Every slide headline should make a claim, not describe a category. 'Revenue grew 23%' beats 'Revenue Update.'" },
+    { title: "Generate speaker notes", description: "Have Claude write what you'll actually say. Don't wing it from bullet points — rehearse from real language." },
+    { title: "Stress-test with Q&A prep", description: "Ask Claude to play skeptical audience member. Prepare answers for the hardest questions before you're standing at the podium." },
+    { title: "Rehearse, don't memorize", description: "Use the full script for your first rehearsal, then switch to notes only. You want to internalize the flow, not recite a script." }
+  ]}
+/>

@@ -1,0 +1,170 @@
+---
+title: "Skills: Teach Claude Reusable Workflows"
+description: "What Skills are, how to build them, and real examples at three levels of complexity."
+products: ["Code"]
+tier: "Operator"
+readTime: "12 min"
+---
+
+You've been using Claude Code for a few weeks. You keep asking for the same types of things — weekly reports, lead scoring, content audits. Every time, you re-explain the context, the format, and the rules.
+
+Skills fix that. A Skill is a saved set of instructions that tells Claude Code exactly how to do a specific task. Instead of re-explaining, you just say: `/weekly-report` and Claude knows what to do.
+
+## What Skills Actually Are
+
+A Skill is a markdown file stored in your project's `.claude/commands/` directory. It contains:
+
+- Instructions for what Claude should do
+- Any rules or constraints
+- The expected output format
+- Variables that change each time (like date ranges or names)
+
+That's it. No code. Just written instructions in a markdown file.
+
+Think of Skills like SOPs (standard operating procedures) for your AI assistant. You write them once, and Claude follows them every time.
+
+## Your First Skill (Level 1: Simple)
+
+Let's start with something straightforward — a weekly revenue summary.
+
+<PromptBlock
+  title="Create your first Skill"
+  prompt="Create a Skill file at .claude/commands/weekly-revenue.md with these instructions:\n\n---\nTitle: Weekly Revenue Summary\n---\n\nPull data from our Stripe account for the last 7 days.\n\nReport:\n1. Total revenue\n2. Number of new subscriptions\n3. Number of cancellations\n4. Net MRR change\n5. Top 5 transactions by amount\n\nFormat as a clean text summary I can paste into Slack.\nKeep it under 200 words.\nEnd with one insight or flag (anything unusual)."
+/>
+
+Now whenever you type `/weekly-revenue` in Claude Code, it runs this workflow automatically.
+
+<StepByStep
+  steps={[
+    { title: "Decide what you repeat", description: "What do you ask Claude Code to do at least twice a month? That's your first Skill candidate." },
+    { title: "Write the instructions", description: "In plain English, describe exactly what Claude should do. Be specific about inputs, process, and outputs." },
+    { title: "Save it as a markdown file", description: "Put it in .claude/commands/[skill-name].md" },
+    { title: "Test it", description: "Run the Skill command and see if the output matches what you want. Refine the instructions until it does." },
+    { title: "Iterate", description: "After using a Skill 3-4 times, you'll notice things to add — edge cases, formatting tweaks, additional data. Update the file." }
+  ]}
+  title="Building a Skill"
+/>
+
+## Level 2: Skills with Variables
+
+Skills become more powerful when they accept inputs that change each time.
+
+<PromptBlock
+  title="Skill with variables: Client report"
+  prompt="Create a Skill at .claude/commands/client-report.md:\n\n---\nTitle: Client Performance Report\n---\n\nGenerate a client performance report.\n\nAsk me for:\n1. Client name\n2. Date range\n3. Which metrics to include (revenue, usage, support tickets, or all)\n\nThen:\n1. Pull relevant data from our systems\n2. Calculate key metrics for the specified period\n3. Compare to the previous period of the same length\n4. Flag any metrics that changed by more than 20%\n5. Generate a professional HTML report suitable for sending to the client\n6. Save to output/client-reports/[client-name]-[date].html\n\nTone: professional, data-driven. No internal jargon.\nInclude charts for any trends spanning 3+ data points."
+/>
+
+<TipCallout type="tip">
+Use the phrase "Ask me for:" in your Skill instructions to create interactive Skills that gather input before executing. Claude will prompt you for each piece of information before running the workflow.
+</TipCallout>
+
+## Level 3: Multi-Step Workflows
+
+Advanced Skills chain multiple actions together.
+
+<PromptBlock
+  title="Multi-step Skill: Content pipeline"
+  prompt="Create a Skill at .claude/commands/content-pipeline.md:\n\n---\nTitle: Weekly Content Pipeline\n---\n\nRun the weekly content pipeline process:\n\n**Step 1: Audit**\n- Check our blog RSS feed for posts published this week\n- Check our YouTube channel for new videos\n- List everything published with title, URL, and date\n\n**Step 2: Performance check**\n- For blog posts older than 7 days, pull page views from analytics\n- For YouTube videos older than 3 days, pull view counts\n- Flag any content that's significantly underperforming our averages\n\n**Step 3: Repurpose queue**\n- For each piece of published content, suggest 3 repurposed formats:\n  - LinkedIn post (draft it)\n  - Newsletter snippet (draft it)\n  - Twitter/X thread outline (draft it)\n- Save all drafts to output/repurpose/[date]/\n\n**Step 4: Summary**\n- Create a summary of what was published, how it performed, and what's ready for repurposing\n- Output as a Slack-ready message\n\nRun all steps in sequence. If any step fails, tell me what happened and continue with the rest."
+/>
+
+## Real Skill Examples for Operators
+
+### Daily Standup Prep
+
+<PromptBlock
+  title="Skill: Daily standup prep"
+  prompt="Create a Skill at .claude/commands/standup.md:\n\n---\nTitle: Daily Standup Prep\n---\n\nPrepare my daily standup in 30 seconds:\n\n1. Check my calendar for what I did yesterday (meetings, events)\n2. Check my task manager for tasks I completed yesterday\n3. Check my task manager for what's due today\n4. Check Slack for any unread messages mentioning me\n\nFormat as:\n**Yesterday:** [2-3 bullet points]\n**Today:** [2-3 bullet points]\n**Blockers:** [any or 'None']\n\nKeep total output under 100 words."
+/>
+
+### Competitor Monitor
+
+<PromptBlock
+  title="Skill: Competitor check"
+  prompt="Create a Skill at .claude/commands/competitor-check.md:\n\n---\nTitle: Weekly Competitor Check\n---\n\nAsk me which competitor to research, then:\n\n1. Check their website for recent changes (pricing page, features page, blog)\n2. Check their social media for recent posts\n3. Search for recent news or press mentions\n4. Check review sites (G2, Capterra) for recent reviews\n\nSummarize:\n- What's new or changed\n- Any positioning shifts\n- New features or announcements\n- Customer sentiment trends\n- One thing we should pay attention to\n\nSave to output/competitive/[competitor]-[date].md"
+/>
+
+### Meeting Prep
+
+<PromptBlock
+  title="Skill: Meeting prep"
+  prompt="Create a Skill at .claude/commands/meeting-prep.md:\n\n---\nTitle: Meeting Prep\n---\n\nAsk me for:\n1. Who I'm meeting with\n2. What the meeting is about\n3. What I want out of this meeting\n\nThen:\n1. Check my CRM for history with this person/company\n2. Check my notes folder for previous meeting notes\n3. Search for recent news about them or their company\n4. Review our last 3 email exchanges\n\nGenerate a 1-page prep doc:\n- Background on the person/company\n- Key context from our history\n- My objectives for this meeting\n- 3-5 questions I should ask\n- One thing to reference that shows I'm prepared\n\nKeep it scannable. I'll review this 5 minutes before the meeting."
+/>
+
+## Skill Organization
+
+As you build more Skills, organize them by category:
+
+```
+.claude/commands/
+├── reporting/
+│   ├── weekly-revenue.md
+│   ├── client-report.md
+│   └── board-deck-data.md
+├── sales/
+│   ├── lead-score.md
+│   ├── deal-review.md
+│   └── competitor-check.md
+├── content/
+│   ├── content-pipeline.md
+│   ├── seo-audit.md
+│   └── repurpose.md
+├── ops/
+│   ├── standup.md
+│   ├── meeting-prep.md
+│   └── weekly-review.md
+└── admin/
+    ├── expense-report.md
+    └── invoice-check.md
+```
+
+<ScenarioCard
+  scenario="You have an operations manager who does the same 5 tasks every Monday morning: check revenue, update the team dashboard, review support tickets, prep for the leadership meeting, and draft the weekly email. It takes her 3 hours."
+  answer="Build 5 Skills — one for each task. Then build a 6th Skill called 'monday-morning' that runs all 5 in sequence. Her 3-hour Monday morning becomes a 15-minute review of Claude's output. She shifts from doing the work to reviewing the work."
+  prompt="Create a master Skill at .claude/commands/monday-morning.md that runs these sub-workflows in sequence: weekly-revenue, team-dashboard, support-review, leadership-prep, and weekly-email-draft. After each step, output a completion confirmation. At the end, create a summary of everything generated with file paths."
+/>
+
+## Writing Good Skill Instructions
+
+The quality of a Skill is the quality of its instructions. Here's what makes the difference:
+
+<BeforeAfter
+  before={{
+    content: "Pull revenue data and make a report."
+  }}
+  after={{
+    content: "Pull all Stripe invoice data for the last 7 days. Calculate: total revenue, number of new subscriptions, number of cancellations, net MRR change, and list top 5 transactions by amount. Format as a text summary under 200 words. End with one notable observation. Save to output/reports/revenue-[date].md"
+  }}
+  annotation="Vague instructions produce inconsistent output. Specific instructions produce reliable, repeatable results — which is the entire point of Skills."
+/>
+
+**Rules for good Skill instructions:**
+
+1. **Be specific about data sources** — "Pull from Stripe" not "Pull revenue data"
+2. **Specify the output format** — HTML, markdown, CSV, Slack message
+3. **Include the save location** — Where should the output file go?
+4. **Set quality bars** — "Under 200 words," "include charts if 3+ data points"
+5. **Handle edge cases** — "If no data exists for this period, say so instead of erroring"
+6. **Include the 'ask me' pattern** — For anything that changes each time
+
+## Sharing Skills Across Your Team
+
+If you're using Claude Code with your team, Skills are portable. Share the `.claude/commands/` folder and everyone gets the same workflows.
+
+<PromptBlock
+  title="Document a Skill for team use"
+  prompt="I built this Skill and want to share it with my team. Review the instructions and:\n\n1. Add a 'Prerequisites' section listing what API keys/access the user needs\n2. Add a 'First time setup' section for anything they need to configure\n3. Add example output so they know what to expect\n4. Add a 'Troubleshooting' section for the 3 most common issues\n5. Make the instructions clear enough for someone who's never used Claude Code\n\n[paste your Skill file]"
+/>
+
+<RealWorldProof
+  quote="I have about 20 Skills now. They're basically my operating system. My team doesn't ask me 'how do I generate the client report' anymore — they just run the Skill and it comes out perfect every time."
+  author="Operations Director"
+  context="Non-technical operator managing a 15-person services team"
+/>
+
+## Common Mistakes
+
+**Don't build Skills for one-time tasks.** If you're only doing it once, just prompt Claude Code directly. Skills are for tasks you do at least 2-3 times per month.
+
+**Don't make Skills too complex at first.** Start with simple, single-purpose Skills. Combine them later. A Skill that tries to do 15 things in sequence is fragile and hard to debug.
+
+**Don't forget to update Skills.** Your business changes. Your data sources change. Your reports need to evolve. Review your Skills quarterly and update the instructions to match your current needs.

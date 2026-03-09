@@ -1,0 +1,153 @@
+---
+title: "The Living Objection Playbook"
+description: "Build a team-wide objection library that gets smarter over time."
+products: ["CoWork"]
+tier: "Operator"
+readTime: "10 min"
+---
+
+Every sales team has the same problem: your best rep handles objections perfectly, and everyone else stumbles. The knowledge is locked in individual heads. Claude's CoWork product lets you build a shared objection library that captures how your top performers handle pushback — and makes that available to everyone.
+
+This isn't a static document. It's a living system that improves with every deal.
+
+## Why CoWork for Objection Handling
+
+CoWork is Claude's collaborative product — think of it as a persistent workspace where your team contributes knowledge and Claude helps organize, retrieve, and apply it. For objection handling, this means:
+
+- **One source of truth** for how to handle any objection
+- **Real examples** from actual deals, not theoretical responses
+- **Pattern recognition** across your whole team's experience
+- **Instant retrieval** during live calls when reps need help fast
+
+## Building Your Objection Library
+
+### Step 1: Define Your Objection Categories
+
+Start by mapping the objection landscape. Most B2B sales teams face the same core categories.
+
+<PromptBlock
+  title="Map your objection categories"
+  prompt="I'm building a comprehensive objection handling library for our sales team. We sell [what you sell] to [who you sell to] at [price range].\n\nOur typical sales cycle is [length] and involves [number of stakeholders].\n\nHelp me map out the complete objection landscape. For each category, list the specific objections we're likely to hear:\n\n1. PRICE & BUDGET objections (too expensive, no budget, cheaper alternatives)\n2. TIMING objections (not now, next quarter, too busy)\n3. AUTHORITY objections (need to check with boss, committee decision, not my call)\n4. NEED objections (we're fine with what we have, not a priority, don't see the value)\n5. TRUST objections (never heard of you, too small/new, want references)\n6. COMPETITION objections (already using X, evaluating Y, our current vendor offered a discount)\n7. IMPLEMENTATION objections (too complex, team won't adopt it, bad past experience with similar tools)\n8. CONTRACT objections (too long, terms are rigid, need legal review)\n\nFor each category, list 4-6 specific objections we'd actually hear in conversation — the exact words a prospect would say, not the polished version."
+  variables={[
+    { name: "what you sell", placeholder: "revenue analytics platform" },
+    { name: "who you sell to", placeholder: "VP Sales and Rev Ops leaders at B2B SaaS companies, $5M-$50M" },
+    { name: "price range", placeholder: "$1,500-$5,000/month" },
+    { name: "length", placeholder: "4-6 weeks" },
+    { name: "number of stakeholders", placeholder: "3-4 people (champion, VP Sales, CFO, sometimes CTO)" }
+  ]}
+/>
+
+### Step 2: Build Response Templates
+
+For each objection, you want three things: the acknowledgment, the reframe, and the proof point.
+
+<PromptBlock
+  title="Generate objection responses"
+  prompt="For each of these objections, generate a complete response using the Acknowledge-Reframe-Prove framework.\n\nOBJECTIONS:\n[List your objections here — paste the output from the previous prompt or your own list]\n\nFor each objection, provide:\n\n1. ACKNOWLEDGE (1 sentence): Validate their concern without agreeing with it. Show you've heard this before.\n2. REFRAME (2-3 sentences): Shift the conversation from their concern to the real issue or opportunity they're missing.\n3. PROVE (1-2 sentences): A specific data point, case study reference, or question that makes the reframe credible.\n4. QUESTION: A follow-up question that advances the conversation rather than letting the objection stall it.\n\nWrite these in conversational tone — how a confident rep would actually say this on a call, not how it would read in a training manual. No corporate speak.\n\nAlso tag each response with:\n- Difficulty: Easy / Medium / Hard\n- When you hear it: Early / Mid / Late in the sales cycle\n- Who says it: Champion / Economic Buyer / Technical Evaluator / End User"
+/>
+
+<TipCallout type="tip">
+The best objection responses come from your actual deals. After each prompt-generated response, add a real example from your team. "Here's how Mike handled this with Acme Corp last month..." Real stories are 10x more useful than generic scripts.
+</TipCallout>
+
+### Step 3: Add Real Deal Context
+
+This is where the library becomes truly valuable. After every significant sales interaction, feed the real objection and response back into the system.
+
+<PromptBlock
+  title="Log a real objection from a deal"
+  prompt="I just handled an objection on a call. Add this to our objection library with the proper categorization.\n\nDEAL: [company name], [deal size], [stage]\nWHO SAID IT: [name, title]\nTHE OBJECTION (their exact words): [what they said]\nHOW I RESPONDED: [what you said back]\nOUTCOME: [did it work? what happened next?]\n\nPlease:\n1. Categorize this objection (Price, Timing, Authority, Need, Trust, Competition, Implementation, or Contract)\n2. Rate my response: what worked well and what could be improved\n3. Generate an optimized version of my response using the Acknowledge-Reframe-Prove framework\n4. Add any context notes about when this objection tends to come up and from what type of stakeholder\n5. Cross-reference: does this relate to any patterns we're seeing across other deals?"
+  variables={[
+    { name: "company name", placeholder: "TechFlow Inc" },
+    { name: "deal size", placeholder: "$36K/year" },
+    { name: "stage", placeholder: "Post-demo, working on proposal" },
+    { name: "name, title", placeholder: "David Kim, CFO" },
+    { name: "what they said", placeholder: "We just went through a big tool migration last quarter. I can't put the team through another one right now." },
+    { name: "what you said back", placeholder: "I totally get that — migration fatigue is real. What if we designed the rollout to start with just your 3 team leads using it alongside the current tool? No full migration, just a parallel track so they can see the value before we talk about switching anything." },
+    { name: "did it work? what happened next?", placeholder: "He paused, then said 'That could work.' We agreed to scope a pilot proposal." }
+  ]}
+/>
+
+## The CoWork Objection Workspace
+
+Here's how to structure this in CoWork so your whole team benefits.
+
+<StepByStep
+  title="Set up the CoWork objection workspace"
+  steps={[
+    { title: "Create a CoWork space called 'Sales Objection Playbook'", description: "This becomes the single source of truth. Every rep on the team gets access." },
+    { title: "Seed it with your initial objection map and responses", description: "Use the prompts above to generate the first version. This gives Claude the structure to work with." },
+    { title: "Set up a weekly contribution ritual", description: "Every Friday, each rep adds 1-2 real objections they handled that week. Takes 5 minutes per rep." },
+    { title: "Use it during live calls", description: "When a rep hears an objection, they can quickly search the workspace: 'How should I handle [objection]?' Claude finds the best response instantly." },
+    { title: "Review and promote monthly", description: "Each month, review new entries. Promote the best real-world responses to the 'featured' section. Archive what doesn't work." }
+  ]}
+/>
+
+## Objection Pattern Analysis
+
+Once you have 30+ logged objections, Claude can spot patterns you'd miss.
+
+<PromptBlock
+  title="Analyze objection patterns across deals"
+  prompt="Analyze our objection library and identify patterns. Look at all logged objections and tell me:\n\n1. FREQUENCY: Which objection categories come up most? Which specific objections within each category?\n2. TIMING: When in the sales cycle do most objections surface? Are we hearing them earlier or later than we should?\n3. STAKEHOLDER PATTERNS: Which roles raise which objections? Is there a pattern by seniority level?\n4. WIN/LOSS CORRELATION: For deals we won vs. lost, were there different objection patterns? Which objections are deal-killers vs. speed bumps?\n5. RESPONSE EFFECTIVENESS: Which of our responses have the best outcomes? Which need work?\n6. GAPS: Are there objections we keep hearing that we don't have a strong response for?\n7. RECOMMENDATIONS: Based on these patterns, what should we change about our pitch, demo, or sales process to prevent the most common objections from coming up in the first place?"
+/>
+
+<RealWorldProof
+  quote="We found that 60% of our lost deals had the same objection: 'We need to get IT involved.' We weren't losing on price or product — we were losing because we didn't bring IT stakeholders into the conversation early enough. That one insight from the pattern analysis changed our entire sales process."
+  author="VP of Sales, MarTech Company"
+  context="Team of 12 AEs, analyzed 6 months of objection data"
+/>
+
+## Role-Play and Training
+
+Use the objection library to train new reps and sharpen experienced ones.
+
+<PromptBlock
+  title="Objection role-play session"
+  prompt="I want to practice handling objections. Act as a tough but realistic prospect.\n\nMY ROLE: Sales rep selling [what you sell]\nYOUR ROLE: [prospect title] at a [company type] who is [their situation]\n\nRules:\n1. Start with a real objection from our library — don't make it easy\n2. If my response is weak, push back harder. If it's strong, give me another objection\n3. Mix objection types — don't just hammer on price\n4. After 5 rounds, break character and give me feedback: what I did well, what I need to work on, and which specific responses from our library I should study\n5. Be realistic. Don't be a cartoon villain — be a busy executive with legitimate concerns\n\nLet's go. Hit me with the first objection."
+  variables={[
+    { name: "what you sell", placeholder: "revenue analytics platform, $2K/month" },
+    { name: "prospect title", placeholder: "VP Sales" },
+    { name: "company type", placeholder: "B2B SaaS company, $15M ARR" },
+    { name: "their situation", placeholder: "evaluating analytics tools, already has a Salesforce-based reporting setup they're somewhat unhappy with" }
+  ]}
+/>
+
+## Quick-Reference Templates by Category
+
+### Price Objections
+
+<ScenarioCard
+  scenario="The prospect says: 'This is way more expensive than what we're paying now.'"
+  answer="Acknowledge the price difference, then shift to total cost. Ask what they're spending in time, errors, and missed opportunities with their current approach. Most 'cheaper' solutions cost more when you factor in everything. Get specific: 'How many hours per week does your team spend on [the thing your tool automates]?' Then do the math together."
+  prompt="A prospect told me '[your product] costs 3x what we pay for [competitor]. Help me build a total cost of ownership comparison that includes: their team's time on manual work the competitor doesn't automate, revenue lost from the capabilities they don't have, and the cost of the workarounds they've built. Make it specific to their situation: [describe their situation]."
+/>
+
+### Timing Objections
+
+<ScenarioCard
+  scenario="The prospect says: 'This isn't the right time. Let's revisit in Q3.'"
+  answer="Timing objections are usually about priority, not timing. The question to ask: 'What would need to change between now and Q3 for this to move up the priority list?' If they can answer that, you have a path forward. If they can't, the real objection is something else — usually need or authority."
+  prompt="A prospect wants to push to Q3. They said: '[their exact words]'. Help me: (1) identify what's really behind the timing objection, (2) craft a response that respects their timeline while creating urgency around the cost of waiting, and (3) propose a low-commitment next step that keeps the deal alive without pressure."
+/>
+
+### Authority Objections
+
+<ScenarioCard
+  scenario="The prospect says: 'I need to run this by my boss before we can move forward.'"
+  answer="Don't fight it — enable it. Your prospect just told you they're your champion but they need help selling internally. Your job shifts from selling to them to arming them to sell for you. Ask: 'What will your boss want to know?' Then build them a one-page internal pitch they can forward."
+  prompt="My champion at [company] needs to get approval from [boss title]. Help me create a one-page internal justification document they can forward. It should include: the business problem in one sentence, the proposed solution in one sentence, expected ROI with specific numbers from our conversation, implementation timeline, and a comparison to the status quo (doing nothing). Format it so it reads like an internal memo, not a vendor pitch."
+/>
+
+<TipCallout type="note">
+The best objection libraries aren't the biggest — they're the most specific. Five real responses from actual deals that worked are worth more than fifty generic scripts. Prioritize adding real examples from your team over generating more theoretical responses.
+</TipCallout>
+
+## Keeping It Current
+
+The objection library is only valuable if it stays current. Set up this monthly review cadence:
+
+<PromptBlock
+  title="Monthly objection library review"
+  prompt="It's time for our monthly objection library review. Here's our current library and the new entries from this month:\n\n[Paste current library summary and new entries]\n\nPlease:\n1. Identify any new objection patterns that emerged this month\n2. Flag responses that were used but had poor outcomes — these need rewriting\n3. Highlight the top 3 most effective responses this month with the context of why they worked\n4. Suggest any objections we should retire (no longer relevant) or add (new patterns)\n5. Generate an updated 'Top 10 Objections' quick-reference card that reps can pull up during calls\n6. Recommend one objection handling skill the team should practice at next week's meeting"
+/>

@@ -1,0 +1,170 @@
+---
+title: "How Claude Actually Thinks"
+description: "Context windows, tokens in plain English, and why more context = better output."
+products: ["Chat", "CoWork", "Code"]
+tier: "Starter"
+readTime: "8 min"
+---
+
+Think of every Claude conversation as briefing a brilliant new hire. This person is incredibly smart, has broad knowledge, and can execute anything — but they only know what you tell them in this conversation.
+
+That mental model unlocks everything else in this Playbook.
+
+## The Context Window: Your Briefing Room
+
+Every time you start a conversation with Claude, you're opening a "context window." This is Claude's working memory — everything it can see and reference during your conversation.
+
+Here's what matters:
+
+- **Claude can see everything in the conversation** — your messages, its responses, any files you've uploaded, and any project instructions you've set up
+- **More context = better output** — the more relevant information Claude has, the better it performs
+- **Context has a limit** — think of it as a very large document (roughly 150,000 words for most Claude models)
+
+<TipCallout type="note">
+You'll almost never hit the context limit in normal use. But if you're pasting in massive documents or having very long conversations, Claude will let you know when you're approaching it.
+</TipCallout>
+
+## Tokens: The Unit of AI Thinking
+
+You'll hear the word "tokens" a lot. Here's all you need to know:
+
+**A token is roughly 3/4 of a word.** "The quick brown fox" is about 4 tokens. A typical email is about 200 tokens. A 10-page document is about 3,000 tokens.
+
+Why does this matter? Two reasons:
+
+1. **Pricing** — Claude subscriptions include a token budget. More complex conversations use more tokens.
+2. **Context limits** — the context window is measured in tokens, not words.
+
+<MiniQuiz
+  question="A 5-page business proposal is approximately how many tokens?"
+  options={[
+    { label: "500 tokens", correct: false, explanation: "That's closer to a long email. A 5-page document is much larger." },
+    { label: "1,500 tokens", correct: true, explanation: "Correct! A typical page is about 300 tokens, so 5 pages is roughly 1,500 tokens." },
+    { label: "15,000 tokens", correct: false, explanation: "That would be closer to a 50-page document." }
+  ]}
+/>
+
+## The Briefing Principle
+
+Here's the most important concept in this entire Playbook:
+
+**The quality of Claude's output is directly proportional to the quality of your input.**
+
+This isn't about "prompt engineering tricks." It's about giving Claude the context it needs to do excellent work — just like you'd brief a consultant or a new team member.
+
+<BeforeAfter
+  before={{
+    label: "Vague briefing",
+    content: "Write me a cold email for my SaaS product."
+  }}
+  after={{
+    label: "Proper briefing",
+    content: "Write a cold email for Acme Analytics, our B2B SaaS product that helps e-commerce companies track customer lifetime value. Target audience: VPs of Marketing at companies doing $5M-$50M in revenue. Our main differentiator is that we integrate with Shopify in one click (competitors require a 2-week implementation). Tone: professional but conversational, no jargon. Goal: book a 15-minute demo call. Keep it under 150 words."
+  }}
+  annotation="Same AI, same model, completely different results. The only difference is context."
+/>
+
+## How Claude Processes Your Input
+
+When you send a message, Claude processes the entire conversation in sequence:
+
+<StepByStep
+  steps={[
+    { title: "System instructions load first", description: "Project instructions, custom instructions, or CLAUDE.md — these set the foundation for everything that follows." },
+    { title: "Conversation history comes next", description: "Every message you've sent and every response Claude has given, in order." },
+    { title: "Your latest message arrives last", description: "Your most recent input, including any pasted text, files, or specific request." },
+    { title: "Claude generates a response", description: "Using ALL of that context together to produce its output." }
+  ]}
+  title="The processing sequence"
+/>
+
+This is why **project instructions matter so much**. They're the first thing Claude sees, every single time. We'll cover this in depth in the [Projects, Memory & Skills](/claude-playbook/foundations/projects-memory-skills) playbook.
+
+## The Three Levels of Context
+
+Think of context as having three layers, and your results improve dramatically as you use more of them.
+
+### Level 1: The Conversation
+
+What you type right now. This is where most people stop — and it's the least powerful layer on its own.
+
+Every message you send is context. Every response Claude gives becomes context for the next message. This is why conversations get better over time within a session — Claude accumulates understanding as you go.
+
+### Level 2: Project Instructions
+
+Persistent context that loads automatically every time you start a new conversation. Your brand voice, your company info, your preferences, your audience details.
+
+This is where the magic starts. Instead of re-explaining who you are and what you need, Claude already knows. You skip straight to the work.
+
+### Level 3: Referenced Files & Data
+
+Documents, spreadsheets, transcripts, and other materials you upload or reference. This is where Claude becomes genuinely useful for real work.
+
+A financial model. A competitor's marketing page. A customer interview transcript. A 50-page strategy document. Claude can process all of it and work with the specifics — not just generic advice, but recommendations grounded in your actual data.
+
+<RealWorldProof
+  quote="The gap between default Claude and configured Claude is wild. Same model, completely different results depending on what you feed it before you start."
+  author="@bpizzacalla"
+  context="Builder who shipped a full agentic sales platform with zero engineering background"
+/>
+
+## The "New Hire" Test
+
+Before you send any important prompt, run this mental test:
+
+**If you handed this exact text to a brilliant new hire on their first day, would they have enough information to do great work?**
+
+If not, add what's missing. Usually it's:
+- **Who the audience is** — "Write this for CTOs at mid-market companies" vs. just "Write this"
+- **What success looks like** — "The email should get them to book a call" vs. "Write an email"
+- **What tone to use** — "Casual and direct, like texting a colleague" vs. leaving it to chance
+- **What constraints exist** — "Under 200 words, no jargon, must include pricing" vs. open-ended
+
+## Practical Example: The Difference Context Makes
+
+Let's look at the same task with increasing levels of context:
+
+<PromptBlock
+  title="Level 1: Conversation only"
+  prompt="Write an apology email about downtime."
+/>
+
+This will produce a generic, template-sounding email. Usable in a pinch, but not good.
+
+<PromptBlock
+  title="Level 2: With project context loaded"
+  prompt="Write an apology email about today's downtime.\n\n(Claude already knows from Project instructions: company name, product, customer base, communication tone, brand voice)"
+/>
+
+Better — Claude matches your voice and knows your audience. But it's still guessing about the specifics.
+
+<PromptBlock
+  title="Level 3: Full context"
+  prompt="Draft a customer communication about today's service outage. Details: 45-minute downtime from 2:15-3:00 PM EST, affected 12% of users (our East Coast infrastructure), root cause was a database migration that hit an edge case, fully resolved with no data loss. Tone: empathetic, transparent, and confident. Include: what happened, who was affected, what we did to fix it, and what we're doing to prevent recurrence. Under 200 words."
+/>
+
+Now Claude has everything. The output will be specific, accurate, and on-brand. One draft, minimal editing.
+
+<ScenarioCard
+  scenario="You need Claude to draft a customer email about a service outage. You know the details: it was 45 minutes of downtime, affected 12% of users, the root cause was a database migration, and it's fully resolved."
+  answer="Don't just say 'write an apology email about downtime.' Give Claude ALL the details: duration, impact scope, root cause, resolution status, and what you're doing to prevent recurrence. Also specify the tone (empathetic but confident) and any company conventions for incident communication."
+  prompt="Draft a customer communication about today's service outage. Details: 45-minute downtime from 2:15-3:00 PM EST, affected 12% of users (our East Coast infrastructure), root cause was a database migration that hit an edge case, fully resolved with no data loss. Tone: empathetic, transparent, and confident. Include: what happened, who was affected, what we did to fix it, and what we're doing to prevent recurrence. Under 200 words."
+/>
+
+## What This Means for You
+
+Three practical takeaways you can use right now:
+
+1. **Don't start from scratch** — Set up Projects (Chat) or CLAUDE.md (Code) with your persistent context. You'll cover this in the [Projects, Memory & Skills](/claude-playbook/foundations/projects-memory-skills) playbook.
+
+2. **Front-load context** — Give Claude the important information at the beginning of the conversation, not as an afterthought. The order matters: Claude weighs earlier context heavily.
+
+3. **Be specific about what you want** — Claude can't read your mind. Tell it the format, the audience, the tone, the constraints, and the goal. Every missing detail is a place where Claude will guess — and guessing means generic output.
+
+<TipCallout type="tip">
+A good rule of thumb: spend 2 minutes writing a detailed prompt to save 20 minutes of back-and-forth revision. The math always works in your favor.
+</TipCallout>
+
+## Next Up
+
+Now that you understand how Claude processes information, the next playbook covers **which Claude product you should actually be using** — Chat, CoWork, or Code. The answer depends entirely on what you're trying to accomplish.

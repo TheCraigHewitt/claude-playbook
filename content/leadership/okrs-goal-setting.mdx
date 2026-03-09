@@ -1,0 +1,134 @@
+---
+title: "OKRs and Goal-Setting with AI"
+description: "Multi-turn facilitated goal-setting. Alignment checks across team goals. Quarterly planning in half the time."
+products: ["Chat", "CoWork"]
+tier: "Operator"
+readTime: "11 min"
+---
+
+Goal-setting is where most leadership teams waste the most time and produce the least clarity. You spend a full day in a conference room and walk out with goals that are either too vague to measure or too specific to matter.
+
+Claude can facilitate goal-setting as a structured, multi-turn process. Not by generating OKRs from thin air, but by asking you the right questions, pressure-testing your thinking, and checking alignment across teams.
+
+## The Goal-Setting Process
+
+<StepByStep
+  steps={[
+    { title: "Strategic context dump", description: "Give Claude your company strategy, last quarter's results, and current situation. Claude needs to know where you're coming from to help you figure out where you're going." },
+    { title: "Objective identification", description: "Claude facilitates a conversation to surface the 3-5 things that actually matter this quarter." },
+    { title: "Key result definition", description: "For each objective, Claude helps you define measurable key results that are ambitious but not delusional." },
+    { title: "Alignment check", description: "Claude maps team goals against company goals and flags gaps, overlaps, and conflicts." },
+    { title: "Stress test", description: "Claude plays devil's advocate — what's missing, what's unrealistic, what will get deprioritized?" }
+  ]}
+/>
+
+## Step 1: Context Dump
+
+<PromptBlock
+  title="Load strategic context for OKR planning"
+  prompt="I'm planning OKRs for [time period] for [scope]. Before we start, here's the context you need:\n\n**Company mission/strategy:** [one paragraph]\n**Last quarter's results:** [what we achieved, what we missed, and why]\n**Current situation:** [what's changed — market, team, resources, competitive landscape]\n**Constraints:** [budget, headcount, technical limitations, dependencies]\n**CEO/board priorities:** [what leadership cares about most right now]\n\nDon't generate OKRs yet. First, tell me:\n1. What patterns do you see in last quarter's results?\n2. What questions should I answer before we set goals?\n3. What tensions do you notice between different priorities?"
+  variables={[
+    { name: "time period", placeholder: "Q2 2026" },
+    { name: "scope", placeholder: "the whole company (35 people)" }
+  ]}
+/>
+
+<TipCallout type="tip">
+This is a multi-turn conversation, not a one-shot prompt. Let Claude ask you questions. The back-and-forth is where the clarity comes from. Budget 20-30 minutes for a thorough goal-setting session.
+</TipCallout>
+
+## Step 2: Objective Identification
+
+<PromptBlock
+  title="Facilitated objective brainstorm"
+  prompt="Based on the context I've provided, help me identify the right objectives for [time period]. Walk me through this:\n\n1. What are the 5-7 things we COULD focus on this quarter? List them all.\n2. Now force-rank them by impact. If we could only achieve 3, which 3 move the needle most?\n3. For each of the top 3, challenge me: is this truly a quarter-long objective, or is it a project masquerading as a goal?\n4. Are any of these 'maintenance' goals (keep doing what we're doing) vs. 'change' goals (achieve something new)? Both are valid, but I should be honest about which is which.\n\nDon't let me pick more than 4 objectives. If I push for 5+, push back and make me prioritize."
+  variables={[{ name: "time period", placeholder: "Q2 2026" }]}
+/>
+
+## Step 3: Key Result Definition
+
+This is where most OKR processes fall apart. Key results end up being either tasks ("Launch the new feature") or unmeasurable aspirations ("Improve customer satisfaction").
+
+<PromptBlock
+  title="Define key results for an objective"
+  prompt="Help me define key results for this objective:\n\n**Objective:** [the objective]\n\nFor each key result, ensure it passes these tests:\n- [ ] **Measurable** — I can look at a number and know if we hit it\n- [ ] **Outcome-focused** — It measures a result, not an activity\n- [ ] **Time-bound** — Achievable within the quarter\n- [ ] **Ambitious but possible** — ~70% confidence of hitting it (not sandbagged, not fantasy)\n- [ ] **Within our control** — We can directly influence this metric\n\nSuggest 3-5 key results. For each one, tell me:\n1. The metric and target\n2. Where the number is today (if I told you)\n3. Why you chose this metric over alternatives\n4. One way this KR could be 'gamed' (so I can watch for it)"
+  variables={[{ name: "the objective", placeholder: "Become the go-to AI implementation partner for mid-market SaaS companies" }]}
+/>
+
+<BeforeAfter
+  before={{
+    content: "Objective: Improve sales performance\nKR1: Do more outreach\nKR2: Close bigger deals\nKR3: Improve the sales process"
+  }}
+  after={{
+    content: "Objective: Accelerate pipeline velocity from first touch to close\nKR1: Reduce average sales cycle from 42 days to 28 days\nKR2: Increase average deal size from $18K to $24K ACV through better discovery and multi-threading\nKR3: Improve Stage 2 → Stage 3 conversion from 35% to 50% by implementing structured discovery framework"
+  }}
+  annotation="Vague aspirations vs. specific, measurable outcomes. Both sets of goals 'sound' similar, but only the second set tells you whether you succeeded."
+/>
+
+## Step 4: Alignment Check
+
+Once each team has drafted their OKRs, Claude is excellent at checking alignment across the org.
+
+<PromptBlock
+  title="Cross-team OKR alignment check"
+  prompt="Here are the OKRs for each team in our company:\n\n**Company OKRs:**\n[paste company-level OKRs]\n\n**Team OKRs:**\n[paste each team's OKRs]\n\nAnalyze alignment:\n1. **Coverage gaps** — Which company OKRs don't have any team-level OKR supporting them?\n2. **Orphan goals** — Which team OKRs don't connect to any company objective? (Not necessarily bad, but worth questioning)\n3. **Dependencies** — Where does one team's KR depend on another team's work? Flag these explicitly.\n4. **Conflicts** — Are any team goals in tension with each other? (e.g., 'reduce costs' in one team vs. 'invest in growth' in another)\n5. **Resource realism** — Based on team sizes I'll share, does any team have too many KRs for their capacity?\n\nPresent this as a visual alignment map if possible."
+/>
+
+<ScenarioCard
+  scenario="Your Head of Product wants an OKR around 'Improve product quality' and your Head of Growth wants 'Ship features faster.' These feel like they're in tension."
+  answer="Surface the tension explicitly — it's not bad, it's real. Ask Claude to help you find the framing that acknowledges both: 'Ship features faster without increasing defect rate' or 'Reduce time-to-quality (faster AND better, not one or the other).' Sometimes the tension reveals a strategic choice you haven't made yet."
+  prompt="Two of my team leads have goals that seem in tension:\n- Product: 'Improve product quality — reduce P1 bugs by 50%'\n- Growth: 'Ship 3 major features by end of quarter'\n\nHelp me:\n1. Is this actually a conflict or can both be true?\n2. What underlying strategic question haven't we answered?\n3. Suggest a reframe that aligns both goals\n4. If I have to choose one priority over the other, what should I consider?"
+/>
+
+## Step 5: Stress Test
+
+<PromptBlock
+  title="Devil's advocate on your OKRs"
+  prompt="Here are our finalized OKRs for [time period]:\n\n[paste all OKRs]\n\nPlay devil's advocate. Challenge everything:\n1. Which KR are we most likely to quietly abandon by week 6? Why?\n2. Which objective is actually 'business as usual' dressed up as a stretch goal?\n3. What major risk or opportunity are we NOT addressing?\n4. If a competitor saw these goals, what would they exploit?\n5. Is there a KR where hitting the number won't actually matter? (vanity metric risk)\n6. Six months from now, will we be proud of these goals or embarrassed by them?\n\nBe brutally honest. I'd rather fix this now than at the end-of-quarter review."
+  variables={[{ name: "time period", placeholder: "Q2 2026" }]}
+/>
+
+## Mid-Quarter Check-In
+
+OKRs are useless if you set them and forget them. Use Claude for a structured mid-quarter review.
+
+<PromptBlock
+  title="Mid-quarter OKR review"
+  prompt="We're at the midpoint of [quarter]. Here are our OKRs with current progress:\n\n[paste OKRs with current metrics]\n\nFor each KR:\n1. On track / at risk / off track — based on the trajectory, not just the current number\n2. If at risk or off track: what would need to be true for us to still hit it? Is that realistic?\n3. Should we adjust the target, change our approach, or accept the miss?\n\nAlso:\n- Are there any KRs we should officially de-prioritize? (Better to make a conscious choice than let it drift)\n- Have conditions changed since we set these goals? Does anything need to be revised?\n- What's the one KR we should pour extra energy into for the back half?"
+  variables={[{ name: "quarter", placeholder: "Q2 2026" }]}
+/>
+
+## Individual Goal Setting
+
+For individual contributors and managers setting personal goals.
+
+<PromptBlock
+  title="Individual goal-setting facilitation"
+  prompt="Help me set goals for [time period]. I'm a [role] reporting to [manager title].\n\nTeam/company OKRs I need to support:\n[paste relevant team OKRs]\n\nMy current projects and responsibilities:\n[list them]\n\nMy development goals:\n[what I want to grow in]\n\nFacilitate a goal-setting conversation:\n1. Given my role, which team OKRs should I directly contribute to?\n2. What 2-3 personal goals would make me clearly successful this quarter?\n3. What's one stretch goal that would accelerate my career if I hit it?\n4. What should I explicitly say NO to this quarter to make room for what matters?\n5. Draft my goals in a format I can share with my manager for alignment."
+  variables={[
+    { name: "time period", placeholder: "Q2 2026" },
+    { name: "role", placeholder: "Senior Account Executive" },
+    { name: "manager title", placeholder: "VP of Sales" }
+  ]}
+/>
+
+## End-of-Quarter Retrospective
+
+<PromptBlock
+  title="OKR retrospective"
+  prompt="The quarter is over. Here are our OKRs and final results:\n\n[paste OKRs with final metrics]\n\nRun a retrospective:\n1. Score each KR (0.0-1.0) and give an honest assessment of each\n2. What did we learn about our ability to predict and plan?\n3. Which goals did we over-invest in at the expense of others?\n4. Were there significant achievements NOT captured by our OKRs? (If so, our goals were wrong)\n5. What should carry over to next quarter vs. what should we let go?\n6. Rate our overall goal-setting quality: did these OKRs actually help us focus, or were they shelf-ware?\n\nDon't sugarcoat. A 0.7 average score means we set appropriately ambitious goals. A 1.0 average means we sandbagged."
+/>
+
+<RealWorldProof
+  quote="We used to spend two full days on quarterly planning. Now we do a 2-hour session with Claude facilitating. The goals are sharper, the alignment is better, and the team actually references them throughout the quarter because they feel clear."
+  author="COO"
+  context="40-person B2B SaaS company"
+/>
+
+## Common Mistakes
+
+**Don't let Claude set your objectives.** Objectives are strategic choices that require human judgment about what matters most. Claude helps you clarify and refine — not decide for you.
+
+**Don't skip the alignment check.** Most companies set team goals in isolation and then wonder why departments work against each other. The alignment check is a 10-minute exercise that saves you a quarter of friction.
+
+**Don't set it and forget it.** The mid-quarter check-in is mandatory. If you're not reviewing progress, you don't have OKRs — you have wishes.

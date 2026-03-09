@@ -1,0 +1,287 @@
+---
+title: "SEC Filings and Earnings Analysis"
+description: "Auto-pull SEC filings into clean tables, parse earnings transcripts, and track KPI shifts across quarters."
+products: ["Chat", "Code"]
+tier: "Operator"
+readTime: "11 min"
+---
+
+Public company analysis is tedious. Pull up a 10-K, scroll through 200 pages, find the three numbers that actually matter, compare them to last quarter, repeat for every competitor. Claude turns hours of extraction into minutes of analysis.
+
+<RealWorldProof
+  quote="Claude Code is better at Excel than anyone I know. I use it to pull SEC filings into clean tables and build comp models faster than any analyst on my team."
+  author="@fasinisterra"
+  context="Finance professional who uses Claude Code for public company analysis"
+/>
+
+## Filing Extraction: 10-K and 10-Q
+
+The most common task: pull specific financial data from SEC filings into clean, comparable tables.
+
+<PromptBlock
+  title="Extract Financials from 10-K"
+  prompt={`I'm uploading the 10-K filing for \${company} (fiscal year \${year}). Extract and organize:
+
+1. **INCOME STATEMENT** (3-year comparison)
+| Line Item | FY\${year} | FY\${parseInt(year)-1} | FY\${parseInt(year)-2} | YoY Change |
+Revenue, COGS, Gross Profit, R&D, S&M, G&A, Operating Income, Net Income, EPS
+
+2. **BALANCE SHEET**
+| Line Item | FY\${year} | FY\${parseInt(year)-1} |
+Cash & equivalents, AR, Total current assets, PP&E, Goodwill, Total assets, Current liabilities, Long-term debt, Total stockholders' equity
+
+3. **CASH FLOW STATEMENT**
+| Line Item | FY\${year} | FY\${parseInt(year)-1} |
+Operating cash flow, Capex, Free cash flow, Stock-based comp, Share repurchases, Dividends
+
+4. **KEY METRICS** (calculated from the above)
+- Revenue growth rate
+- Gross margin %
+- Operating margin %
+- Net margin %
+- FCF margin %
+- SBC as % of revenue
+- Net cash position (cash minus debt)
+- Days sales outstanding
+
+Format all numbers in millions with one decimal place. Include the source page/note reference for each major figure.`}
+  variables={[
+    { name: "company", placeholder: "Datadog" },
+    { name: "year", placeholder: "2025" }
+  ]}
+/>
+
+<TipCallout type="tip">
+Download the 10-K as a PDF from the SEC's EDGAR system and upload it directly to Claude. It handles the full document — you don't need to extract sections first. For very long filings (300+ pages), upload just the financial statements section.
+</TipCallout>
+
+## Earnings Transcript Analysis
+
+Earnings calls contain signal that the financial statements don't capture. Claude parses transcripts faster than you can listen to the call.
+
+<PromptBlock
+  title="Earnings Call Transcript Analysis"
+  prompt={`I'm uploading the Q\${quarter} earnings call transcript for \${company}. Analyze it and produce:
+
+1. **KEY METRICS MENTIONED**
+Table of every specific number the CEO/CFO cited:
+| Metric | Value | Context | Comparison (if given) |
+
+2. **GUIDANCE CHANGES**
+Compare any forward guidance to what was previously guided:
+| Metric | New Guidance | Prior Guidance | Change | Management Explanation |
+
+3. **STRATEGIC SIGNALS**
+Bullet list of strategic shifts, new initiatives, or changes in tone:
+- What's being emphasized more than last quarter?
+- What's being de-emphasized or not mentioned?
+- Any new product launches, partnerships, or market entries?
+
+4. **COMPETITIVE MENTIONS**
+Every mention of competitors, market positioning, or win/loss commentary. Direct quotes with context.
+
+5. **ANALYST CONCERNS**
+What did analysts push back on or ask multiple follow-ups about? This reveals what the market is worried about.
+
+6. **ONE-PARAGRAPH SUMMARY**
+Write the summary an analyst would send to their PM after the call. "Here's what you need to know about \${company}'s Q\${quarter}: ..."
+
+Be specific. Use exact quotes from the transcript when they're revealing.`}
+  variables={[
+    { name: "quarter", placeholder: "4" },
+    { name: "company", placeholder: "Datadog" }
+  ]}
+/>
+
+## Quarter-over-Quarter KPI Tracking
+
+Upload multiple quarters of data and track how KPIs are shifting.
+
+<PromptBlock
+  title="Multi-Quarter KPI Tracker"
+  prompt={`I'm uploading earnings data (transcripts, press releases, or financials) for \${company} covering the last \${quarters} quarters. Build a KPI tracking table:
+
+| KPI | Q\${startQ} | Q\${startQ+1} | Q\${startQ+2} | Q\${startQ+3} | Trend | Flag |
+
+KPIs to track:
+- Revenue and YoY growth
+- Gross margin %
+- Operating margin %
+- Free cash flow and FCF margin
+- Customer count (total and enterprise)
+- Net revenue retention / dollar-based net expansion rate
+- Remaining performance obligations (RPO)
+- DBNERate or NRR
+- Headcount
+- Revenue per employee
+
+TREND column: Arrow and direction (↑ improving, → stable, ↓ declining)
+FLAG column: 🔴 if metric degraded for 2+ consecutive quarters
+
+Then write a 2-paragraph analysis:
+1. What's improving and why
+2. What's deteriorating and why
+
+If the company changed how they report a metric (redefined, stopped disclosing), note that.`}
+  variables={[
+    { name: "company", placeholder: "Datadog" },
+    { name: "quarters", placeholder: "4" },
+    { name: "startQ", placeholder: "1" }
+  ]}
+/>
+
+## "What Changed" Earnings Recap
+
+The fastest way to process an earnings release: upload it and ask what's different from expectations.
+
+<PromptBlock
+  title="What Changed This Quarter"
+  prompt={`I'm uploading \${company}'s Q\${quarter} earnings press release. Compare against:
+- Consensus estimates: Revenue $\${consensusRev}M, EPS $\${consensusEPS}
+- Prior quarter guidance: Revenue $\${guidanceLow}M-$\${guidanceHigh}M
+
+Produce a rapid recap:
+
+**BEAT / MISS / IN-LINE**
+| Metric | Actual | Consensus | Beat/Miss | Magnitude |
+
+**GUIDANCE RAISED / LOWERED / MAINTAINED**
+| Metric | New Range | Prior Range | Direction |
+
+**SURPRISE ITEMS**
+Anything in the press release that wasn't in consensus expectations — restructuring charges, acquisition announcements, accounting changes, one-time items.
+
+**BOTTOM LINE** (2 sentences)
+What the stock reaction should be based purely on the numbers. "Beat on revenue and raised guidance — this is unambiguously positive" or "Beat on revenue but guided below consensus — the market will focus on the guide-down."
+
+Don't editorialize. Stick to what the numbers say.`}
+  variables={[
+    { name: "company", placeholder: "Datadog" },
+    { name: "quarter", placeholder: "4" },
+    { name: "consensusRev", placeholder: "620" },
+    { name: "consensusEPS", placeholder: "0.42" },
+    { name: "guidanceLow", placeholder: "605" },
+    { name: "guidanceHigh", placeholder: "615" }
+  ]}
+/>
+
+## Competitive Comp Table
+
+Build a comp table across multiple companies from their filings.
+
+<PromptBlock
+  title="Public Comp Table"
+  prompt={`Build a public company comp table for these companies: \${companies}
+
+I'll upload their most recent 10-K or 10-Q filings (or you can work from the data I paste in).
+
+TABLE FORMAT:
+| Metric | \${companies.split(',').join(' | ')} |
+
+METRICS:
+- LTM Revenue ($M)
+- Revenue Growth (YoY %)
+- Gross Margin %
+- Operating Margin %
+- FCF Margin %
+- Net Revenue Retention (if disclosed)
+- Total Customers
+- Enterprise Customers (if disclosed)
+- Revenue per Employee ($K)
+- SBC as % of Revenue
+- EV/Revenue (current)
+- EV/GP (current)
+- Rule of 40 score (growth + FCF margin)
+
+Sort by Rule of 40 score, highest to lowest.
+
+Below the table, write a 3-sentence comparative summary: who's winning on growth, who's winning on profitability, and who has the best balance.`}
+  variables={[
+    { name: "companies", placeholder: "Datadog, Cloudflare, CrowdStrike, Zscaler" }
+  ]}
+/>
+
+<BeforeAfter
+  before={{
+    content: "Manually opening each company's 10-K, finding the revenue line, calculating growth rates, copying into a spreadsheet, repeating for every metric. Takes 3-4 hours for 4 companies."
+  }}
+  after={{
+    content: "Upload the filings, ask for the comp table. Get a formatted comparison with calculated metrics, trend flags, and a summary paragraph. Takes 20 minutes including review."
+  }}
+  annotation="The time savings compound — you'll update this comp table every quarter."
+/>
+
+## Automated SEC Filing Pipeline with Code
+
+For recurring analysis, build a pipeline that pulls filings automatically.
+
+<PromptBlock
+  title="SEC Filing Pipeline"
+  prompt={`Build a Python script that:
+
+1. Uses the SEC EDGAR API to pull the most recent 10-Q or 10-K for a given company ticker
+2. Extracts key financial data from the XBRL tags (Revenue, NetIncome, OperatingIncome, CashAndCashEquivalents, etc.)
+3. Stores the extracted data in a JSON file organized by company and quarter
+4. Generates a clean comparison table as an HTML file
+
+INPUT: A list of tickers: \${tickers}
+OUTPUT:
+- JSON data file with extracted financials
+- HTML comp table with all companies side by side
+- Changelog: what metrics changed most QoQ for each company
+
+Use the SEC EDGAR full-text search API (efts.sec.gov) and the XBRL companyfacts API.
+Include proper rate limiting (SEC requires 10 requests/second max).
+Include a User-Agent header with a contact email as required by SEC.`}
+  variables={[
+    { name: "tickers", placeholder: "DDOG, NET, CRWD, ZS" }
+  ]}
+/>
+
+<TipCallout type="warning">
+The SEC EDGAR API requires a User-Agent header with your name and email. This is a legal requirement, not optional. Claude Code will include this in the script — make sure you update it with your actual contact information before running.
+</TipCallout>
+
+## Segment and Geographic Analysis
+
+Public companies disclose segment data that reveals the real story beneath the consolidated numbers.
+
+<PromptBlock
+  title="Segment Revenue Analysis"
+  prompt={`I'm uploading \${company}'s 10-K. Find the segment disclosures and produce:
+
+1. **SEGMENT REVENUE TABLE** (3-year trend)
+| Segment | FY\${year} | FY\${parseInt(year)-1} | FY\${parseInt(year)-2} | Growth | Mix % |
+
+2. **GEOGRAPHIC BREAKDOWN** (if disclosed)
+| Region | Revenue | % of Total | Growth |
+
+3. **ANALYSIS**
+- Which segment is growing fastest?
+- Is revenue concentration increasing or diversifying?
+- Are there geographic regions showing deceleration?
+- What does the segment margin data reveal about the business quality?
+
+4. **RISKS**
+- Customer concentration (any customer >10% of revenue?)
+- Geographic concentration
+- Segment-level margin compression
+
+This is the analysis an investor would do to understand the quality and sustainability of the top-line number.`}
+  variables={[
+    { name: "company", placeholder: "Datadog" },
+    { name: "year", placeholder: "2025" }
+  ]}
+/>
+
+## Practical Workflow
+
+<ScenarioCard
+  scenario="Earnings season starts next week and you need to process 8 company reports across your coverage universe. Each requires a recap, guidance comparison, and comp table update."
+  answer="Set up a Claude Project with your comp table template and consensus estimates. As each company reports, upload the press release and transcript, and ask for the standard analysis. Claude maintains the template format across all companies."
+  prompt="I'm setting up for earnings season. I'll be uploading press releases and transcripts for 8 companies over the next two weeks. For each company, I need: (1) beat/miss vs consensus, (2) guidance change analysis, (3) updated row for our comp table. Here's the comp table template with consensus estimates: [upload]. Process each company consistently — same format, same metrics, same analysis structure."
+/>
+
+<TipCallout type="note">
+For ongoing public company analysis, set up a Claude Project with your coverage universe, comp table template, and analysis format. You'll use it every quarter and the consistency across companies saves as much time as the analysis itself.
+</TipCallout>
