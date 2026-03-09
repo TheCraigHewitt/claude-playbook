@@ -91,28 +91,15 @@ claude-playbook/
 │   ├── assessment.ts
 │   ├── implementation-paths.ts
 │   └── mdx.ts
-├── hooks/
-│   └── usePlaybookProgress.ts
-├── sync-to-site.sh         # Push changes → craighewitt-com
-└── sync-from-site.sh       # Pull changes ← craighewitt-com
+└── hooks/
+    └── usePlaybookProgress.ts
 ```
 
 ## How It Works
 
-This repo is the source of truth for all Claude Playbook content. It gets synced into the [craighewitt.com](https://craighewitt.com) codebase where Next.js builds and serves it.
+This repo is the source of truth for all Claude Playbook content. It powers the live site at [craighewitt.com/claude-playbook](https://craighewitt.com/claude-playbook), built with Next.js App Router.
 
-**Sync to site:**
-```bash
-./sync-to-site.sh              # defaults to ../craighewitt-com
-./sync-to-site.sh /path/to/site  # or specify path
-```
-
-**Pull from site:**
-```bash
-./sync-from-site.sh
-```
-
-Import paths use the `@/` alias that resolves in the craighewitt-com project:
+Import paths use the `@/` alias convention:
 - `@/components/claude-playbook/*` — Components
 - `@/lib/playbook/*` — Data and helpers
 - `@/hooks/*` — Hooks
