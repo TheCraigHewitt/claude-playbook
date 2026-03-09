@@ -66,6 +66,7 @@ export default async function PlaybookPage({ params }: { params: Promise<{ secti
           remarkPlugins: [remarkGfm],
         },
         parseFrontmatter: false,
+        blockJS: false,
       },
     })
     content = result.content
